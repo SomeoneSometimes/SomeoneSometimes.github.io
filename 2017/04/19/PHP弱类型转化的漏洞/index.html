@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hello World | Yiruma</title>
+  <title>PHP | Yiruma</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+  <meta name="description" content="#php中弱类型的转化漏洞###官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的  ###从几个例子中学习字符型是如何转换为数值的：12345678其中0代表转化失败，">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/04/14/hello-world/index.html">
+<meta property="og:title" content="PHP">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
-<meta property="og:updated_time" content="2017-04-14T03:49:18.941Z">
+<meta property="og:description" content="#php中弱类型的转化漏洞###官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的  ###从几个例子中学习字符型是如何转换为数值的：12345678其中0代表转化失败，">
+<meta property="og:updated_time" content="2017-04-19T15:16:35.755Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta name="twitter:title" content="PHP">
+<meta name="twitter:description" content="#php中弱类型的转化漏洞###官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的  ###从几个例子中学习字符型是如何转换为数值的：12345678其中0代表转化失败，">
   
     <link rel="alternative" href="/atom.xml" title="Yiruma" type="application/atom+xml">
   
@@ -219,11 +219,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="article-PHP弱类型转化的漏洞" class="article article-type-article" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/04/14/hello-world/" class="article-date">
-      <time datetime="2017-04-14T03:12:43.171Z" itemprop="datePublished">2017-04-14</time>
+      <a href="/2017/04/19/PHP弱类型转化的漏洞/" class="article-date">
+      <time datetime="2017-04-19T15:15:47.000Z" itemprop="datePublished">2017-04-19</time>
 </a>
     </div>
   
@@ -236,7 +236,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      PHP
     </h1>
   
 
@@ -253,15 +253,26 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.<br><a id="more"></a></p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <h2 id="php中弱类型的转化漏洞"><a href="#php中弱类型的转化漏洞" class="headerlink" title="#php中弱类型的转化漏洞"></a>#php中弱类型的转化漏洞</h2><p>###官方文档中的几句话已经说的很清楚了</p>
+<blockquote>
+<p><strong>在==中，<code>数值和字符串的比较</code>或者<code>比较涉及到数字内容的字符串</code>，则字符串会被转换为数值并且比较按照数值来进行。</strong><br><strong>当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对</strong><br><strong>对了，这些规则经过测试，在mysql的比较中是一样一样的</strong></p>
+</blockquote>
+<p>###从几个例子中学习字符型是如何转换为数值的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">其中0代表转化失败，转化成功即为对应的数值</div><div class="line">	&apos;xie&apos;=&gt;0</div><div class="line">	&apos;0xff&apos;=&gt;0xff</div><div class="line">	&apos;0xfz&apos;=&gt;0xf</div><div class="line">	&apos;0xzf&apos;=&gt;0  这个比较有趣，0是转化成功的结果，而不是转化失败的意思</div><div class="line">	&apos;x1&apos;=&gt;0</div><div class="line">	&apos;1x&apos;=&gt;1</div><div class="line">	&apos;0e123456&apos;=&gt;0 很神奇，0e123这种数值代表幂写法，已经好几次碰到了</div></pre></td></tr></table></figure></p>
+<p>###php弱类型漏洞的应用场景</p>
+<ul>
+<li>在使用==时，php会对不同类型进行转化后再比较</li>
+<li><code>&quot;flagpig&quot;+1 = 1</code><br> <code>11zip+0=11</code><br>基于字符与数值的组合成数值类型</li>
+<li>待补充</li>
+</ul>
+<p>###记录比赛中关于判断的一些例子</p>
+<ul>
+<li>md5(password)==md5(username)<br>基于转后后是十六进制数值，利用两个数值的幂写法进行了绕过。。。</li>
+<li>使用<code>strcmp</code>进行比较的判断中，文档中给出：<code>int strcmp ( string $str1 , string $str2 )</code>，其实如果是字符串与数组类型，也不会导致报错，而且会判定相等通过的</li>
+<li>使用一个很有意思的逻辑：<code>任意字符串+0 = 任意字符串</code>,这样就可以把字符串转化为0而通过所有与字符串比较的弱类型判断</li>
+<li>记得有一道数据库的题目，可以使用where “xie”=”meng”=”fei”来实现判断</li>
+<li>两个数值的相等判断，可以使用幂的表示方法：<code>0e123==0e456</code></li>
+<li>待补充</li>
+</ul>
 
       
       
@@ -316,13 +327,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/04/14/hello-world/">Hello World</a></p>
+        <p><span>本文标题:</span><a href="/2017/04/19/PHP弱类型转化的漏洞/">PHP</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
-        <p><span>发布时间:</span>2017年04月14日 - 11时12分</p>
-        <p><span>最后更新:</span>2017年04月14日 - 11时49分</p>
+        <p><span>发布时间:</span>2017年04月19日 - 23时15分</p>
+        <p><span>最后更新:</span>2017年04月19日 - 23时16分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/04/14/hello-world/" title="Hello World">https://someonesometimes.github.io/2017/04/14/hello-world/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/14/hello-world/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/04/19/PHP弱类型转化的漏洞/" title="PHP">https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -335,11 +346,15 @@
 
 <nav id="article-nav">
   
-  
-    <a href="/2017/04/14/js的DOM操作/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">js的DOM操作</div>
-      <strong class="article-nav-caption">></strong>
+    <a href="/2017/04/14/js的DOM操作/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          js的DOM操作
+        
+      </div>
     </a>
+  
   
 </nav>
 
@@ -348,7 +363,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#php中弱类型的转化漏洞"><span class="toc-number">1.</span> <span class="toc-text">#php中弱类型的转化漏洞</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
@@ -396,7 +411,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2017/04/14/hello-world/" data-title="Hello World" data-url="https://someonesometimes.github.io/2017/04/14/hello-world/"></div>
+    <div class="ds-thread" data-thread-key="2017/04/19/PHP弱类型转化的漏洞/" data-title="PHP" data-url="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -419,13 +434,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2017/04/14/js的DOM操作/" title="上一篇: js的DOM操作">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2017/04/14/js的DOM操作/" title="下一篇: js的DOM操作">
-                <i class="fa fa-angle-right"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
     <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
