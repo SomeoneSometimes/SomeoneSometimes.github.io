@@ -5,17 +5,17 @@
   
   <title>PHP | Yiruma</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="#php中弱类型的转化漏洞###官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
+  <meta name="description" content="#php中弱类型的转化漏洞##官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="#php中弱类型的转化漏洞###官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
-<meta property="og:updated_time" content="2017-04-19T15:19:42.263Z">
+<meta property="og:description" content="#php中弱类型的转化漏洞##官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
+<meta property="og:updated_time" content="2017-04-19T15:21:28.028Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP">
-<meta name="twitter:description" content="#php中弱类型的转化漏洞###官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
+<meta name="twitter:description" content="#php中弱类型的转化漏洞##官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
   
     <link rel="alternative" href="/atom.xml" title="Yiruma" type="application/atom+xml">
   
@@ -253,18 +253,21 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="php中弱类型的转化漏洞"><a href="#php中弱类型的转化漏洞" class="headerlink" title="#php中弱类型的转化漏洞"></a>#php中弱类型的转化漏洞</h2><p>###官方文档中的几句话已经说的很清楚了</p>
+        <h2 id="php中弱类型的转化漏洞"><a href="#php中弱类型的转化漏洞" class="headerlink" title="#php中弱类型的转化漏洞"></a>#php中弱类型的转化漏洞</h2><p>##官方文档中的几句话已经说的很清楚了</p>
 <blockquote>
 <p><strong>在==中，<code>数值和字符串的比较</code>或者<code>比较涉及到数字内容的字符串</code>，则字符串会被转换为数值并且比较按照数值来进行。</strong><br><strong>当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对</strong><br><strong>对了，这些规则经过测试，在mysql的比较中是一样一样的</strong><br><a id="more"></a></p>
 </blockquote>
-<p>###从几个例子中学习字符型是如何转换为数值的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">其中0代表转化失败，转化成功即为对应的数值</div><div class="line">	&apos;xie&apos;=&gt;0</div><div class="line">	&apos;0xff&apos;=&gt;0xff</div><div class="line">	&apos;0xfz&apos;=&gt;0xf</div><div class="line">	&apos;0xzf&apos;=&gt;0  这个比较有趣，0是转化成功的结果，而不是转化失败的意思</div><div class="line">	&apos;x1&apos;=&gt;0</div><div class="line">	&apos;1x&apos;=&gt;1</div><div class="line">	&apos;0e123456&apos;=&gt;0 很神奇，0e123这种数值代表幂写法，已经好几次碰到了</div></pre></td></tr></table></figure></p>
-<p>###php弱类型漏洞的应用场景</p>
+<p><br></p>
+<p>##从几个例子中学习字符型是如何转换为数值的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">其中0代表转化失败，转化成功即为对应的数值</div><div class="line">	&apos;xie&apos;=&gt;0</div><div class="line">	&apos;0xff&apos;=&gt;0xff</div><div class="line">	&apos;0xfz&apos;=&gt;0xf</div><div class="line">	&apos;0xzf&apos;=&gt;0  这个比较有趣，0是转化成功的结果，而不是转化失败的意思</div><div class="line">	&apos;x1&apos;=&gt;0</div><div class="line">	&apos;1x&apos;=&gt;1</div><div class="line">	&apos;0e123456&apos;=&gt;0 很神奇，0e123这种数值代表幂写法，已经好几次碰到了</div></pre></td></tr></table></figure></p>
+<p><br></p>
+<p>##php弱类型漏洞的应用场景</p>
 <ul>
 <li>在使用==时，php会对不同类型进行转化后再比较</li>
 <li><code>&quot;flagpig&quot;+1 = 1</code><br> <code>11zip+0=11</code><br>基于字符与数值的组合成数值类型</li>
 <li>待补充</li>
 </ul>
-<p>###记录比赛中关于判断的一些例子</p>
+<p><br></p>
+<p>##记录比赛中关于判断的一些例子</p>
 <ul>
 <li>md5(password)==md5(username)<br>基于转后后是十六进制数值，利用两个数值的幂写法进行了绕过。。。</li>
 <li>使用<code>strcmp</code>进行比较的判断中，文档中给出：<code>int strcmp ( string $str1 , string $str2 )</code>，其实如果是字符串与数组类型，也不会导致报错，而且会判定相等通过的</li>
@@ -330,7 +333,7 @@
         <p><span>本文标题:</span><a href="/2017/04/19/PHP弱类型转化的漏洞/">PHP</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年04月19日 - 23时15分</p>
-        <p><span>最后更新:</span>2017年04月19日 - 23时19分</p>
+        <p><span>最后更新:</span>2017年04月19日 - 23时21分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/04/19/PHP弱类型转化的漏洞/" title="PHP">https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
