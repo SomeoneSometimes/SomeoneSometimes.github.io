@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/14/js的DOM操作/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="DOM是什么？   整个DOM由三种元素所组成：Element、Attribute、Text   实际使用的时候通常将Element作为DOM域的划分方式">
-<meta property="og:updated_time" content="2017-04-14T03:46:19.596Z">
+<meta property="og:updated_time" content="2017-04-19T15:32:20.629Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="js的DOM操作">
 <meta name="twitter:description" content="DOM是什么？   整个DOM由三种元素所组成：Element、Attribute、Text   实际使用的时候通常将Element作为DOM域的划分方式">
@@ -261,9 +261,12 @@
 <p>DOM是什么？  </p>
 <p>整个DOM由三种元素所组成：<br><code>Element</code>、<code>Attribute</code>、<code>Text</code>   实际使用的时候通常将<code>Element</code>作为DOM域的划分方式<br><a id="more"></a></p>
 </blockquote>
-<h2 id="对脚本的DOM操作浓缩为2点："><a href="#对脚本的DOM操作浓缩为2点：" class="headerlink" title="#对脚本的DOM操作浓缩为2点： "></a>#对脚本的DOM操作浓缩为2点： </h2><p>##定位<br><em>整个DOM可以看作由Element划分的，使用以下三种方式来定位Element的标签：</em></p>
-<p><code>ele.getElementById</code><br><code>ele.getElementByClassName</code><br><code>ele.getElementByTagName</code></p>
-<p>##调整<br><em>在定位之后就切入了DOM里面，可以任意的切换Element：</em></p>
+<p><br><br></p>
+<h1 id="对脚本的DOM操作浓缩为2点"><a href="#对脚本的DOM操作浓缩为2点" class="headerlink" title="对脚本的DOM操作浓缩为2点"></a>对脚本的DOM操作浓缩为2点</h1><hr>
+<p><br></p>
+<h2 id="定位"><a href="#定位" class="headerlink" title="定位"></a>定位</h2><p><em>整个DOM可以看作由Element划分的，使用以下三种方式来定位Element的标签：</em></p>
+<p><code>ele.getElementById</code><br><code>ele.getElementByClassName</code><br><code>ele.getElementByTagName</code><br><br></p>
+<h2 id="调整"><a href="#调整" class="headerlink" title="调整"></a>调整</h2><p><em>在定位之后就切入了DOM里面，可以任意的切换Element：</em></p>
 <table>
 <thead>
 <tr>
@@ -291,10 +294,12 @@
 </tbody>
 </table>
 <p><br><br> </p>
-<h2 id="CTF常用操作"><a href="#CTF常用操作" class="headerlink" title="#CTF常用操作"></a>#CTF常用操作</h2><p>创建元素：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var ep=document.creatElement(&quot;script&quot;)；</div><div class="line">ep.src=&quot;&quot;;</div><div class="line">xx.appendChild(ep);</div></pre></td></tr></table></figure></p>
+<h1 id="CTF常用操作"><a href="#CTF常用操作" class="headerlink" title="CTF常用操作"></a>CTF常用操作</h1><hr>
+<p>创建元素：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">var ep=document.creatElement(&quot;script&quot;)；</div><div class="line">ep.src=&quot;&quot;;</div><div class="line">xx.appendChild(ep);</div></pre></td></tr></table></figure></p>
 <p>添加、删除元素  实验发现单元素不可以，其他的像<code>&lt;p&gt;</code>也是可的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">document.head.appendChild()是最简便的方式</div><div class="line">ele.appendChild(el);</div><div class="line">ele.removeChild(el);</div></pre></td></tr></table></figure></p>
 <p><br><br></p>
-<h2 id="其他操作"><a href="#其他操作" class="headerlink" title="#其他操作"></a>#其他操作</h2><table>
+<h1 id="其他操作"><a href="#其他操作" class="headerlink" title="其他操作"></a>其他操作</h1><hr>
+<table>
 <thead>
 <tr>
 <th>操作</th>
@@ -381,7 +386,7 @@
         <p><span>本文标题:</span><a href="/2017/04/14/js的DOM操作/">js的DOM操作</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年04月14日 - 11时37分</p>
-        <p><span>最后更新:</span>2017年04月14日 - 11时46分</p>
+        <p><span>最后更新:</span>2017年04月19日 - 23时32分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/04/14/js的DOM操作/" title="js的DOM操作">https://someonesometimes.github.io/2017/04/14/js的DOM操作/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/14/js的DOM操作/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -408,7 +413,7 @@
   
   
     <a href="/2017/04/19/PHP弱类型转化的漏洞/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">PHP</div>
+      <div class="article-nav-title">PHP中弱类型的转化漏洞</div>
       <strong class="article-nav-caption">></strong>
     </a>
   
@@ -419,7 +424,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#对脚本的DOM操作浓缩为2点："><span class="toc-number">1.</span> <span class="toc-text">#对脚本的DOM操作浓缩为2点： </span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#CTF常用操作"><span class="toc-number">2.</span> <span class="toc-text">#CTF常用操作</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他操作"><span class="toc-number">3.</span> <span class="toc-text">#其他操作</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#对脚本的DOM操作浓缩为2点"><span class="toc-number">1.</span> <span class="toc-text">对脚本的DOM操作浓缩为2点</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#定位"><span class="toc-number">1.1.</span> <span class="toc-text">定位</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#调整"><span class="toc-number">1.2.</span> <span class="toc-text">调整</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#CTF常用操作"><span class="toc-number">2.</span> <span class="toc-text">CTF常用操作</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#其他操作"><span class="toc-number">3.</span> <span class="toc-text">其他操作</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
@@ -496,12 +501,12 @@
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2017/04/19/PHP弱类型转化的漏洞/" title="下一篇: PHP">
+            <a href="/2017/04/19/PHP弱类型转化的漏洞/" title="下一篇: PHP中弱类型的转化漏洞">
                 <i class="fa fa-angle-right"></i>
             </a>
         
     </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
     <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");

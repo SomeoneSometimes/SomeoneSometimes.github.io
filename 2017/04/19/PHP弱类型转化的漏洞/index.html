@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>PHP | Yiruma</title>
+  <title>PHP中弱类型的转化漏洞 | Yiruma</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="#php中弱类型的转化漏洞##官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
+  <meta name="description" content="官方文档中的几句话已经说的很清楚了 在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PHP">
+<meta property="og:title" content="PHP中弱类型的转化漏洞">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="#php中弱类型的转化漏洞##官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
-<meta property="og:updated_time" content="2017-04-19T15:21:28.028Z">
+<meta property="og:description" content="官方文档中的几句话已经说的很清楚了 在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
+<meta property="og:updated_time" content="2017-04-19T15:31:38.806Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PHP">
-<meta name="twitter:description" content="#php中弱类型的转化漏洞##官方文档中的几句话已经说的很清楚了  在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
+<meta name="twitter:title" content="PHP中弱类型的转化漏洞">
+<meta name="twitter:description" content="官方文档中的几句话已经说的很清楚了 在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
   
     <link rel="alternative" href="/atom.xml" title="Yiruma" type="application/atom+xml">
   
@@ -236,7 +236,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      PHP
+      PHP中弱类型的转化漏洞
     </h1>
   
 
@@ -253,22 +253,20 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <h2 id="php中弱类型的转化漏洞"><a href="#php中弱类型的转化漏洞" class="headerlink" title="#php中弱类型的转化漏洞"></a>#php中弱类型的转化漏洞</h2><p>##官方文档中的几句话已经说的很清楚了</p>
-<blockquote>
+        <p><br></p>
+<h2 id="官方文档中的几句话已经说的很清楚了"><a href="#官方文档中的几句话已经说的很清楚了" class="headerlink" title="官方文档中的几句话已经说的很清楚了"></a>官方文档中的几句话已经说的很清楚了</h2><blockquote>
 <p><strong>在==中，<code>数值和字符串的比较</code>或者<code>比较涉及到数字内容的字符串</code>，则字符串会被转换为数值并且比较按照数值来进行。</strong><br><strong>当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对</strong><br><strong>对了，这些规则经过测试，在mysql的比较中是一样一样的</strong><br><a id="more"></a></p>
 </blockquote>
 <p><br></p>
-<p>##从几个例子中学习字符型是如何转换为数值的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">其中0代表转化失败，转化成功即为对应的数值</div><div class="line">	&apos;xie&apos;=&gt;0</div><div class="line">	&apos;0xff&apos;=&gt;0xff</div><div class="line">	&apos;0xfz&apos;=&gt;0xf</div><div class="line">	&apos;0xzf&apos;=&gt;0  这个比较有趣，0是转化成功的结果，而不是转化失败的意思</div><div class="line">	&apos;x1&apos;=&gt;0</div><div class="line">	&apos;1x&apos;=&gt;1</div><div class="line">	&apos;0e123456&apos;=&gt;0 很神奇，0e123这种数值代表幂写法，已经好几次碰到了</div></pre></td></tr></table></figure></p>
+<h2 id="从几个例子中学习字符型是如何转换为数值的："><a href="#从几个例子中学习字符型是如何转换为数值的：" class="headerlink" title="从几个例子中学习字符型是如何转换为数值的："></a>从几个例子中学习字符型是如何转换为数值的：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">其中0代表转化失败，转化成功即为对应的数值</div><div class="line">	&apos;xie&apos;=&gt;0</div><div class="line">	&apos;0xff&apos;=&gt;0xff</div><div class="line">	&apos;0xfz&apos;=&gt;0xf</div><div class="line">	&apos;0xzf&apos;=&gt;0  这个比较有趣，0是转化成功的结果，而不是转化失败的意思</div><div class="line">	&apos;x1&apos;=&gt;0</div><div class="line">	&apos;1x&apos;=&gt;1</div><div class="line">	&apos;0e123456&apos;=&gt;0 很神奇，0e123这种数值代表幂写法，已经好几次碰到了</div></pre></td></tr></table></figure>
 <p><br></p>
-<p>##php弱类型漏洞的应用场景</p>
-<ul>
+<h2 id="php弱类型漏洞的应用场景"><a href="#php弱类型漏洞的应用场景" class="headerlink" title="php弱类型漏洞的应用场景"></a>php弱类型漏洞的应用场景</h2><ul>
 <li>在使用==时，php会对不同类型进行转化后再比较</li>
 <li><code>&quot;flagpig&quot;+1 = 1</code><br> <code>11zip+0=11</code><br>基于字符与数值的组合成数值类型</li>
 <li>待补充</li>
 </ul>
 <p><br></p>
-<p>##记录比赛中关于判断的一些例子</p>
-<ul>
+<h2 id="记录比赛中关于判断的一些例子"><a href="#记录比赛中关于判断的一些例子" class="headerlink" title="记录比赛中关于判断的一些例子"></a>记录比赛中关于判断的一些例子</h2><ul>
 <li>md5(password)==md5(username)<br>基于转后后是十六进制数值，利用两个数值的幂写法进行了绕过。。。</li>
 <li>使用<code>strcmp</code>进行比较的判断中，文档中给出：<code>int strcmp ( string $str1 , string $str2 )</code>，其实如果是字符串与数组类型，也不会导致报错，而且会判定相等通过的</li>
 <li>使用一个很有意思的逻辑：<code>任意字符串+0 = 任意字符串</code>,这样就可以把字符串转化为0而通过所有与字符串比较的弱类型判断</li>
@@ -330,12 +328,12 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/04/19/PHP弱类型转化的漏洞/">PHP</a></p>
+        <p><span>本文标题:</span><a href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年04月19日 - 23时15分</p>
-        <p><span>最后更新:</span>2017年04月19日 - 23时21分</p>
+        <p><span>最后更新:</span>2017年04月19日 - 23时31分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/04/19/PHP弱类型转化的漏洞/" title="PHP">https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/</a>
+            <span>原始链接:</span><a class="post-url" href="/2017/04/19/PHP弱类型转化的漏洞/" title="PHP中弱类型的转化漏洞">https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
@@ -366,7 +364,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#php中弱类型的转化漏洞"><span class="toc-number">1.</span> <span class="toc-text">#php中弱类型的转化漏洞</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#官方文档中的几句话已经说的很清楚了"><span class="toc-number">1.</span> <span class="toc-text">官方文档中的几句话已经说的很清楚了</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#从几个例子中学习字符型是如何转换为数值的："><span class="toc-number">2.</span> <span class="toc-text">从几个例子中学习字符型是如何转换为数值的：</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#php弱类型漏洞的应用场景"><span class="toc-number">3.</span> <span class="toc-text">php弱类型漏洞的应用场景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#记录比赛中关于判断的一些例子"><span class="toc-number">4.</span> <span class="toc-text">记录比赛中关于判断的一些例子</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
@@ -414,7 +412,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2017/04/19/PHP弱类型转化的漏洞/" data-title="PHP" data-url="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/"></div>
+    <div class="ds-thread" data-thread-key="2017/04/19/PHP弱类型转化的漏洞/" data-title="PHP中弱类型的转化漏洞" data-url="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -446,7 +444,7 @@
             <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
     <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
