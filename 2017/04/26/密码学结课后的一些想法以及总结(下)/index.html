@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>密码学结课后的一些想法以及总结（下） | Yiruma</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="密码学结课后的一些想法以及总结（下）">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。">
+<meta property="og:updated_time" content="2017-04-28T14:24:17.665Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="密码学结课后的一些想法以及总结（下）">
+<meta name="twitter:description" content="断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。">
+  
+    <link rel="alternative" href="/atom.xml" title="Yiruma" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/img/head.jpg">
+  
+  
+      <link rel="stylesheet" href="//cdn.bootcss.com/animate.css/3.5.0/animate.min.css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  
+  
+      <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  
+  <!-- 加载特效 -->
+    <script src="/js/pace.js"></script>
+    <link href="/css/pace/pace-theme-flash.css" rel="stylesheet" />
+  <script>
+      var yiliaConfig = {
+          rootUrl: '/',
+          fancybox: true,
+          animate: true,
+          isHome: false,
+          isPost: true,
+          isArchive: false,
+          isTag: false,
+          isCategory: false,
+          open_in_new: false
+      }
+  </script>
+</head>
+<body>
+  <div id="container">
+    <div class="left-col">
+    <div class="overlay"></div>
+<div class="intrude-less">
+    <header id="header" class="inner">
+        <a href="/" class="profilepic">
+            
+            <img lazy-src="/img/head.jpg" class="js-avatar">
+            
+        </a>
+
+        <hgroup>
+          <h1 class="header-author"><a href="/" title="Hi Mate">Yiruma</a></h1>
+        </hgroup>
+
+        
+        
+        
+            <div id="switch-btn" class="switch-btn">
+                <div class="icon">
+                    <div class="icon-ctn">
+                        <div class="icon-wrap icon-house" data-idx="0">
+                            <div class="birdhouse"></div>
+                            <div class="birdhouse_holes"></div>
+                        </div>
+                        <div class="icon-wrap icon-ribbon hide" data-idx="1">
+                            <div class="ribbon"></div>
+                        </div>
+                        
+                        <div class="icon-wrap icon-link hide" data-idx="2">
+                            <div class="loopback_l"></div>
+                            <div class="loopback_r"></div>
+                        </div>
+                        
+                        
+                        <div class="icon-wrap icon-me hide" data-idx="3">
+                            <div class="user"></div>
+                            <div class="shoulder"></div>
+                        </div>
+                        
+                    </div>
+                    
+                </div>
+                <div class="tips-box hide">
+                    <div class="tips-arrow"></div>
+                    <ul class="tips-inner">
+                        <li>菜单</li>
+                        <li>标签</li>
+                        
+                        <li>友情链接</li>
+                        
+                        
+                        <li>关于我</li>
+                        
+                    </ul>
+                </div>
+            </div>
+        
+
+        <div id="switch-area" class="switch-area">
+            <div class="switch-wrap">
+                <section class="switch-part switch-part1">
+                    <nav class="header-menu">
+                        <ul>
+                        
+                            <li><a href="/">博客首页</a></li>
+                        
+                            <li><a href="/archives">归档</a></li>
+                        
+                            <li><a href="/about">关于我</a></li>
+                        
+                        </ul>
+                    </nav>
+                    <nav class="header-nav">
+                        <ul class="social">
+                            
+                                <a class="fl github" target="_blank" href="https://github.com/SomeoneSometimes" title="github">github</a>
+                            
+                                <a class="fl zhihu" target="_blank" href="https://www.zhihu.com/people/jie-meng-fei/activities" title="zhihu">zhihu</a>
+                            
+                                <a class="fl QQ" target="_blank" href="/1943842696" title="QQ">QQ</a>
+                            
+                                <a class="fl douban" target="_blank" href="https://movie.douban.com/top250" title="douban">douban</a>
+                            
+                        </ul>
+                    </nav>
+                </section>
+                
+                
+                <section class="switch-part switch-part2">
+                    <div class="widget tagcloud" id="js-tagcloud">
+                        <a href="/tags/javascript/" style="font-size: 10px;">javascript</a>
+                    </div>
+                </section>
+                
+                
+                
+                <section class="switch-part switch-part3">
+                    <div id="js-friends">
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://luuman.github.io/">Bendawang师傅</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.venenof.com/">Veneno</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://lorexxar.cn/">LoRexxar</a>
+                    
+                      <a target="_blank" class="main-nav-link switch-friends-link" href="http://www.melodia.pw/">小m</a>
+                    
+                    </div>
+                </section>
+                
+
+                
+                
+                <section class="switch-part switch-part4">
+                
+                    <div id="js-aboutme">拜在Bendawang师傅脚下学习，目前全面web弱鸡。虽然还没有确定发展方向，但一步步来吧，大佬们都是这么过来的</div>
+                </section>
+                
+            </div>
+        </div>
+    </header>                
+</div>
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+      <div class="overlay">
+          <div class="slider-trigger"></div>
+          <h1 class="header-author js-mobile-header hide"><a href="/" title="Me">Yiruma</a></h1>
+      </div>
+    <div class="intrude-less">
+        <header id="header" class="inner">
+            <a href="/" class="profilepic">
+                
+                    <img lazy-src="/img/head.jpg" class="js-avatar">
+                
+            </a>
+            <hgroup>
+              <h1 class="header-author"><a href="/" title="Me">Yiruma</a></h1>
+            </hgroup>
+            
+            <nav class="header-menu">
+                <ul>
+                
+                    <li><a href="/">博客首页</a></li>
+                
+                    <li><a href="/archives">归档</a></li>
+                
+                    <li><a href="/about">关于我</a></li>
+                
+                <div class="clearfix"></div>
+                </ul>
+            </nav>
+            <nav class="header-nav">
+                <div class="social">
+                    
+                        <a class="github" target="_blank" href="https://github.com/SomeoneSometimes" title="github">github</a>
+                    
+                        <a class="zhihu" target="_blank" href="https://www.zhihu.com/people/jie-meng-fei/activities" title="zhihu">zhihu</a>
+                    
+                        <a class="QQ" target="_blank" href="/1943842696" title="QQ">QQ</a>
+                    
+                        <a class="douban" target="_blank" href="https://movie.douban.com/top250" title="douban">douban</a>
+                    
+                </div>
+            </nav>
+        </header>                
+    </div>
+</nav>
+      <div class="body-wrap"><article id="post-密码学结课后的一些想法以及总结(下)" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/04/26/密码学结课后的一些想法以及总结(下)/" class="article-date">
+      <time datetime="2017-04-26T11:56:41.000Z" itemprop="datePublished">2017-04-26</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      密码学结课后的一些想法以及总结（下）
+    </h1>
+  
+
+      </header>
+      
+      <div class="article-info article-info-post">
+        
+
+        
+        <div class="clearfix"></div>
+      </div>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。<br><a id="more"></a><br>总感现在很多的渗透中很少考虑密码学方面的漏洞，如果面对的是一个正规加密算法，我们在已知的算法漏洞，或是实际实现中所遗漏的漏洞之外，几乎不会对现行的密码体制做出任何攻击的尝试，密码学课中所讲授的各种基于密码算法的攻击方式，大多都是理论可行的范畴而身边少有例子，毕竟理论上现在计算极限是2^80但实际攻击中你来个试试。。。可能也正是此原因，总觉得我应该把当下对这些知识的理解都写下来，也许目前就是我对密码学认识最清楚的时候了，日后可能再也没有机会能这样正规，这样没有明确目的驱动去学习这样一套系统的理论性知识了。<br>不管怎样，所有叙事的开端都要先感谢钟神这一年的教导，您渊博的知识以及很和我胃口的讲授方式使我一直认为密码学这门课是我目前上过的最有趣的课，没有之一~~~</p>
+<hr>
+<h1 id="基于单向函数的非对称密码算法"><a href="#基于单向函数的非对称密码算法" class="headerlink" title="基于单向函数的非对称密码算法"></a>基于单向函数的非对称密码算法</h1><h2 id="首先描述最最基础的单项函数"><a href="#首先描述最最基础的单项函数" class="headerlink" title="首先描述最最基础的单项函数"></a>首先描述最最基础的单项函数</h2><p>我所学习的单向函数有三个</p>
+<ul>
+<li>基于大素数分解困难性的单向函数</li>
+<li>基于DLP离散对数问题的单向函数<br><em>（基于一个循环群的生成元每次给定指数而生成的结果具有不确定性，在循环群上，又可以分成广义的循环群以及循环子群）</em></li>
+<li>基于ECC椭圆曲线的单向函数<br><em>（和DLP很像，只是循环群是在椭圆曲线上构建的，生成元也是椭圆曲线上的一个点，同样是基于给定一个参数和生成元运算的结果具有不确定性）</em></li>
+</ul>
+<p>相应的数论基础</p>
+<ul>
+<li>这种基于循环群的问题最早要追溯到原根与循环群的讲解中，在一个循环群中，由原根可以遍历出所有的元素<em>（记得当时原根的寻找方法，欧拉公式求互素的个数什么的，学习了好长的时间，都属于数论中的基础）</em>，DLP与ECC本质上都是基于循环群中生成元生成元素的不确定性来做的。</li>
+<li>二次剩余与勒让德符号值是椭圆曲线中涉及到的概念，遍历一个椭圆曲线中所有的点方法就是拿着x值来实验，带入x后的结果就会形成形如y^2=xxmodp的形式，那么y是否有解<em>（勒让德符号值来判断）</em>，有解下y的两个解是多少<em>（华罗庚的一个理论中提到了部分计算方法）</em>。实际ECC算法实施中，其实并用不到这些概念</li>
+</ul>
+<p>现行的攻击方式———针对单向函数问题的降复杂度解法</p>
+<ul>
+<li>针对循环群的问题，如果是广义循环群的的话，可以使用基于CRT的指数溢出攻击，貌似还有数域筛？等进行攻击，复杂度与安全等级可以下降相当多</li>
+<li>针对循环子群以及ECC这种模是素数的，无法基于CRT进行拆分后的攻击，可以使用基于生日悖论的 pollard_pho算法以及BSGS大步小步法来进行计算，可以下降根号的复杂度即使安全等级下降一半</li>
+</ul>
+<h2 id="基于单向函数可以做哪些事情"><a href="#基于单向函数可以做哪些事情" class="headerlink" title="基于单向函数可以做哪些事情"></a>基于单向函数可以做哪些事情</h2><h3 id="hint：所有基于单项函数实现的功能，其安全强度都是所使用的单向函数的安全强度"><a href="#hint：所有基于单项函数实现的功能，其安全强度都是所使用的单向函数的安全强度" class="headerlink" title="hint：所有基于单项函数实现的功能，其安全强度都是所使用的单向函数的安全强度"></a>hint：所有基于单项函数实现的功能，其安全强度都是所使用的单向函数的安全强度</h3><p>可以基于单向函数制定一些公钥密码算法了<br>hint：其实基于下面的描述，我感觉公钥密码算法的大致框架就是两种：RSA与Elgamal</p>
+<ul>
+<li>RSA是基于大整数分解这个单向函数来制定的<br><em>但是学习了Elgamal算法后我总觉得RSA没有前者那样灵活而有趣，因为他是固定的公钥与私钥</em></li>
+<li>Elgamal是基于DLP单向函数来制定的，其本质上就是利用DH密钥交换的key进行简单的加密操作，这个体系是发送方发送密文加公钥的，因此是非确定性加密的，即并没有明确的公钥之说</li>
+<li>基于ECC的公钥密码算法？好像并没有学习，只是在数字签名中使用到了，用法和Elgamal是差不多的</li>
+</ul>
+<p>数字签名中使用的是公钥密码算法<br>可以感觉到就是对公钥算法的那两种框架进行了改动，使其能够完成签名、签名验证的功能</p>
+<ul>
+<li>使用RSA的私钥签名，公钥解密。针对RSA特点，对信息进行预处理，将x进行hash以减少长度，hash中加入salt以改善确定性加密的问题</li>
+<li>使用Elgamal的验证体系，使用私钥d与Ke签名，对方使用规定流程进行验证</li>
+<li>对Elgamal的验证体系改进后——DSA，将公钥的签名对象进行hash，将DLP基于的循环群改为循环子群以提高安全强度</li>
+<li>使用ECDSA，将循环群改为了椭圆曲线上的，相应的改变并不大</li>
+</ul>
+<p>进行密钥协商</p>
+<ul>
+<li>通过DH密钥交换协议，我才真正认识到基于单向函数算法的优点——没有传输一点敏感数据实现了密钥的协商</li>
+</ul>
+<h2 id="公钥密码算法概览以及变动"><a href="#公钥密码算法概览以及变动" class="headerlink" title="公钥密码算法概览以及变动"></a>公钥密码算法概览以及变动</h2><p>公钥密码算法无法加密过大的东西，因此应用的场景如上面所述常用于数字签名的身份认证，密钥协商等方面。这都是众所周知的。</p>
+<p>从你的私钥是世界上唯一独有的角度来看，我们就能很容易的理解为什么公钥密码算法可以胜任身份证明的任务</p>
+<p>我们从密钥协商中就能看出来公钥密码算法的一种特性：数据的传递并不需要安全通道就可以完成，因此让我们从对称加密的机密性中走出来，公钥密码算法中更多的考虑的是数据的完整性与数据认证与不可抵赖性，这些在后面的数字签名以及CA中心中我们可以看到，包括后面学习的很多攻击诸如中间人攻击、重放攻击等，都是基于数据真实性的角度来说的，这是我们学习公钥密码算法后才开始着重考虑的一个方面</p>
+<hr>
+<h1 id="关于数据真实性的那些事——Hash-MAC-DS"><a href="#关于数据真实性的那些事——Hash-MAC-DS" class="headerlink" title="关于数据真实性的那些事——Hash,MAC,DS"></a>关于数据真实性的那些事——Hash,MAC,DS</h1><h2 id="Hash"><a href="#Hash" class="headerlink" title="Hash"></a>Hash</h2><p><em>注意不要将所采用的结构与盒函数混为一谈，王小云的攻击是在MD5盒函数上的，hash应用中的各种问题是在结构上的</em></p>
+<p><strong>可以提供的服务————消息完整性</strong></p>
+<p><strong>Hash函数应当抵抗的几种攻击</strong>（攻击方式决定安全强度）</p>
+<ul>
+<li>不可逆性，这是肯定的</li>
+<li>抗第二原象攻击 即在指定x1下很难找到另一个x2其hash值与前者相同以实现伪造<br><em>2^n个盒子里指定一个，选到的复杂度是2^n</em></li>
+<li>强碰撞攻击 即很难找到两个具有相同hash值得x1与x2<br><em>书上的笔记给了应用的场景 攻击复杂度为2^n个盒子里，在2^n/2时就会有一个盒子里装有两个值，基于生日悖论</em></li>
+</ul>
+<p><strong>现行的Hash函数</strong><br><strong>MD结构</strong><br><em>个人认为并不是MD结构被攻破了，可能只是MD5的那个盒函数找到了碰撞的方法，而且就算没有这种攻击方式，以MD5那2^60的长度也是可以实施攻击的，只是钟神上课演示的碰撞明显不是2^60的复杂度，应该采用了那种攻击方式</em></p>
+<ul>
+<li>MD5（输出长度为160bit，抗强碰撞攻击强度为80，强碰撞攻击的碰撞算法已经给出）</li>
+<li>SHA-1（输出长度为256bit，抗强碰撞攻击强度为128bit，未被攻破）</li>
+<li>SHA-512系列 （输出长度为不同的值：224、256、384、512）</li>
+</ul>
+<p><strong>MD结构的劣势</strong></p>
+<ul>
+<li>这种结构依次往里面输入x值，因此能够在最后添加一些附加值并再进行一次盒内的运算从而获得新的hash值，在含key的hash中会出现问题</li>
+<li>只有吸收x，多次吸收完后最终结果即为hash值，这样输出长度就是固定的</li>
+<li>大概目前找到了MD5盒的攻击方式，其他MD结构的盒本身并没有找到攻击方式，上述问题是MD结构本身在应用中所存在的缺陷</li>
+</ul>
+<p><strong>Keccak结构</strong><br>目前就是SHA-3使用了这种结构<br>掌握SHA-3要注意以下几个方面：</p>
+<ul>
+<li>SHA-3根据不同的安全等级来确定它的输入长度也就是分块长度，具体是什么长度决定具有什么安全等级</li>
+<li>在消息分块入盒前，有详细的填充方案</li>
+</ul>
+<p><strong>Keccak结构的优势</strong></p>
+<ul>
+<li>MAC中若是使用hash函数加key的方式，则使用MD结构的话，简单的将key与x组合会有问题，而是用基于Keccak结构的SHA-3的话就可以简单的组合就行了</li>
+<li>Keccak使用的是海绵结构，首先将所有的x依次吸入，与MD结构不同的是此结构并不将最后一个盒的输出值作为hash结果，而是再进行盒运算以输出，这样实现了输出不同长度的hash结果</li>
+</ul>
+<p><strong>其他的补充</strong></p>
+<ul>
+<li>hash的基础结构都是对x进行分块，然后放入盒中，其分块长度也就是一个盒一次吸入多少的x，决定了hash的运行效率，当然盒内的设计也得要考虑</li>
+</ul>
+<h2 id="MAC"><a href="#MAC" class="headerlink" title="MAC"></a>MAC</h2><p><strong>简述</strong><br>简而言之，(x,MAC)的目的就是为了对x的完整性做出验证，而且要保证攻击者不能构造出其他x’的MAC码，或是不能求出修改后x’的MAC码<br>MAC的构建有两种思路，一是使用hash函数做出对消息的提取，然后在hash中加入key使得攻击者无法计算出x’的hash值；二是自己构建一种信息特征码的提取流程，在流程中录入所有x值，key值，最后得出的值就可以作为特征码MAC来用，又因为里面有着key，攻击者根据流程没有key而无法计算</p>
+<p><strong>现行的MAC方案</strong></p>
+<ul>
+<li>HMAC 使用制定流程将x与ke融合一块后再hash的方案</li>
+<li>GMAC 基于使用CTR的加密流程，将加密中的结果，padding，key值都吸收入，最后的结果作为MAC码，同时还得到了加密后的结果</li>
+</ul>
+<h2 id="Digatal-Signature"><a href="#Digatal-Signature" class="headerlink" title="Digatal Signature"></a>Digatal Signature</h2><p><strong>简述</strong><br>数字签名基于公钥体系构建，使用私钥签名hash(x),公钥解密进行验证，除了对信息完整性的验证外，因为使用私钥签名，所以可以做到身份验证，以达到不可否认服务。但正因为使用的公钥体系，签名的速度会很慢，因此才有了只进行信息完整性验证的MAC方案，那里面的key是双方已知的，基于对称加密。对了，DS的安全性也是基于单向函数的安全性的。</p>
+<p><strong>现行的DS方案</strong></p>
+<ul>
+<li>基于RSA体系 使用私钥加密，公钥解密</li>
+<li>基于Elgamal体系（并没有完全采用这种体系，但是单向函数还是一样的）——原始的方案，改进后的DSA，使用ECC的ECDSA</li>
+</ul>
+<hr>
+<h1 id="密钥分配方案与CA证书"><a href="#密钥分配方案与CA证书" class="headerlink" title="密钥分配方案与CA证书"></a>密钥分配方案与CA证书</h1><p><strong>简述</strong><br>实际生产环境中，一个组织内部的通信使用密钥的话，是需要考虑专门的方案进行密钥分配的，毕竟使用对称加密的话，总密钥个数可是成O(2^n)的复杂度来增长的<br>如果使用对称加密方式的话，可以通过设置密钥分配中心来减少总密钥的个数，并基于MIT所研究的三头狗Kerburse建立session key的方式来保证安全性<br>如果使用非对称加密方式的话，密钥复杂度问题就可以完美解决，并设置CA认证中心对用户的公钥进行签名来保证安全性</p>
+<h2 id="对称加密的分配方案以及安全性"><a href="#对称加密的分配方案以及安全性" class="headerlink" title="对称加密的分配方案以及安全性"></a>对称加密的分配方案以及安全性</h2><p><strong>分配方案</strong><br>通过设置密钥分配中心，使分配中心只保留与用户之间的长期密钥，在两个用户间需要通信的时候就建立sessionkey会话密钥并使用两个用户的长期密钥来发送过去<br>这样可使得一个组织中只保留n个数的长期密钥，越少也就会越安全，尤其是用户电脑中不会保存所有其他用户的密钥，并且新用户加入时不会影响到老用户</p>
+<p><strong>安全性</strong><br>单纯的传输session key的话，因为没有时效性会受到重放攻击，因为没有通信双方的身份会收到攻击，因为没有验证分配中心的身份会受到攻击。Kerburse方案在通信请求者建立连接的时候使用挑战应答的方式验证了通信对方的身份，分配中心在生成的session key中加入时间戳以及通信双方的ID。这样即可提高了安全性</p>
+<h2 id="非对称加密的安全性"><a href="#非对称加密的安全性" class="headerlink" title="非对称加密的安全性"></a>非对称加密的安全性</h2><p><strong>安全性</strong><br>以前以为证书就是公钥，学习后才知道其实是经过CA中心签名后的用户公钥。因为单纯的公钥在发放中很容易受到伪造，也没有统一的管理策略，因此有了现在的PKI中心来统一管理证书以及CA中心来为这些证书签名以表明这些是通过验证的。具体是为哪些签名就去看书吧。</p>
+
+      
+      
+        <div class="page-reward">
+          <p><a href="javascript:void(0)" onclick="dashangToggle()" class="dashang" title="打赏，支持一下">赏</a></p>
+          <div class="hide_box"></div>
+          <div class="shang_box">
+            <a class="shang_close" href="javascript:void(0)" onclick="dashangToggle()" title="关闭">×</a>
+            <div class="shang_tit">
+              <p>纯属好玩</p>
+            </div>
+            <div class="shang_payimg">
+              <img src="/img/alipayimg.jpg" alt="扫码支持" title="扫一扫" />
+            </div>
+              <div class="pay_explain">扫码打赏，你说多少就多少</div>
+            <div class="shang_payselect">
+              
+                <div class="pay_item checked" data-id="alipay">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/alipay.png" alt="支付宝" /></span>
+                </div>
+              
+              
+                <div class="pay_item" data-id="wechat">
+                  <span class="radiobox"></span>
+                  <span class="pay_logo"><img src="/img/weixin.png" alt="微信" /></span>
+                </div>
+              
+            </div>
+            <div class="shang_info">
+              <p>打开<span id="shang_pay_txt">支付宝</span>扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+        </div>
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/zepto/1.2.0/zepto.min.js"></script>
+        <script type="text/javascript">
+          $(".pay_item").click(function(){
+            $(this).addClass('checked').siblings('.pay_item').removeClass('checked');
+            var dataid=$(this).attr('data-id');
+            $(".shang_payimg img").attr("src","/img/"+dataid+"img.jpg");
+            $("#shang_pay_txt").text(dataid=="alipay"?"支付宝":"微信");
+          });
+          function dashangToggle(){
+            $(".hide_box").fadeToggle();
+            $(".shang_box").fadeToggle();
+          }
+        </script>
+      
+    </div>
+    
+  </div>
+  
+    
+    <div class="copyright">
+        <p><span>本文标题:</span><a href="/2017/04/26/密码学结课后的一些想法以及总结(下)/">密码学结课后的一些想法以及总结（下）</a></p>
+        <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
+        <p><span>发布时间:</span>2017年04月26日 - 19时56分</p>
+        <p><span>最后更新:</span>2017年04月28日 - 22时24分</p>
+        <p>
+            <span>原始链接:</span><a class="post-url" href="/2017/04/26/密码学结课后的一些想法以及总结(下)/" title="密码学结课后的一些想法以及总结（下）">https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <script src="/js/clipboard.min.js"></script>
+            <script> var clipboard = new Clipboard('.copy-path'); </script>
+        </p>
+        <p>
+            <span>许可协议:</span><i class="fa fa-creative-commons"></i> <a rel="license" href="http://creativecommons.org/licenses/by-nc-sa/3.0/cn/" title="中国大陆 (CC BY-NC-SA 3.0 CN)" target = "_blank">"署名-非商用-相同方式共享 3.0"</a> 转载请保留原文链接及作者。
+        </p>
+    </div>
+
+
+
+<nav id="article-nav">
+  
+    <a href="/2017/04/19/PHP弱类型转化的漏洞/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          PHP中弱类型的转化漏洞
+        
+      </div>
+    </a>
+  
+  
+</nav>
+
+  
+</article>
+
+    <div id="toc" class="toc-article">
+    <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#基于单向函数的非对称密码算法"><span class="toc-number">1.</span> <span class="toc-text">基于单向函数的非对称密码算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#首先描述最最基础的单项函数"><span class="toc-number">1.1.</span> <span class="toc-text">首先描述最最基础的单项函数</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#基于单向函数可以做哪些事情"><span class="toc-number">1.2.</span> <span class="toc-text">基于单向函数可以做哪些事情</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#hint：所有基于单项函数实现的功能，其安全强度都是所使用的单向函数的安全强度"><span class="toc-number">1.2.1.</span> <span class="toc-text">hint：所有基于单项函数实现的功能，其安全强度都是所使用的单向函数的安全强度</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#公钥密码算法概览以及变动"><span class="toc-number">1.3.</span> <span class="toc-text">公钥密码算法概览以及变动</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#关于数据真实性的那些事——Hash-MAC-DS"><span class="toc-number">2.</span> <span class="toc-text">关于数据真实性的那些事——Hash,MAC,DS</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash"><span class="toc-number">2.1.</span> <span class="toc-text">Hash</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MAC"><span class="toc-number">2.2.</span> <span class="toc-text">MAC</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Digatal-Signature"><span class="toc-number">2.3.</span> <span class="toc-text">Digatal Signature</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#密钥分配方案与CA证书"><span class="toc-number">3.</span> <span class="toc-text">密钥分配方案与CA证书</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#对称加密的分配方案以及安全性"><span class="toc-number">3.1.</span> <span class="toc-text">对称加密的分配方案以及安全性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#非对称加密的安全性"><span class="toc-number">3.2.</span> <span class="toc-text">非对称加密的安全性</span></a></li></ol></li></ol>
+</div>
+<input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
+
+<script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script>
+    var valueHide = "隐藏目录";
+    var valueShow = "显示目录";
+
+    if ($(".left-col").is(":hidden")) {
+        $("#tocButton").attr("value", valueShow);
+    }
+    $("#tocButton").click(function() {
+        if ($("#toc").is(":hidden")) {
+            $("#tocButton").attr("value", valueHide);
+            $("#toc").slideDown(320);
+        }
+        else {
+            $("#tocButton").attr("value", valueShow);
+            $("#toc").slideUp(350);
+        }
+    })
+    if ($(".toc").length < 1) {
+        $("#toc, #tocButton").hide();
+    }
+</script>
+
+
+
+
+
+<div class="bdsharebuttonbox">
+	<a href="#" class="fx fa-weibo bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+	<a href="#" class="fx fa-weixin bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+	<a href="#" class="fx fa-qq bds_sqq" data-cmd="sqq" title="分享到QQ好友"></a>
+	<a href="#" class="fx fa-facebook-official bds_fbook" data-cmd="fbook" title="分享到Facebook"></a>
+	<a href="#" class="fx fa-twitter bds_twi" data-cmd="twi" title="分享到Twitter"></a>
+	<a href="#" class="fx fa-linkedin bds_linkedin" data-cmd="linkedin" title="分享到linkedin"></a>
+	<a href="#" class="fx fa-files-o bds_copy" data-cmd="copy" title="分享到复制网址"></a>
+</div>
+<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"2","bdSize":"24"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+
+
+
+
+    
+      <div class="duoshuo" id="comments">
+    <!-- 多说评论框 start -->
+    <div class="ds-thread" data-thread-key="2017/04/26/密码学结课后的一些想法以及总结(下)/" data-title="密码学结课后的一些想法以及总结（下）" data-url="https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/"></div>
+    <!-- 多说评论框 end -->
+    <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+    <script type="text/javascript">
+    var duoshuoQuery = {short_name:"null"};
+    (function() {
+        var ds = document.createElement('script');
+        ds.type = 'text/javascript';ds.async = true;
+        ds.src = '/js/embed.js';
+        ds.charset = 'UTF-8';
+        (document.getElementsByTagName('head')[0] 
+         || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+    </script>
+    <!-- 多说公共JS代码 end -->
+</div>
+
+    
+
+
+
+    <div class="scroll" id="post-nav-button">
+        
+            <a href="/2017/04/19/PHP弱类型转化的漏洞/" title="上一篇: PHP中弱类型的转化漏洞">
+                <i class="fa fa-angle-left"></i>
+            </a>
+        
+        <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
+        
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+        
+    </div>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/密码学结课后的一些想法以及总结(下)/">密码学结课后的一些想法以及总结（下）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+    <script>
+        $(".post-list").addClass("toc-article");
+        $(".post-list-item a").attr("target","_blank");
+        $("#post-nav-button > a:nth-child(2)").click(function() {
+            $(".fa-bars, .fa-times").toggle();
+            $(".post-list").toggle(300);
+            if ($(".toc").length > 0) {
+                $("#toc, #tocButton").toggle(200, function() {
+                    if ($(".switch-area").is(":visible")) {
+                        $("#tocButton").attr("value", valueHide);
+                        }
+                    })
+            }
+            else {
+            }
+        })
+    </script>
+
+
+
+    <script>
+        
+    </script>
+</div>
+      <footer id="footer">
+    <div class="outer">
+        <div id="footer-info">
+            <div class="footer-left">
+                &copy; 2017 Yiruma
+            </div>
+            <div class="footer-right">
+                <a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/luuman/hexo-theme-spfk" target="_blank">spfk</a> by luuman
+            </div>
+        </div>
+        
+            <div class="visit">
+                
+                    <span id="busuanzi_container_site_pv" style='display:none'>
+                        <span id="site-visit" >到访数: 
+                            <span id="busuanzi_value_site_uv"></span>
+                        </span>
+                    </span>
+                
+                
+                    <span>, </span>
+                
+                
+                    <span id="busuanzi_container_page_pv" style='display:none'>
+                        <span id="page-visit">本页阅读量: 
+                            <span id="busuanzi_value_page_pv"></span>
+                        </span>
+                    </span>
+                
+            </div>
+        
+    </div>
+</footer>
+
+    </div>
+    <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
+<script src="/js/main.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            var backgroundnum = 24;
+            var backgroundimg = "url(/background/bg-x.jpg)".replace(/x/gi, Math.ceil(Math.random() * backgroundnum));
+            $("#mobile-nav").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+            $(".left-col").css({"background-image": backgroundimg,"background-size": "cover","background-position": "center"});
+        })
+    </script>
+
+
+
+
+
+<div class="scroll" id="scroll">
+    <a href="#"><i class="fa fa-arrow-up"></i></a>
+    <a href="#comments"><i class="fa fa-comments-o"></i></a>
+    <a href="#footer"><i class="fa fa-arrow-down"></i></a>
+</div>
+<script>
+    $(document).ready(function() {
+        if ($("#comments").length < 1) {
+            $("#scroll > a:nth-child(2)").hide();
+        };
+    })
+</script>
+
+<script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js">
+</script>
+
+  <script language="javascript">
+    $(function() {
+        $("a[title]").each(function() {
+            var a = $(this);
+            var title = a.attr('title');
+            if (title == undefined || title == "") return;
+            a.data('title', title).removeAttr('title').hover(
+
+            function() {
+                var offset = a.offset();
+                $("<div id=\"anchortitlecontainer\"></div>").appendTo($("body")).html(title).css({
+                    top: offset.top - a.outerHeight() - 15,
+                    left: offset.left + a.outerWidth()/2 + 1
+                }).fadeIn(function() {
+                    var pop = $(this);
+                    setTimeout(function() {
+                        pop.remove();
+                    }, pop.text().length * 800);
+                });
+            }, function() {
+                $("#anchortitlecontainer").remove();
+            });
+        });
+    });
+</script>
+
+
+  </div>
+</body>
+</html>
