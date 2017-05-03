@@ -5,17 +5,17 @@
   
   <title>文件上传漏洞 | Yiruma</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="##服务器解析问题的漏洞  在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行 在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测（说实话没见过），文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文">
+  <meta name="description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文件上传漏洞">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/02/文件上传漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="##服务器解析问题的漏洞  在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行 在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测（说实话没见过），文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文">
-<meta property="og:updated_time" content="2017-05-02T13:55:37.400Z">
+<meta property="og:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
+<meta property="og:updated_time" content="2017-05-03T02:11:44.092Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传漏洞">
-<meta name="twitter:description" content="##服务器解析问题的漏洞  在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行 在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测（说实话没见过），文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文">
+<meta name="twitter:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
   
     <link rel="alternative" href="/atom.xml" title="Yiruma" type="application/atom+xml">
   
@@ -253,23 +253,27 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>##服务器解析问题的漏洞</p>
-<ul>
+        <ul>
+<li>服务器解析问题的漏洞</li>
+<li>文件名的正则检测漏洞</li>
+<li>其他的检测方式</li>
+<li>利用其他思路上传shell</li>
+</ul>
+<a id="more"></a>
+<h2 id="服务器解析问题的漏洞"><a href="#服务器解析问题的漏洞" class="headerlink" title="服务器解析问题的漏洞"></a>服务器解析问题的漏洞</h2><ol>
 <li>在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行</li>
 <li>在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测<em>（说实话没见过）</em>，文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文件系统时会把00忽略所以相当于获得了文件test.jpg.php  <em>(容易和00截断弄混)</em></li>
 <li>老版本的IIS中，存在;漏洞，IIS在解析文件名的时候可能将分号后面的内容丢弃，那么test.asp;jpg如果可以绕过的话就能够执行</li>
 <li>老版本的IIS中，如果网站目录/.asp/下的所有内容都将作为asp脚本来解析</li>
-</ul>
-<p>##文件名的正则检测漏洞</p>
-<ul>
+</ol>
+<h2 id="文件名的正则检测漏洞"><a href="#文件名的正则检测漏洞" class="headerlink" title="文件名的正则检测漏洞"></a>文件名的正则检测漏洞</h2><ol>
 <li>00截断，形如test.php%00.jpg的文件属于正常后缀能够通过检测，而文件系统读取文件时会有00截断，因此相当于得到了文件test.php</li>
 <li>因为是正则表达式，所以可以尝试以下写法能否绕过并被php解释器执行<blockquote>
 <p>test.PhP<br>test.php3 test.php4</p>
 </blockquote>
 </li>
-</ul>
-<p>##其他的检测方式</p>
-<ul>
+</ol>
+<h2 id="其他的检测方式"><a href="#其他的检测方式" class="headerlink" title="其他的检测方式"></a>其他的检测方式</h2><ul>
 <li>HTTP协议规定了上传资源的时候在Header中加上一项文件的MIMETYPE，类型的判断是由浏览器完成的，结果即为HTTP头中的Content-Type，使用burp拦截后修改为image/jpeg 或 text/plain 等即可</li>
 <li>后端再验证文件格式，可以为php文件加上相应的幻术头来通过检测，一般加GIF的，因为这个直接加文本<code>GIF89a</code>即可</li>
 </ul>
@@ -400,10 +404,9 @@
 </tr>
 </tbody>
 </table>
-<p>##利用其他思路上传shell</p>
-<ul>
+<h2 id="利用其他思路上传shell"><a href="#利用其他思路上传shell" class="headerlink" title="利用其他思路上传shell"></a>利用其他思路上传shell</h2><ol>
 <li>通过apache日志上传shell <em>主要是需要文件包含漏洞</em><br>使用telnet来构造包含一句话的http请求头，之后文件包含C:\wamp\logs\access.log即可以执行shell</li>
-</ul>
+</ol>
 
       
       
@@ -461,7 +464,7 @@
         <p><span>本文标题:</span><a href="/2017/05/02/文件上传漏洞/">文件上传漏洞</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年05月02日 - 20时03分</p>
-        <p><span>最后更新:</span>2017年05月02日 - 21时55分</p>
+        <p><span>最后更新:</span>2017年05月03日 - 10时11分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/05/02/文件上传漏洞/" title="文件上传漏洞">https://someonesometimes.github.io/2017/05/02/文件上传漏洞/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/05/02/文件上传漏洞/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -494,7 +497,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#服务器解析问题的漏洞"><span class="toc-number">1.</span> <span class="toc-text">服务器解析问题的漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#文件名的正则检测漏洞"><span class="toc-number">2.</span> <span class="toc-text">文件名的正则检测漏洞</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#其他的检测方式"><span class="toc-number">3.</span> <span class="toc-text">其他的检测方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#利用其他思路上传shell"><span class="toc-number">4.</span> <span class="toc-text">利用其他思路上传shell</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
