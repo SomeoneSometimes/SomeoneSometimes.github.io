@@ -219,6 +219,211 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="post-文件上传漏洞" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/05/02/文件上传漏洞/" class="article-date">
+      <time datetime="2017-05-02T12:03:25.000Z" itemprop="datePublished">2017-05-02</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/02/文件上传漏洞/">文件上传漏洞</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+        <p>##服务器解析问题的漏洞</p>
+<ul>
+<li>在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行</li>
+<li>在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测<em>（说实话没见过）</em>，文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文件系统时会把00忽略所以相当于获得了文件test.jpg.php  <em>(容易和00截断弄混)</em></li>
+<li>老版本的IIS中，存在;漏洞，IIS在解析文件名的时候可能将分号后面的内容丢弃，那么test.asp;jpg如果可以绕过的话就能够执行</li>
+<li>老版本的IIS中，如果网站目录/.asp/下的所有内容都将作为asp脚本来解析</li>
+</ul>
+<p>##文件名的正则检测漏洞</p>
+<ul>
+<li>00截断，形如test.php%00.jpg的文件属于正常后缀能够通过检测，而文件系统读取文件时会有00截断，因此相当于得到了文件test.php</li>
+<li>因为是正则表达式，所以可以尝试以下写法能否绕过并被php解释器执行<blockquote>
+<p>test.PhP<br>test.php3 test.php4</p>
+</blockquote>
+</li>
+</ul>
+<p>##其他的检测方式</p>
+<ul>
+<li>HTTP协议规定了上传资源的时候在Header中加上一项文件的MIMETYPE，类型的判断是由浏览器完成的，结果即为HTTP头中的Content-Type，使用burp拦截后修改为image/jpeg 或 text/plain 等即可</li>
+<li>后端再验证文件格式，可以为php文件加上相应的幻术头来通过检测，一般加GIF的，因为这个直接加文本<code>GIF89a</code>即可</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>格式</th>
+<th style="text-align:center">文件头</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GIF</td>
+<td style="text-align:center">GIF89a  对应二进制为474946383961</td>
+</tr>
+<tr>
+<td>JPG</td>
+<td style="text-align:center">FFD8FFE000104A464946</td>
+</tr>
+<tr>
+<td>PNG</td>
+<td style="text-align:center">89504E47</td>
+</tr>
+<tr>
+<td>TIFF (tif)</td>
+<td style="text-align:center">49492A00</td>
+</tr>
+<tr>
+<td>Windows Bitmap (bmp)</td>
+<td style="text-align:center">424D</td>
+</tr>
+<tr>
+<td>CAD (dwg)</td>
+<td style="text-align:center">41433130</td>
+</tr>
+<tr>
+<td>Adobe Photoshop (psd)</td>
+<td style="text-align:center">38425053</td>
+</tr>
+<tr>
+<td>Rich Text Format (rtf)</td>
+<td style="text-align:center">7B5C727466</td>
+</tr>
+<tr>
+<td>MS Word/Excel (xls.or.doc)</td>
+<td style="text-align:center">D0CF11E0</td>
+</tr>
+<tr>
+<td>MS Access (mdb)</td>
+<td style="text-align:center">5374616E64617264204A</td>
+</tr>
+<tr>
+<td>ZIP Archive (zip)，</td>
+<td style="text-align:center">504B0304</td>
+</tr>
+<tr>
+<td>RAR Archive (rar)，</td>
+<td style="text-align:center">52617221</td>
+</tr>
+<tr>
+<td>Wave (wav)，</td>
+<td style="text-align:center">57415645</td>
+</tr>
+<tr>
+<td>AVI (avi)，</td>
+<td style="text-align:center">41564920</td>
+</tr>
+<tr>
+<td>Real Media (rm)，</td>
+<td style="text-align:center">2E524D46</td>
+</tr>
+<tr>
+<td>MPEG (mpg)，</td>
+<td style="text-align:center">000001BA</td>
+</tr>
+<tr>
+<td>MPEG (mpg)，</td>
+<td style="text-align:center">000001B3</td>
+</tr>
+<tr>
+<td>Quicktime (mov)，</td>
+<td style="text-align:center">6D6F6F76</td>
+</tr>
+<tr>
+<td>Adobe Acrobat (pdf)，</td>
+<td style="text-align:center">255044462D312E</td>
+</tr>
+<tr>
+<td>Windows Media (asf)，</td>
+<td style="text-align:center">3026B2758E66CF11</td>
+</tr>
+<tr>
+<td>MIDI (mid)，</td>
+<td style="text-align:center">4D546864</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>通过.htaccess文件进行的限制，相应的可以使用.htaccess覆盖的方式来进行反制，书写并上传.htaccess文件即可</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>.htaccess语法</th>
+<th style="text-align:center">作用</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>AddType application/x-httpd-php .txt</code></td>
+<td style="text-align:center">将.txt文件使用php解释器执行</td>
+</tr>
+<tr>
+<td><code>AddType text/plain .pl .py .php</code></td>
+<td style="text-align:center">将以上后缀名的文件以纯文本的形式展示出来</td>
+</tr>
+<tr>
+<td><code>&lt;FilesMatch &quot;\.(php)$&quot;&gt; ForceType text/plain &lt;/FilesMatch&gt;</code></td>
+<td style="text-align:center">强行让apache将文件识别为你指定的类型</td>
+</tr>
+<tr>
+<td><code>&lt;Files ^(*.jpeg)&gt;order deny,allow deny from all&lt;/Files&gt;</code></td>
+<td style="text-align:center">使得该文件夹里面只有图片扩展名的文件才可以被访问，其他类型都是拒绝访问</td>
+</tr>
+<tr>
+<td><code>Options -ExecCGI AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi</code></td>
+<td style="text-align:center">以上几种类型的文件被访问的时候，会返回403 Forbidden的错误</td>
+</tr>
+</tbody>
+</table>
+<p>##利用其他思路上传shell</p>
+<ul>
+<li>通过apache日志上传shell <em>主要是需要文件包含漏洞</em><br>使用telnet来构造包含一句话的http请求头，之后文件包含C:\wamp\logs\access.log即可以执行shell</li>
+</ul>
+
+      
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-密码学结课后的一些想法以及总结(下)" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
