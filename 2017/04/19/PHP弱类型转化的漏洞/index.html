@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="官方文档中的几句话已经说的很清楚了 在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
-<meta property="og:updated_time" content="2017-05-06T05:53:21.485Z">
+<meta property="og:updated_time" content="2017-05-06T05:55:14.059Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP中弱类型的转化漏洞">
 <meta name="twitter:description" content="官方文档中的几句话已经说的很清楚了 在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
@@ -262,7 +262,7 @@
 <p><br></p>
 <h2 id="php弱类型漏洞的应用场景"><a href="#php弱类型漏洞的应用场景" class="headerlink" title="php弱类型漏洞的应用场景"></a>php弱类型漏洞的应用场景</h2><ul>
 <li>在使用==时，php会对不同类型进行转化后再比较</li>
-<li><p>+类型的运算的结果都是数值型的，如果参数有字符型的话，就按照上述的转换方式来转换</p>
+<li><p>类型的运算的结果都是数值型的，如果参数有字符型的话，就按照上述的转换方式来转换</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&apos;flagpig&apos;+1 = 1</div><div class="line">&apos;11zip&apos;+1=12</div><div class="line">&apos;0&apos;+&apos;1&apos;+&apos;0&apos;=1</div><div class="line">&apos;xie&apos;+&apos;fei&apos;=0</div></pre></td></tr></table></figure>
 </li>
 <li><p>待补充</p>
@@ -335,7 +335,7 @@
         <p><span>本文标题:</span><a href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年04月19日 - 23时15分</p>
-        <p><span>最后更新:</span>2017年05月06日 - 13时53分</p>
+        <p><span>最后更新:</span>2017年05月06日 - 13时55分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/04/19/PHP弱类型转化的漏洞/" title="PHP中弱类型的转化漏洞">https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
