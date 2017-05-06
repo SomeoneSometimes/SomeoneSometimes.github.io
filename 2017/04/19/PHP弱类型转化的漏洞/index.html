@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="官方文档中的几句话已经说的很清楚了 在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
-<meta property="og:updated_time" content="2017-05-03T02:03:41.981Z">
+<meta property="og:updated_time" content="2017-05-06T05:44:24.408Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP中弱类型的转化漏洞">
 <meta name="twitter:description" content="官方文档中的几句话已经说的很清楚了 在==中，数值和字符串的比较或者比较涉及到数字内容的字符串，则字符串会被转换为数值并且比较按照数值来进行。当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对对了，这些规则经过测试，在mysql的比较中是一样一样的">
@@ -273,6 +273,7 @@
 <li>记得有一道数据库的题目，可以使用where “xie”=”meng”=”fei”来实现判断</li>
 <li>两个数值的相等判断，可以使用幂的表示方法：<code>0e123==0e456</code></li>
 <li>返回结果==false时，因为0==false，除0外的所有数字==true，这样可能实现绕过。但如果是使用返回结果===false时，就没法伪造返回结果为数字，因为此时要求比较的类型也是相同的，只有真正的返回结果可以做到</li>
+<li><strong>利用’0’+’1’的结果是数值型,这种利用可以用在mysql注入中，这样可以把预定的sex=’xx’转化为sex=数值型对象，接下来就是判断中类型转化的原理了</strong><br>应用：sex=’0’+’1’+’0’ 第一个0用于闭合句式中的前引号，最后一个0用于闭合句式中的后引号，中间的将用于盲注，是0是1将影响输出结果  本题将有两个结果：sex=0 or sex=1 产生两种不同情况以作为盲注判断条件</li>
 </ul>
 
       
@@ -331,7 +332,7 @@
         <p><span>本文标题:</span><a href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年04月19日 - 23时15分</p>
-        <p><span>最后更新:</span>2017年05月03日 - 10时03分</p>
+        <p><span>最后更新:</span>2017年05月06日 - 13时44分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/04/19/PHP弱类型转化的漏洞/" title="PHP中弱类型的转化漏洞">https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
