@@ -5,17 +5,17 @@
   
   <title>文件上传漏洞 | Yiruma</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell  服务器解析问题的漏洞">
+  <meta name="description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文件上传漏洞">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/02/文件上传漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell  服务器解析问题的漏洞">
-<meta property="og:updated_time" content="2017-05-03T08:46:21.060Z">
+<meta property="og:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
+<meta property="og:updated_time" content="2017-05-06T05:45:39.359Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传漏洞">
-<meta name="twitter:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell  服务器解析问题的漏洞">
+<meta name="twitter:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
   
     <link rel="alternative" href="/atom.xml" title="Yiruma" type="application/atom+xml">
   
@@ -259,8 +259,8 @@
 <li>其他的检测方式</li>
 <li>利用其他思路上传shell</li>
 </ul>
-<h2 id="服务器解析问题的漏洞"><a href="#服务器解析问题的漏洞" class="headerlink" title="服务器解析问题的漏洞"></a>服务器解析问题的漏洞</h2><a id="more"></a>
-<ol>
+<a id="more"></a>
+<h2 id="服务器解析问题的漏洞"><a href="#服务器解析问题的漏洞" class="headerlink" title="服务器解析问题的漏洞"></a>服务器解析问题的漏洞</h2><ol>
 <li>在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行</li>
 <li>在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测<em>（说实话没见过）</em>，文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文件系统时会把00忽略所以相当于获得了文件test.jpg.php  <em>(容易和00截断弄混)</em></li>
 <li>老版本的IIS中，存在;漏洞，IIS在解析文件名的时候可能将分号后面的内容丢弃，那么test.asp;jpg如果可以绕过的话就能够执行</li>
@@ -464,7 +464,7 @@
         <p><span>本文标题:</span><a href="/2017/05/02/文件上传漏洞/">文件上传漏洞</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年05月02日 - 20时03分</p>
-        <p><span>最后更新:</span>2017年05月03日 - 16时46分</p>
+        <p><span>最后更新:</span>2017年05月06日 - 13时45分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/05/02/文件上传漏洞/" title="文件上传漏洞">https://someonesometimes.github.io/2017/05/02/文件上传漏洞/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/05/02/文件上传漏洞/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
