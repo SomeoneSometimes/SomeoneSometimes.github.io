@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
-<meta property="og:updated_time" content="2017-05-12T06:22:45.909Z">
+<meta property="og:updated_time" content="2017-05-12T07:32:15.617Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP文件包含的利用思路">
 <meta name="twitter:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
@@ -255,8 +255,8 @@
           
         <p>PHP的文件包含函数有两类，分三种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">file_get_contents() </div><div class="line">include()/include_once()  require/require_once()</div></pre></td></tr></table></figure></p>
 <p>第一种用于获取文件的数据，第二种用于包含并执行文件代码<br><a id="more"></a></p>
-<h2 id="file-get-contents"><a href="#file-get-contents" class="headerlink" title="file_get_contents()"></a>file_get_contents()</h2><p>这个函数经常用于获取文件内容，尤其是php文件的代码，配合伪协议中的元封装器php://filter/convert.base64-encode/resource=class.php<br>几乎已经成了公认的文件获取姿势<br>顺便说一句，刚测试的print file_get_contents(“test2.php”)貌似是被禁止了，php类型的文件无法产生任何回显</p>
-<p>##include() / require()<br><strong>首先说下两者的唯一不同</strong></p>
+<h3 id="file-get-contents"><a href="#file-get-contents" class="headerlink" title="file_get_contents()"></a>file_get_contents()</h3><p>这个函数经常用于获取文件内容，尤其是php文件的代码，配合伪协议中的元封装器php://filter/convert.base64-encode/resource=class.php<br>几乎已经成了公认的文件获取姿势<br>顺便说一句，刚测试的print file_get_contents(“test2.php”)貌似是被禁止了，php类型的文件无法产生任何回显</p>
+<h3 id="include-require"><a href="#include-require" class="headerlink" title="include() / require()"></a>include() / require()</h3><p><strong>首先说下两者的唯一不同</strong></p>
 <ol>
 <li>include是当代码执行到它的时候才加载文件,发生错误的时候只是给一个警告,然后继续往下执行</li>
 <li>require是只要程序一执行就会立即调用文件,发生错误的时候会输出错误信息,并且终止脚本的运行</li>
@@ -345,7 +345,7 @@
         <p><span>本文标题:</span><a href="/2017/05/11/PHP文件包含的利用思路/">PHP文件包含的利用思路</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年05月11日 - 21时54分</p>
-        <p><span>最后更新:</span>2017年05月12日 - 14时22分</p>
+        <p><span>最后更新:</span>2017年05月12日 - 15时32分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/05/11/PHP文件包含的利用思路/" title="PHP文件包含的利用思路">https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -378,7 +378,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#file-get-contents"><span class="toc-number">1.</span> <span class="toc-text">file_get_contents()</span></a></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#file-get-contents"><span class="toc-number">1.</span> <span class="toc-text">file_get_contents()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#include-require"><span class="toc-number">2.</span> <span class="toc-text">include() / require()</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
