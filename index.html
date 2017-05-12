@@ -219,6 +219,210 @@
 </nav>
       <div class="body-wrap">
   
+    <article id="w-PHP文件包含的利用思路" class="article article-type-w" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/05/11/PHP文件包含的利用思路/" class="article-date">
+      <time datetime="2017-05-11T13:54:08.000Z" itemprop="datePublished">2017-05-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/11/PHP文件包含的利用思路/">PHP文件包含的利用思路</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>PHP的文件包含函数有两类，分三种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">file_get_contents() </div><div class="line">include()/include_once()  require/require_once()</div></pre></td></tr></table></figure></p>
+<p>第一种用于获取文件的数据，第二种用于包含并执行文件代码<br>
+          
+      
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+        <p class="article-more-link">
+          <a  href="/2017/05/11/PHP文件包含的利用思路/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-PHP伪协议" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/05/11/PHP伪协议/" class="article-date">
+      <time datetime="2017-05-11T13:53:23.000Z" itemprop="datePublished">2017-05-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/11/PHP伪协议/">PHP伪协议</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p>伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议</p>
+<blockquote>
+<p><strong>伪协议可以分为以下几类：</strong></p>
+<ul>
+<li>生成数据流<ul>
+<li>php://input</li>
+<li>data://text/plain;base64,base64编码字符串</li>
+</ul>
+</li>
+<li>数据流过滤器<ul>
+<li>php://filter/convert.base64-encode/resource=xxx</li>
+<li>php://filter/convert.base64-decode/resource=xxx</li>
+<li>phar://</li>
+<li>zip://</li>
+</ul>
+</li>
+<li>远程文件访问<ul>
+<li>http://</li>
+<li>ftp://</li>
+</ul>
+</li>
+<li>本地文件访问<ul>
+<li>file:///</li>
+</ul>
+</li>
+</ul>
+</blockquote>
+          
+      
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+        <p class="article-more-link">
+          <a  href="/2017/05/11/PHP伪协议/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
+    <article id="post-CTF中getshell的统计" class="article article-type-post" itemscope itemprop="blogPost">
+  
+    <div class="article-meta">
+      <a href="/2017/05/11/CTF中getshell的统计/" class="article-date">
+      <time datetime="2017-05-11T12:42:41.000Z" itemprop="datePublished">2017-05-11</time>
+</a>
+    </div>
+  
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/05/11/CTF中getshell的统计/">CTF中getshell的统计</a>
+    </h1>
+  
+
+      </header>
+      
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+          
+              <p><strong>CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧</strong></p>
+          
+      
+      
+    </div>
+    
+    <div class="article-info article-info-index">
+      
+      
+
+      
+      
+        <p class="article-more-link">
+          <a  href="/2017/05/11/CTF中getshell的统计/#more">阅读全文 >></a>
+        </p>
+      
+      <div class="clearfix"></div>
+    </div>
+    
+  </div>
+  
+</article>
+
+
+
+
+
+
+
+
+
+  
     <article id="post-XXE学习笔记" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">

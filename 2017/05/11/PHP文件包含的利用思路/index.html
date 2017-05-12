@@ -3,19 +3,19 @@
 <head>
   <meta charset="utf-8">
   
-  <title>Hello World | Yiruma</title>
+  <title>PHP文件包含的利用思路 | Yiruma</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+  <meta name="description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/04/14/hello-world/index.html">
+<meta property="og:title" content="PHP文件包含的利用思路">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
-<meta property="og:updated_time" content="2017-04-14T03:49:18.941Z">
+<meta property="og:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
+<meta property="og:updated_time" content="2017-05-12T06:22:45.909Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta name="twitter:title" content="PHP文件包含的利用思路">
+<meta name="twitter:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
   
     <link rel="alternative" href="/atom.xml" title="Yiruma" type="application/atom+xml">
   
@@ -219,11 +219,11 @@
         </header>                
     </div>
 </nav>
-      <div class="body-wrap"><article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="w-PHP文件包含的利用思路" class="article article-type-w" itemscope itemprop="blogPost">
   
     <div class="article-meta">
-      <a href="/2017/04/14/hello-world/" class="article-date">
-      <time datetime="2017-04-14T03:12:43.171Z" itemprop="datePublished">2017-04-14</time>
+      <a href="/2017/05/11/PHP文件包含的利用思路/" class="article-date">
+      <time datetime="2017-05-11T13:54:08.000Z" itemprop="datePublished">2017-05-11</time>
 </a>
     </div>
   
@@ -236,7 +236,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Hello World
+      PHP文件包含的利用思路
     </h1>
   
 
@@ -253,15 +253,41 @@
     <div class="article-entry" itemprop="articleBody">
       
           
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.<br><a id="more"></a></p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>PHP的文件包含函数有两类，分三种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">file_get_contents() </div><div class="line">include()/include_once()  require/require_once()</div></pre></td></tr></table></figure></p>
+<p>第一种用于获取文件的数据，第二种用于包含并执行文件代码<br><a id="more"></a></p>
+<h2 id="file-get-contents"><a href="#file-get-contents" class="headerlink" title="file_get_contents()"></a>file_get_contents()</h2><p>这个函数经常用于获取文件内容，尤其是php文件的代码，配合伪协议中的元封装器php://filter/convert.base64-encode/resource=class.php<br>几乎已经成了公认的文件获取姿势<br>顺便说一句，刚测试的print file_get_contents(“test2.php”)貌似是被禁止了，php类型的文件无法产生任何回显</p>
+<p>##include() / require()<br><strong>首先说下两者的唯一不同</strong></p>
+<ol>
+<li>include是当代码执行到它的时候才加载文件,发生错误的时候只是给一个警告,然后继续往下执行</li>
+<li>require是只要程序一执行就会立即调用文件,发生错误的时候会输出错误信息,并且终止脚本的运行</li>
+</ol>
+<p><strong>这种文件包含利用的目的无外乎以下几种：</strong></p>
+<ul>
+<li>包含shell代码文件（自己上传的，写的等各种方式），使代码具有php的执行环境</li>
+<li>包含使用伪协议自定的数据流，常用于写shell</li>
+<li>包含关键文件，获得该文件的输出结果与执行环境（就比如说关键文件中的变量引入）</li>
+<li>如果包含的不是php文件，就会输出</li>
+</ul>
+<p><strong>文件包含有许多种姿势，在这里做出统计</strong><br>1、包含日志文件</p>
+<p>2、包含form-data形式下php创建的临时文件</p>
+<p>3、包含session文件<br>session文件一般在/tmp目录下，格式为sess_[phpsessid]</p>
+<p>4、远程文件包含shell，这个在5.6下测试过了，php代码可以正常执行，但是不知为什么马运行不了，莫非是权限问题？？？好像记得ph师傅说过远程文件包含默认是禁用的。</p>
+<p>5、文件包含中可以使用伪协议的过滤器进行编解码</p>
+<p>6、文件包含函数的参数有固定的后缀<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$file = $_GET[&apos;file&apos;].&apos;.php&apos;;</div><div class="line">include($file);</div></pre></td></tr></table></figure></p>
+<p>考虑使用phar://或zip://伪协议来绕过</p>
+<p>7、文件包含函数参数有其他样式的后缀，</p>
+<pre><code>%00截断
+/etc/passwd%00
+(需要 magic_quotes_gpc=off，PHP小于5.3.4有效)
+
+ 路径长度截断：
+/etc/passwd/././././././.[…]/./././././.
+(php版本小于5.2.8(?)可以成功，linux需要文件名长于4096，windows需要长于256)
+
+点号截断：
+/boot.ini/………[…]…………
+(php版本小于5.2.8(?)可以成功，只适用windows，点号需要长于256)
+</code></pre><p>8、使用伪协议php://  data:// 构造输入流</p>
 
       
       
@@ -316,13 +342,13 @@
   
     
     <div class="copyright">
-        <p><span>本文标题:</span><a href="/2017/04/14/hello-world/">Hello World</a></p>
+        <p><span>本文标题:</span><a href="/2017/05/11/PHP文件包含的利用思路/">PHP文件包含的利用思路</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
-        <p><span>发布时间:</span>2017年04月14日 - 11时12分</p>
-        <p><span>最后更新:</span>2017年04月14日 - 11时49分</p>
+        <p><span>发布时间:</span>2017年05月11日 - 21时54分</p>
+        <p><span>最后更新:</span>2017年05月12日 - 14时22分</p>
         <p>
-            <span>原始链接:</span><a class="post-url" href="/2017/04/14/hello-world/" title="Hello World">https://someonesometimes.github.io/2017/04/14/hello-world/</a>
-            <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/14/hello-world/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
+            <span>原始链接:</span><a class="post-url" href="/2017/05/11/PHP文件包含的利用思路/" title="PHP文件包含的利用思路">https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/</a>
+            <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
             <script src="/js/clipboard.min.js"></script>
             <script> var clipboard = new Clipboard('.copy-path'); </script>
         </p>
@@ -335,11 +361,15 @@
 
 <nav id="article-nav">
   
-  
-    <a href="/2017/04/14/js的DOM操作/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">js的DOM操作</div>
-      <strong class="article-nav-caption">></strong>
+    <a href="/2017/05/11/PHP伪协议/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
+        
+          PHP伪协议
+        
+      </div>
     </a>
+  
   
 </nav>
 
@@ -348,7 +378,7 @@
 
     <div id="toc" class="toc-article">
     <strong class="toc-title">文章目录</strong>
-    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Quick-Start"><span class="toc-number">1.</span> <span class="toc-text">Quick Start</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Create-a-new-post"><span class="toc-number">1.1.</span> <span class="toc-text">Create a new post</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Run-server"><span class="toc-number">1.2.</span> <span class="toc-text">Run server</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Generate-static-files"><span class="toc-number">1.3.</span> <span class="toc-text">Generate static files</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Deploy-to-remote-sites"><span class="toc-number">1.4.</span> <span class="toc-text">Deploy to remote sites</span></a></li></ol></li></ol>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#file-get-contents"><span class="toc-number">1.</span> <span class="toc-text">file_get_contents()</span></a></li></ol>
 </div>
 <input type="button" id="tocButton" value="隐藏目录"  title="点击按钮隐藏或者显示文章目录">
 
@@ -396,7 +426,7 @@
     
       <div class="duoshuo" id="comments">
     <!-- 多说评论框 start -->
-    <div class="ds-thread" data-thread-key="2017/04/14/hello-world/" data-title="Hello World" data-url="https://someonesometimes.github.io/2017/04/14/hello-world/"></div>
+    <div class="ds-thread" data-thread-key="2017/05/11/PHP文件包含的利用思路/" data-title="PHP文件包含的利用思路" data-url="https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/"></div>
     <!-- 多说评论框 end -->
     <!-- 多说公共JS代码 start (一个网页只需插入一次) -->
     <script type="text/javascript">
@@ -419,13 +449,13 @@
 
     <div class="scroll" id="post-nav-button">
         
-            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
+            <a href="/2017/05/11/PHP伪协议/" title="上一篇: PHP伪协议">
+                <i class="fa fa-angle-left"></i>
+            </a>
         
         <a title="文章列表"><i class="fa fa-bars"></i><i class="fa fa-times"></i></a>
         
-            <a href="/2017/04/14/js的DOM操作/" title="下一篇: js的DOM操作">
-                <i class="fa fa-angle-right"></i>
-            </a>
+            <a href="/" title="回到主页"><i class="fa fa-home"></i></a>
         
     </div>
     <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/11/PHP文件包含的利用思路/">PHP文件包含的利用思路</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/11/PHP伪协议/">PHP伪协议</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/11/CTF中getshell的统计/">CTF中getshell的统计</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/07/XXE学习笔记/">XXE学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/02/文件上传漏洞/">文件上传漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/密码学结课后的一些想法以及总结(下)/">密码学结课后的一些想法以及总结（下）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>

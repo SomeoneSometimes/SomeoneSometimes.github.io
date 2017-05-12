@@ -12,7 +12,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。">
-<meta property="og:updated_time" content="2017-04-28T15:25:24.431Z">
+<meta property="og:updated_time" content="2017-05-08T06:31:36.807Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="密码学结课后的一些想法以及总结（下）">
 <meta name="twitter:description" content="断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。">
@@ -302,9 +302,9 @@
 </ul>
 <p><strong>现行的Hash函数</strong><br><strong>MD结构</strong><br><em>个人认为并不是MD结构被攻破了，可能只是MD5的那个盒函数找到了碰撞的方法，而且就算没有这种攻击方式，以MD5那2^60的长度也是可以实施攻击的，只是钟神上课演示的碰撞明显不是2^60的复杂度，应该采用了那种攻击方式</em></p>
 <ul>
-<li>MD5（输出长度为160bit，抗强碰撞攻击强度为80，强碰撞攻击的碰撞算法已经给出）</li>
-<li>SHA-1（输出长度为256bit，抗强碰撞攻击强度为128bit，未被攻破）</li>
-<li>SHA-512系列 （输出长度为不同的值：224、256、384、512）</li>
+<li>MD5（输出长度为128bit，抗强碰撞攻击强度为64bit，强碰撞攻击的碰撞算法已经给出）</li>
+<li>SHA-1（输出长度为160bit，抗强碰撞攻击强度为80bit，未被攻破）</li>
+<li>SHA2族 （输出长度为不同的值：SHA-224、SHA-256、SHA-384、SHA-512）</li>
 </ul>
 <p><strong>MD结构的劣势</strong></p>
 <ul>
@@ -312,7 +312,7 @@
 <li>只有吸收x，多次吸收完后最终结果即为hash值，这样输出长度就是固定的</li>
 <li>大概目前找到了MD5盒的攻击方式，其他MD结构的盒本身并没有找到攻击方式，上述问题是MD结构本身在应用中所存在的缺陷</li>
 </ul>
-<p><strong>Keccak结构</strong><br>目前就是SHA-3使用了这种结构<br>掌握SHA-3要注意以下几个方面：</p>
+<p><strong>Keccak结构</strong><br>SHA3族（SHA3-224、SHA3-256、SHA3-384、SHA3-512）<br>掌握SHA-3要注意以下几个方面：</p>
 <ul>
 <li>SHA-3根据不同的安全等级来确定它的输入长度也就是分块长度，具体是什么长度决定具有什么安全等级</li>
 <li>在消息分块入盒前，有详细的填充方案</li>
@@ -400,7 +400,7 @@
         <p><span>本文标题:</span><a href="/2017/04/26/密码学结课后的一些想法以及总结(下)/">密码学结课后的一些想法以及总结（下）</a></p>
         <p><span>文章作者:</span><a href="/" title="访问 Yiruma 的个人博客">Yiruma</a></p>
         <p><span>发布时间:</span>2017年04月26日 - 19时56分</p>
-        <p><span>最后更新:</span>2017年04月28日 - 23时25分</p>
+        <p><span>最后更新:</span>2017年05月08日 - 14时31分</p>
         <p>
             <span>原始链接:</span><a class="post-url" href="/2017/04/26/密码学结课后的一些想法以及总结(下)/" title="密码学结课后的一些想法以及总结（下）">https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/</a>
             <span class="copy-path" data-clipboard-text="原文: https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/　　作者: Yiruma" title="点击复制文章链接"><i class="fa fa-clipboard"></i></span>
@@ -520,7 +520,7 @@
             </a>
         
     </div>
-    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/07/XXE学习笔记/">XXE学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/02/文件上传漏洞/">文件上传漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/密码学结课后的一些想法以及总结(下)/">密码学结课后的一些想法以及总结（下）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
+    <ul class="post-list"><li class="post-list-item"><a class="post-list-link" href="/2017/05/11/PHP文件包含的利用思路/">PHP文件包含的利用思路</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/11/PHP伪协议/">PHP伪协议</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/11/CTF中getshell的统计/">CTF中getshell的统计</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/07/XXE学习笔记/">XXE学习笔记</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/05/02/文件上传漏洞/">文件上传漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/26/密码学结课后的一些想法以及总结(下)/">密码学结课后的一些想法以及总结（下）</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/19/PHP弱类型转化的漏洞/">PHP中弱类型的转化漏洞</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/js的DOM操作/">js的DOM操作</a></li><li class="post-list-item"><a class="post-list-link" href="/2017/04/14/hello-world/">Hello World</a></li></ul>
     <script src="https://7.url.cn/edu/jslib/comb/require-2.1.6,jquery-1.9.1.min.js"></script>
     <script>
         $(".post-list").addClass("toc-article");
