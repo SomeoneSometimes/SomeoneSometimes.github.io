@@ -1,0 +1,675 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="使用python已经有很长一段时间了，在比赛中python语言的简洁易懂性给了我很大的帮助。当对一项技能使用的熟练度到达一定程度的时候，就该重新入门了。本文章将长期保持更新，收集记录各种python黑魔法，努力使自己的代码变得更加pythonic！">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="优化 pythonic">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/05/28/优化-pythonic/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="使用python已经有很长一段时间了，在比赛中python语言的简洁易懂性给了我很大的帮助。当对一项技能使用的熟练度到达一定程度的时候，就该重新入门了。本文章将长期保持更新，收集记录各种python黑魔法，努力使自己的代码变得更加pythonic！">
+<meta property="og:updated_time" content="2017-05-28T09:04:23.345Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="优化 pythonic">
+<meta name="twitter:description" content="使用python已经有很长一段时间了，在比赛中python语言的简洁易懂性给了我很大的帮助。当对一项技能使用的熟练度到达一定程度的时候，就该重新入门了。本文章将长期保持更新，收集记录各种python黑魔法，努力使自己的代码变得更加pythonic！">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/05/28/优化-pythonic/"/>
+
+
+
+
+
+  <title>优化 pythonic | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Über
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            menu.link
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/28/优化-pythonic/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">优化 pythonic</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-28T13:12:11+08:00">
+                2017-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>使用python已经有很长一段时间了，在比赛中python语言的简洁易懂性给了我很大的帮助。当对一项技能使用的熟练度到达一定程度的时候，就该重新入门了。本文章将长期保持更新，收集记录各种python黑魔法，努力使自己的代码变得更加pythonic！<br><a id="more"></a></p>
+<p><strong>变量交换</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">a,b = b,a</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>对可变字符串不建议再使用temp = “(“+str(i)+”,”+str(j)+”)”的写法，给两种替换：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">temp = &quot;(&#123;x&#125;,&#123;y&#125;)&quot;.format(x=str(i), y=str(j))</div><div class="line">temp = &quot;(%(x),%(y))&quot; % &#123;&apos;x&apos;:str(i), &apos;y&apos;:str(j)&#125;</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>类似于C里面的三元操作符：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">X if X&lt;Y else Y</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>直接生成的列表（不是那种定义后一直要修改的）</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">fr = open(&quot;F://xie.txt&quot;)</div><div class="line">list = [i for i in fr.readlines()]</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>python装饰器</strong><br>作用就是为函数外加一层代码，可以用于日志记录，函数运行时间记录，对于不合适的函数进行代码补充等等场景<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">def runTime(tag = True):</div><div class="line">	if tag == True:</div><div class="line">		def _deco(func):</div><div class="line">			def wrapper(*args, **kwargs):</div><div class="line">				startTime = time.time()</div><div class="line">				retu = func(*args, **kwargs)</div><div class="line">				endTime = time.time()</div><div class="line">				print (&quot;RunTime is &#123;time&#125;&quot;.format(time=endTime-startTime))</div><div class="line">				return retu</div><div class="line">			return wrapper</div><div class="line">	else:</div><div class="line">		def _deco(func):</div><div class="line">			return func</div><div class="line">	return _deco	</div><div class="line"></div><div class="line">@runTime(True)</div><div class="line">def myFunc(path):</div><div class="line">	fr = open(path)</div><div class="line">	list = [i for i in fr.readlines]</div><div class="line"></div><div class="line">myFunc(&quot;F://xie.txt&quot;)</div></pre></td></tr></table></figure></p>
+<p><strong>@runTime(True)相当于：myFunc = runTime(True)(myFunc(path))</strong></p>
+<p><strong>调用逻辑为：</strong></p>
+<ol>
+<li>runTime(True) 返回_deco 因此等价于 _deco函数</li>
+<li>_deco(myFunc(path))返回wrapper 因此等价于 wrapper函数</li>
+<li>所以myFunc 等价于 执行逻辑之后的wrapper(path)函数</li>
+</ol>
+<p><strong>装饰器书写需要把握的重点是：</strong></p>
+<ul>
+<li>装饰器的本质是函数转换，经过@之后的那个函数其实最后都是变为装饰代码后的wrapper函数</li>
+<li>基本的函数转换方式就是在每层函数中定义个子函数，然后逻辑执行后return 子函数</li>
+</ul>
+<hr>
+<p><strong>python函数中的可变参数：</strong><br>其实实现原理很简单，def xie(<em>args, **kwargs)中的</em>args就相当于一个list， **kwargs就相当于一个dict，只是python为方便使用做出了进一步定义<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">def xie(farg, *args)</div><div class="line">xie(1, &apos;two&apos;, 3) ==&gt; xie(1, [&apos;two&apos;,3])</div><div class="line"></div><div class="line">def xie(farg, **kwargs)</div><div class="line">xie(1, url=&apos;/xss&apos;, method=&apos;get&apos;) ==&gt; xie(1, &#123;&quot;url&quot;:&apos;/xss&apos;, &apos;method&apos;:&apos;get&apos;&#125;)</div><div class="line"></div><div class="line">def xie(arg1, arg2, arg3)</div><div class="line">args = [2, 3]</div><div class="line">xie(1, *args) ==&gt; xie(1, 2, 3)</div><div class="line"></div><div class="line">def xie(arg1, arg2, arg3)</div><div class="line">kwargs = &#123;&apos;arg1&apos;:1, &apos;arg2&apos;:2, &apos;arg3&apos;:3&#125;</div><div class="line">xie(**kwargs) ==&gt; xie(1, 2, 3)</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>迭代器中使用计数模式</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">fr = open(&quot;F://xie.txt&quot;, &apos;r&apos;)</div><div class="line">for index, i in enumerate(fr.readlines(), 1):</div><div class="line">	print (&quot;&#123;index&#125;:&#123;i&#125;&quot;.format(index=index, i=i))</div></pre></td></tr></table></figure></p>
+<p>将迭代列表用enumerate对象封装，每次迭代值返回两个————index, data。<br>同时enumerate()的第二个参数用于指定index的起始值，默认为0</p>
+<hr>
+<p><strong>对于对象的迭代器遍历如果只是为了循环检测是否存在某种情况，可以这样写：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[row[1]==0 and row[2]!=&apos;Yes&apos; for row in rows]</div></pre></td></tr></table></figure></p>
+<p>之后使用any()  all() 函数做检测<br>any([1,0,0])列表中存在1即返回真      all([1,1,1])列表中全为真则返回真<br>因此具体可以这样写<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">any([row[1]==0 and row[2]!=&apos;Yes&apos; for row in rows])</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>之前对dict的操作认识太浅显，重新整理下dict操作</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">获取字典中的值，get()函数支持默认参数方法，在没有键值的时候使用默认参数</div><div class="line">dict.get(&apos;xie&apos;, &apos;fei&apos;)</div><div class="line"></div><div class="line">检测键是否存在,存在会返回对应的值，不存在会返回None</div><div class="line">dict.get(&apos;xie&apos;)</div><div class="line">另一种方法是在dict.keys()列表中寻找</div><div class="line"></div><div class="line">返回dict中的所有键：</div><div class="line">dict.keys()</div><div class="line"></div><div class="line">返回dict中所有值：</div><div class="line">dict.values()</div><div class="line"></div><div class="line">更新字典，也就是添加没有的键值对，为键对应的值改变的进行更新。类似于加运算吧</div><div class="line">dict.update(dict2)</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>使用defaultdict类型来进行遍历的结果记录</strong><br>在对遍历结果统计时经常使用dict类型来记录，但dict在这种情况下有个问题就是，如果是第一次引用一个键，dict[‘xie’] += 1就会出现问题，需要先dict[‘xie’] = 0,再dict[‘xie’] += 1，而defaultdict会在dict[]遇到新的键时为其分配指定的值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">from collections import defaultdict</div><div class="line"></div><div class="line">list = [1,2,3,4,5,6,3,4,2,1,8,6,5]</div><div class="line">dict = defaultdict(int)</div><div class="line">for i in list:</div><div class="line">	dict[i]+=1</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/11/PHP文件包含的利用思路/" rel="prev" title="PHP文件包含的利用思路">
+                PHP文件包含的利用思路 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+
+      <section class="site-overview sidebar-panel sidebar-panel-active">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">Tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
