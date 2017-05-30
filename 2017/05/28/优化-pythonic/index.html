@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/28/优化-pythonic/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="使用python已经有很长一段时间了，在比赛中python语言的简洁易懂性给了我很大的帮助。当对一项技能使用的熟练度到达一定程度的时候，就该重新入门了。本文章将长期保持更新，收集记录各种python黑魔法，努力使自己的代码变得更加pythonic！">
-<meta property="og:updated_time" content="2017-05-28T09:04:23.345Z">
+<meta property="og:updated_time" content="2017-05-28T11:06:32.904Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="优化 pythonic">
 <meta name="twitter:description" content="使用python已经有很长一段时间了，在比赛中python语言的简洁易懂性给了我很大的帮助。当对一项技能使用的熟练度到达一定程度的时候，就该重新入门了。本文章将长期保持更新，收集记录各种python黑魔法，努力使自己的代码变得更加pythonic！">
@@ -352,6 +352,19 @@
 <p><strong>之前对dict的操作认识太浅显，重新整理下dict操作</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">获取字典中的值，get()函数支持默认参数方法，在没有键值的时候使用默认参数</div><div class="line">dict.get(&apos;xie&apos;, &apos;fei&apos;)</div><div class="line"></div><div class="line">检测键是否存在,存在会返回对应的值，不存在会返回None</div><div class="line">dict.get(&apos;xie&apos;)</div><div class="line">另一种方法是在dict.keys()列表中寻找</div><div class="line"></div><div class="line">返回dict中的所有键：</div><div class="line">dict.keys()</div><div class="line"></div><div class="line">返回dict中所有值：</div><div class="line">dict.values()</div><div class="line"></div><div class="line">更新字典，也就是添加没有的键值对，为键对应的值改变的进行更新。类似于加运算吧</div><div class="line">dict.update(dict2)</div></pre></td></tr></table></figure></p>
 <hr>
 <p><strong>使用defaultdict类型来进行遍历的结果记录</strong><br>在对遍历结果统计时经常使用dict类型来记录，但dict在这种情况下有个问题就是，如果是第一次引用一个键，dict[‘xie’] += 1就会出现问题，需要先dict[‘xie’] = 0,再dict[‘xie’] += 1，而defaultdict会在dict[]遇到新的键时为其分配指定的值<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">from collections import defaultdict</div><div class="line"></div><div class="line">list = [1,2,3,4,5,6,3,4,2,1,8,6,5]</div><div class="line">dict = defaultdict(int)</div><div class="line">for i in list:</div><div class="line">	dict[i]+=1</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>更加健壮的python程序需要进行参数检查：</strong></p>
+<p>要检查的数据有：</p>
+<ol>
+<li>用户输出的数据</li>
+<li>从文件中解析出来的数据，如从网页中解析出来的数据，从txt中获取的数据</li>
+</ol>
+<p>需要在以下几个地方做参数检查：</p>
+<ol>
+<li>最初遇到这种参数时就做出了检查</li>
+<li>必须保证安全性关键的子函数，如果def download(url)</li>
+<li>检测函数中，经常会做切片分析检测，要防止越界</li>
+</ol>
 
       
     </div>
