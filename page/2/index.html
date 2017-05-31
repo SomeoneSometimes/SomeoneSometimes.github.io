@@ -90,17 +90,12 @@
 
 
 
-<meta name="description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
-<meta name="keywords">
-<meta property="og:type" content="article">
-<meta property="og:title" content="CTF中getshell的统计">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/CTF中getshell的统计/index.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Yiruma">
+<meta property="og:url" content="https://someonesometimes.github.io/page/2/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
-<meta property="og:updated_time" content="2017-05-12T07:34:50.952Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CTF中getshell的统计">
-<meta name="twitter:description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
+<meta name="twitter:title" content="Yiruma">
 
 
 
@@ -128,13 +123,13 @@
 
 
 
-  <link rel="canonical" href="https://someonesometimes.github.io/2017/05/11/CTF中getshell的统计/"/>
+  <link rel="canonical" href="https://someonesometimes.github.io/page/2/"/>
 
 
 
 
 
-  <title>CTF中getshell的统计 | Yiruma</title>
+  <title>Yiruma</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="">
@@ -160,7 +155,9 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <div class="container sidebar-position-left 
+   page-home 
+ ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -243,9 +240,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-
-  <div id="posts" class="posts-expand">
+  <section id="posts" class="posts-expand">
     
+      
 
   
 
@@ -254,7 +251,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/11/CTF中getshell的统计/">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/04/14/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yiruma">
@@ -271,7 +268,9 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">CTF中getshell的统计</h1>
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/04/14/hello-world/" itemprop="url">Hello World</a></h1>
         
 
         <div class="post-meta">
@@ -283,8 +282,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-11T20:42:41+08:00">
-                2017-05-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-14T11:12:43+08:00">
+                2017-04-14
               </time>
             
 
@@ -318,68 +317,28 @@
       
 
       
-        <p><strong>CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧</strong></p>
-<a id="more"></a>
-<p>1、在BCTF中的paint题目里面，从一个指定url的文件上传，考虑是使用命令行的方式，通过包含xss来看其http头的访问形式，判定使用的curl命令，因此考虑是命令注入的漏洞，成功进行命令注入后即getshell</p>
-<p>2、exec(“/bin/hence “ . $shell);php中直接有了这样的函数，但是命令执行因有前缀遇到问题，通过%0a进行命令注入（因为其他的符号都被过滤了<code>preg_match(&#39;/^\w+$/&#39;, $shell[$i])</code>），<br>之后使用tar打包文件之后下载或使用wget一个新的马的方式</p>
-<p>3、有个就给出了eval()函数，但是限制命令长度，基本无法使用命令远程getshell，考虑echo ‘’&gt; xx的形式来直接写一个shell，最终考虑的方案是使用echo ls &gt; xx来靠文件名来写shell</p>
-<p>4、leavesong中也是一个限制命令长度的题目，使用的方法是：</p>
-<p>5、在HBCTF里面的一个web题目，盲注得到shell重命名后的名字，然后因为是以文件包含的形式getshell,可以使用部分伪协议，所以在文件上传的时候就容易了很多，直接使用phar://的思路就可以</p>
-<p>6、有一题目通过上传.htaccess文件来为文本配置执行环境为php</p>
-<p>7、有一题存在文件包含功能，通过递归的文件包含（包含自己）是程序崩溃，留下文件上传的临时文件，之后通过一个第三方程序的目录遍历漏洞来获取临时文件名，调用后getshell<br>这里再补充下所见过的程序崩溃的写法，一般都是通过递归调用的方式来构成溢出吧：</p>
-<ul>
-<li>文件包含中包含自己</li>
-<li>xxe中仿照实体递归定义的方式书写，最后调用此实体引起溢出</li>
-</ul>
-<p>8、文件上传中上传了改后缀为图片格式的文件，之后被php文件引用了，然后里面的代码就有了php的执行环境，即所谓’图马’</p>
-<p>9、通过日志写shell，之后文件包含日志 目前所见的日志写shell都是通过tencent来实现的</p>
-<p>10、</p>
-<h2 id="基于以上的统计，做出归纳整理"><a href="#基于以上的统计，做出归纳整理" class="headerlink" title="基于以上的统计，做出归纳整理"></a>基于以上的统计，做出归纳整理</h2><h3 id="通过php代码的："><a href="#通过php代码的：" class="headerlink" title="通过php代码的："></a>通过php代码的：</h3><p><strong>shell上传</strong></p>
-<ul>
-<li>通过正常的文件上传流程</li>
-<li>通过php异常中断后的临时文件</li>
-<li>通过写日志的方法，将log文件作为shell</li>
-<li></li>
-</ul>
-<p><strong>shell调用</strong></p>
-<ul>
-<li>使用文件包含获得php的执行环境，见<a href=""></a>的总结</li>
-<li>使用url直接访问具有调用php解释器的文件,像PhP可以直接使用.php调用</li>
-<li>在调用时通过修改.htaccess文件获得php的执行环境，改变url调用文件的解释器</li>
-<li><strong>文件目录与名字的获取上</strong><ul>
-<li>知道文件的位置与名字，直接进行url访问</li>
-<li>由一些第三方软件的漏洞 如kindeditor 的目录遍历获得信息</li>
-<li>由暴力破解的脚本方式，一般适用于已知位置的情况</li>
-<li>由phpinfo()可以知道form-data+文件中断的临时文件的保存位置（5.6未测试成功）</li>
-<li>有个数据库的环境下，文件更改后的名字可能能通过数据库注入来获取</li>
-<li>包含的是日志文件等的话，有固定的位置，<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">常见的有，最准确的应该通过phpinfo()来看</div><div class="line">/var/log/apache/access_log</div><div class="line">/var/www/logs/access_log</div><div class="line">/var/log/access_log</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>命令注入，php审计中发现的显示命令调用以及黑盒测试中发现的命令调用</p>
-
+        
+          <p>Welcome to <a href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues">GitHub</a>.<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/04/14/hello-world/#more" rel="contents">
+              Weiterlesen &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
       
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
       
-        
-
-      
     </div>
 
     <div>
-      
-        
-
       
     </div>
 
@@ -387,42 +346,25 @@
       
 
       
-        
+
       
 
       
-        <div class="post-nav">
-          <div class="post-nav-next post-nav-item">
-            
-              <a href="/2017/05/11/PHP伪协议/" rel="next" title="PHP伪协议">
-                <i class="fa fa-chevron-left"></i> PHP伪协议
-              </a>
-            
-          </div>
-
-          <span class="post-nav-divider"></span>
-
-          <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/05/07/XXE学习笔记/" rel="prev" title="XXE学习笔记">
-                XXE学习笔记 <i class="fa fa-chevron-right"></i>
-              </a>
-            
-          </div>
-        </div>
       
-
-      
+        <div class="post-eof"></div>
       
     </footer>
   </article>
 
 
+    
+  </section>
 
-    <div class="post-spread">
-      
-    </div>
-  </div>
+  
+  <nav class="pagination">
+    <a class="extend prev" rel="prev" href="/"><i class="fa fa-angle-left"></i></a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+  </nav>
+
 
 
           </div>
@@ -430,10 +372,6 @@
 
 
           
-  <div class="comments" id="comments">
-    
-  </div>
-
 
         </div>
         
@@ -453,17 +391,8 @@
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
-          </li>
-        </ul>
-      
 
-      <section class="site-overview sidebar-panel">
+      <section class="site-overview sidebar-panel sidebar-panel-active">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -516,22 +445,6 @@
 
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于以上的统计，做出归纳整理"><span class="nav-number">1.</span> <span class="nav-text">基于以上的统计，做出归纳整理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过php代码的："><span class="nav-number">1.1.</span> <span class="nav-text">通过php代码的：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">1.2.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
@@ -645,10 +558,6 @@
   
 
   
-  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
-<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
-
-
 
   
 

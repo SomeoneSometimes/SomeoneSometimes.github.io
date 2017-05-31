@@ -90,17 +90,21 @@
 
 
 
-<meta name="description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
+<meta name="description" content="mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句show variables like &amp;#39;%character%&amp;#39;;就可以看到如下显示：详细解释了各种场景下编码的意义：  a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下  。b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CTF中getshell的统计">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/CTF中getshell的统计/index.html">
+<meta property="og:title" content="mysql数据库编码问题的原因与解决方法">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
-<meta property="og:updated_time" content="2017-05-12T07:34:50.952Z">
+<meta property="og:description" content="mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句show variables like &amp;#39;%character%&amp;#39;;就可以看到如下显示：详细解释了各种场景下编码的意义：  a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下  。b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数">
+<meta property="og:image" content="http://i.imgur.com/UthX236.png">
+<meta property="og:image" content="http://i.imgur.com/i6JDGa7.png">
+<meta property="og:image" content="http://i.imgur.com/XVYIRtx.png">
+<meta property="og:updated_time" content="2017-05-31T12:30:39.532Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="CTF中getshell的统计">
-<meta name="twitter:description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
+<meta name="twitter:title" content="mysql数据库编码问题的原因与解决方法">
+<meta name="twitter:description" content="mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句show variables like &amp;#39;%character%&amp;#39;;就可以看到如下显示：详细解释了各种场景下编码的意义：  a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下  。b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数">
+<meta name="twitter:image" content="http://i.imgur.com/UthX236.png">
 
 
 
@@ -128,13 +132,13 @@
 
 
 
-  <link rel="canonical" href="https://someonesometimes.github.io/2017/05/11/CTF中getshell的统计/"/>
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/"/>
 
 
 
 
 
-  <title>CTF中getshell的统计 | Yiruma</title>
+  <title>mysql数据库编码问题的原因与解决方法 | Yiruma</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="">
@@ -254,7 +258,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/11/CTF中getshell的统计/">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yiruma">
@@ -271,7 +275,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">CTF中getshell的统计</h1>
+          <h1 class="post-title" itemprop="name headline">mysql数据库编码问题的原因与解决方法</h1>
         
 
         <div class="post-meta">
@@ -283,8 +287,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-11T20:42:41+08:00">
-                2017-05-11
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-31T19:35:32+08:00">
+                2017-05-31
               </time>
             
 
@@ -318,46 +322,17 @@
       
 
       
-        <p><strong>CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧</strong></p>
-<a id="more"></a>
-<p>1、在BCTF中的paint题目里面，从一个指定url的文件上传，考虑是使用命令行的方式，通过包含xss来看其http头的访问形式，判定使用的curl命令，因此考虑是命令注入的漏洞，成功进行命令注入后即getshell</p>
-<p>2、exec(“/bin/hence “ . $shell);php中直接有了这样的函数，但是命令执行因有前缀遇到问题，通过%0a进行命令注入（因为其他的符号都被过滤了<code>preg_match(&#39;/^\w+$/&#39;, $shell[$i])</code>），<br>之后使用tar打包文件之后下载或使用wget一个新的马的方式</p>
-<p>3、有个就给出了eval()函数，但是限制命令长度，基本无法使用命令远程getshell，考虑echo ‘’&gt; xx的形式来直接写一个shell，最终考虑的方案是使用echo ls &gt; xx来靠文件名来写shell</p>
-<p>4、leavesong中也是一个限制命令长度的题目，使用的方法是：</p>
-<p>5、在HBCTF里面的一个web题目，盲注得到shell重命名后的名字，然后因为是以文件包含的形式getshell,可以使用部分伪协议，所以在文件上传的时候就容易了很多，直接使用phar://的思路就可以</p>
-<p>6、有一题目通过上传.htaccess文件来为文本配置执行环境为php</p>
-<p>7、有一题存在文件包含功能，通过递归的文件包含（包含自己）是程序崩溃，留下文件上传的临时文件，之后通过一个第三方程序的目录遍历漏洞来获取临时文件名，调用后getshell<br>这里再补充下所见过的程序崩溃的写法，一般都是通过递归调用的方式来构成溢出吧：</p>
-<ul>
-<li>文件包含中包含自己</li>
-<li>xxe中仿照实体递归定义的方式书写，最后调用此实体引起溢出</li>
-</ul>
-<p>8、文件上传中上传了改后缀为图片格式的文件，之后被php文件引用了，然后里面的代码就有了php的执行环境，即所谓’图马’</p>
-<p>9、通过日志写shell，之后文件包含日志 目前所见的日志写shell都是通过tencent来实现的</p>
-<p>10、</p>
-<h2 id="基于以上的统计，做出归纳整理"><a href="#基于以上的统计，做出归纳整理" class="headerlink" title="基于以上的统计，做出归纳整理"></a>基于以上的统计，做出归纳整理</h2><h3 id="通过php代码的："><a href="#通过php代码的：" class="headerlink" title="通过php代码的："></a>通过php代码的：</h3><p><strong>shell上传</strong></p>
-<ul>
-<li>通过正常的文件上传流程</li>
-<li>通过php异常中断后的临时文件</li>
-<li>通过写日志的方法，将log文件作为shell</li>
-<li></li>
-</ul>
-<p><strong>shell调用</strong></p>
-<ul>
-<li>使用文件包含获得php的执行环境，见<a href=""></a>的总结</li>
-<li>使用url直接访问具有调用php解释器的文件,像PhP可以直接使用.php调用</li>
-<li>在调用时通过修改.htaccess文件获得php的执行环境，改变url调用文件的解释器</li>
-<li><strong>文件目录与名字的获取上</strong><ul>
-<li>知道文件的位置与名字，直接进行url访问</li>
-<li>由一些第三方软件的漏洞 如kindeditor 的目录遍历获得信息</li>
-<li>由暴力破解的脚本方式，一般适用于已知位置的情况</li>
-<li>由phpinfo()可以知道form-data+文件中断的临时文件的保存位置（5.6未测试成功）</li>
-<li>有个数据库的环境下，文件更改后的名字可能能通过数据库注入来获取</li>
-<li>包含的是日志文件等的话，有固定的位置，<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">常见的有，最准确的应该通过phpinfo()来看</div><div class="line">/var/log/apache/access_log</div><div class="line">/var/www/logs/access_log</div><div class="line">/var/log/access_log</div></pre></td></tr></table></figure>
-</li>
-</ul>
-</li>
-</ul>
-<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>命令注入，php审计中发现的显示命令调用以及黑盒测试中发现的命令调用</p>
+        <a id="more"></a>
+<p>mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句<code>show variables like &#39;%character%&#39;;</code>就可以看到如下显示：<img src="http://i.imgur.com/UthX236.png" alt="">详细解释了各种场景下编码的意义：</p>
+<blockquote>
+<p>a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下 </p>
+<p><metahttp-equiv="content-type"content="text html;="" charset="utf-8"">。<br>b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数据库使用的字符集类型<br>就按照服务器端默认的字符集设置。<br>c、其中database是数据库服务器中某个库使用的字符集设定，如果建库时没有指明，将使用服务器安装<br>时指定的字符集设置。<br>d、results是数据库给客户端返回时使用的字符集设定，如果没有指明，使用服务器默认的字符集。<br>e、server是服务器安装时指定的默认字符集设定。<br>f、system是数据库系统使用的字符集设定。 </metahttp-equiv="content-type"content="text></p>
+</blockquote>
+<p>我们从PHP对数据库进行操作的一次过程中，涉及到多个场景，先是PHP自身编码方案决定了它构建并发出的那条sql语句是什么编码的，之后语句执行后拿到的数据又会是一种编码，就是数据库中存储数据的编码方案，之后再以发送给php，这些场景中数据的编码方案是不同的，而mysql会在不同场景切换中对数据进行编码转换话，如果执行过程中数据的编码转化与mysql上表的配置不同，就会出现编码的问题，而出现问题的原因一般有两条：</p>
+<h3 id="数据库对数据存储的编码方案"><a href="#数据库对数据存储的编码方案" class="headerlink" title="数据库对数据存储的编码方案"></a>数据库对数据存储的编码方案</h3><p>这个问题的产生比较奇怪，从上面表的character_set_database 我们可以看到，默认的数据库对数据存储的编码方案采用的是<strong>latin1</strong>，这种编码方案收录的字符除ASCII收录的字符外，还包括西欧语言、希腊语、泰语、阿拉伯语、希伯来语对应的文字符号，<strong>但是没有中文！！！！</strong>所以遇到中文的编码方案会出现报错或是乱码。。。<br>解决的方式也很简单，我们在新建数据库时为其指定默认的编码方案，使用支持中文的gbk,utf8编码就好了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create database test default character set gbk;</div><div class="line">create database test default character set utf8;</div></pre></td></tr></table></figure></p>
+<p>之后进入到这个数据库再看编码方案，在character_set_database那一栏就会有对应的修改了</p>
+<h3 id="sql语句的编码方案"><a href="#sql语句的编码方案" class="headerlink" title="sql语句的编码方案"></a>sql语句的编码方案</h3><p>也就所输入sql语句是怎样编码的，如果sql语句的编码与mysql中记录的理解方式也就是编码方案不同，那自然也会出现问题。<br>给出几个场景的例子，比如我在cmd中对mysql进行操作，cmd的默认编码是GBK<img src="http://i.imgur.com/i6JDGa7.png" alt=""><br>而mysql中会按照记录中的utf8进行操作，这时就是出现问题<br>再比如PHP所发出的sql语句具体采用什么编码方案，取决于PHP运行环境中的编码（如果你不进行手动的解码再编码到指定码的话），这时也有可能出现于mysql中默认编码方案不同的问题</p>
+<p>解决方式同样很简单，我们进行数据库操作时候，无论是使用命令行，还是调用高级语言的接口，都先指定自己的sql语句是以什么形式编码的，即语句<code>set names 编码方案</code>。这样之后就会修改当前操作下mysql的编码方案，像这张图就是我执行<code>set names gbk</code>后的改变结果：<img src="http://i.imgur.com/XVYIRtx.png" alt=""></p>
 
       
     </div>
@@ -394,18 +369,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/11/PHP伪协议/" rel="next" title="PHP伪协议">
-                <i class="fa fa-chevron-left"></i> PHP伪协议
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/07/XXE学习笔记/" rel="prev" title="XXE学习笔记">
-                XXE学习笔记 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/05/28/优化-pythonic/" rel="prev" title="优化 pythonic">
+                优化 pythonic <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -526,7 +497,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基于以上的统计，做出归纳整理"><span class="nav-number">1.</span> <span class="nav-text">基于以上的统计，做出归纳整理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过php代码的："><span class="nav-number">1.1.</span> <span class="nav-text">通过php代码的：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#其他"><span class="nav-number">1.2.</span> <span class="nav-text">其他</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库对数据存储的编码方案"><span class="nav-number">1.</span> <span class="nav-text">数据库对数据存储的编码方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sql语句的编码方案"><span class="nav-number">2.</span> <span class="nav-text">sql语句的编码方案</span></a></li></ol></div>
             
 
           </div>
