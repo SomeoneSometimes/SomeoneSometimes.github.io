@@ -90,20 +90,20 @@
 
 
 
-<meta name="description" content="mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句show variables like &amp;#39;%character%&amp;#39;;就可以看到如下显示：详细解释了各种场景下编码的意义：  a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下  。b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数">
+<meta name="description" content="好像这里必须要写点什么才不会显示整篇文章">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="mysql数据库编码问题的原因与解决方法">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句show variables like &amp;#39;%character%&amp;#39;;就可以看到如下显示：详细解释了各种场景下编码的意义：  a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下  。b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数">
+<meta property="og:description" content="好像这里必须要写点什么才不会显示整篇文章">
 <meta property="og:image" content="http://i.imgur.com/UthX236.png">
 <meta property="og:image" content="http://i.imgur.com/i6JDGa7.png">
 <meta property="og:image" content="http://i.imgur.com/XVYIRtx.png">
-<meta property="og:updated_time" content="2017-05-31T12:33:58.167Z">
+<meta property="og:updated_time" content="2017-05-31T12:35:51.424Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql数据库编码问题的原因与解决方法">
-<meta name="twitter:description" content="mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句show variables like &amp;#39;%character%&amp;#39;;就可以看到如下显示：详细解释了各种场景下编码的意义：  a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下  。b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数">
+<meta name="twitter:description" content="好像这里必须要写点什么才不会显示整篇文章">
 <meta name="twitter:image" content="http://i.imgur.com/UthX236.png">
 
 
@@ -322,8 +322,7 @@
       
 
       
-        <a id="more"></a>
-<p>mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句<code>show variables like &#39;%character%&#39;;</code>就可以看到如下显示：<img src="http://i.imgur.com/UthX236.png" alt="">详细解释了各种场景下编码的意义：</p>
+        <p>好像这里必须要写点什么才不会显示整篇文章<br><a id="more"></a><br>mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句<code>show variables like &#39;%character%&#39;;</code>就可以看到如下显示：<img src="http://i.imgur.com/UthX236.png" alt="">详细解释了各种场景下编码的意义：</p>
 <blockquote>
 <p>a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下 </p>
 <p><metahttp-equiv="content-type"content="text html;="" charset="utf-8"">。<br>b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数据库使用的字符集类型<br>就按照服务器端默认的字符集设置。<br>c、其中database是数据库服务器中某个库使用的字符集设定，如果建库时没有指明，将使用服务器安装<br>时指定的字符集设置。<br>d、results是数据库给客户端返回时使用的字符集设定，如果没有指明，使用服务器默认的字符集。<br>e、server是服务器安装时指定的默认字符集设定。<br>f、system是数据库系统使用的字符集设定。 </metahttp-equiv="content-type"content="text></p>
