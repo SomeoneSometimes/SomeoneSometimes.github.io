@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta name="description" content="最近因为设计网站的时候需要实现一个后台处理的功能，在寻找解决方式的时候了解到了php输出缓冲的功能，让我第一次意识到http具体的传输数据都是什么流程（不会告诉你们我以前一直以为http只有一次数据传输的！），又get到一个新技能点，先记录下来，以后了解的多了再进一步补充吧">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/04/14/hello-world/index.html">
+<meta property="og:title" content="php输出缓冲与http的联系">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/06/20/php输出缓冲与http的联系/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
-<meta property="og:updated_time" content="2017-04-14T03:49:18.941Z">
+<meta property="og:description" content="最近因为设计网站的时候需要实现一个后台处理的功能，在寻找解决方式的时候了解到了php输出缓冲的功能，让我第一次意识到http具体的传输数据都是什么流程（不会告诉你们我以前一直以为http只有一次数据传输的！），又get到一个新技能点，先记录下来，以后了解的多了再进一步补充吧">
+<meta property="og:updated_time" content="2017-06-20T10:11:46.404Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hello World">
-<meta name="twitter:description" content="Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.">
+<meta name="twitter:title" content="php输出缓冲与http的联系">
+<meta name="twitter:description" content="最近因为设计网站的时候需要实现一个后台处理的功能，在寻找解决方式的时候了解到了php输出缓冲的功能，让我第一次意识到http具体的传输数据都是什么流程（不会告诉你们我以前一直以为http只有一次数据传输的！），又get到一个新技能点，先记录下来，以后了解的多了再进一步补充吧">
 
 
 
@@ -128,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://someonesometimes.github.io/2017/04/14/hello-world/"/>
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/06/20/php输出缓冲与http的联系/"/>
 
 
 
 
 
-  <title>Hello World | Yiruma</title>
+  <title>php输出缓冲与http的联系 | Yiruma</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="">
@@ -254,7 +254,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/04/14/hello-world/">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/06/20/php输出缓冲与http的联系/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yiruma">
@@ -271,7 +271,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Hello World</h1>
+          <h1 class="post-title" itemprop="name headline">php输出缓冲与http的联系</h1>
         
 
         <div class="post-meta">
@@ -283,8 +283,8 @@
               
                 <span class="post-meta-item-text">Veröffentlicht am</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-14T11:12:43+08:00">
-                2017-04-14
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T17:05:22+08:00">
+                2017-06-20
               </time>
             
 
@@ -318,15 +318,22 @@
       
 
       
-        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.<br><a id="more"></a></p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+        <p>最近因为设计网站的时候需要实现一个后台处理的功能，在寻找解决方式的时候了解到了php输出缓冲的功能，让我第一次意识到http具体的传输数据都是什么流程（不会告诉你们我以前一直以为http只有一次数据传输的！），又get到一个新技能点，先记录下来，以后了解的多了再进一步补充吧<br><a id="more"></a></p>
+<hr>
+<h2 id="首先需要对以下函数有一定的了解"><a href="#首先需要对以下函数有一定的了解" class="headerlink" title="首先需要对以下函数有一定的了解"></a>首先需要对以下函数有一定的了解</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">/**</div><div class="line">获取当前php缓冲区的内容长度</div><div class="line">*/</div><div class="line">$size = ob_get_length()</div><div class="line"> </div><div class="line">/**</div><div class="line">刷新php的输出缓冲区，也就是将当前缓冲区中的数据通过http来传输过去</div><div class="line">然后至于这两个函数分别是什么功能。。我也不太清楚，网上倒是有不少介绍，反正就是一起用，起到刷新php</div><div class="line">输出缓冲区的作用</div><div class="line">*/</div><div class="line">flush()</div><div class="line">ob_flush()</div><div class="line"></div><div class="line">/**</div><div class="line">指定一个http流程中，一共需要接收多少数据，注意如果接收者还没有接收到指定的数据长度的时候就不会关闭</div><div class="line">http链接，也就是浏览器窗口一直处于加载中的小圆圈</div><div class="line">*/</div><div class="line">header(&quot;Content-Length: xxx&quot;);</div><div class="line"></div><div class="line">/**</div><div class="line">指定一个http链接到目前接收的数据为止是否要关闭，但测试中发现，如果浏览器接受的数据没有达到指定长度</div><div class="line">的时候，就算告诉了要关闭连接，http链接依然不会中断，所以我们在接下来实现中断http功能的过程中我们就</div><div class="line">主要使用header(&quot;Content-Length: xxx&quot;);来实现，这个指定Connection状态的语句加不加随意吧</div><div class="line">*/</div><div class="line">header(&quot;Connection: close/keep-alive&quot;);</div><div class="line"></div><div class="line">/*</div><div class="line">指定脚本在失去http连接之后是否仍然要运行,也就是是否继续在后台运行。有一点要指明的是脚本不会注意到</div><div class="line">http链接已经关闭，除非尝试echo一下，才能发现无法往缓冲区输出数据了</div><div class="line">*/</div><div class="line">ignore_user_abort(true);</div><div class="line"></div><div class="line">/*</div><div class="line">用于指定脚本的运行时限，0就是不限时间，因为想要后台运行的php脚本往往需要大量的时间，如果使用默认的</div><div class="line">时间限制可能导致异常终止</div><div class="line">*/</div><div class="line">set_time_limit(0);</div></pre></td></tr></table></figure>
+<h2 id="下面开始通过测试来分析php输出与http的关系"><a href="#下面开始通过测试来分析php输出与http的关系" class="headerlink" title="下面开始通过测试来分析php输出与http的关系"></a>下面开始通过测试来分析php输出与http的关系</h2><p><strong>测试一</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">echo &quot;hahaha&quot;;</div><div class="line">sleep(10);</div><div class="line">echo &quot;hahaha&quot;;</div></pre></td></tr></table></figure></p>
+<p>结果：浏览器在等待了10s后接收到了一次数据，为”hahahahahaha”,看来php将两次数据都输出后统一进行了一次http传输<br></p>
+<p><strong>测试二</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">echo &quot;hahaha&quot;;</div><div class="line">ob_flush();</div><div class="line">flush();</div><div class="line"></div><div class="line">sleep(10s);</div><div class="line"></div><div class="line">echo &quot;hahaha&quot;;</div></pre></td></tr></table></figure></p>
+<p>结果：浏览器很快就接收到了第一次返回的数据————“hahaha”,又等待了10S后，返回了剩下的数据”hahaha”</p>
+<p><strong>测试三</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">echo &quot;hahaha&quot;;</div><div class="line">$size = ob_get_size();</div><div class="line">header(Content-Length: &#123;$size&#125;);</div><div class="line">flush();</div><div class="line">ob_flush();</div><div class="line"></div><div class="line">echo &quot;hahaha&quot;;</div></pre></td></tr></table></figure></p>
+<p>结果:浏览器很快就接收到了第一次返回的数据————“hahaha”,然后就停止了。原因就是我们通过指定这次传输中Content-Length的方式，让浏览器认为接收的数据已经够了，所以就终止了连接</p>
+<p><br><br><strong>综上所述</strong></p>
+<ul>
+<li>我们可以通过flush(); ob_flush();来php输出缓存区的内容释放，然后进行一次http传输</li>
+<li>我们还可以在这次传输中通过指定header头Content-Length的方式来使整个的http链接终止</li>
+<li>然后我们还可以通过指定ignore_user_abort(true);来使php程序在http链接终止的时候继续运行，并为其设置运行时间限制set_time_limit(0);</li>
+</ul>
+<p>以上就是实现php后台处理的思路啦</p>
 
       
     </div>
@@ -363,15 +370,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/04/14/js的DOM操作/" rel="next" title="js的DOM操作">
-                <i class="fa fa-chevron-left"></i> js的DOM操作
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/15/python模块使用记录/" rel="prev" title="python模块使用记录">
+                python模块使用记录 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -491,7 +498,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Quick-Start"><span class="nav-number">1.</span> <span class="nav-text">Quick Start</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Create-a-new-post"><span class="nav-number">1.1.</span> <span class="nav-text">Create a new post</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Run-server"><span class="nav-number">1.2.</span> <span class="nav-text">Run server</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Generate-static-files"><span class="nav-number">1.3.</span> <span class="nav-text">Generate static files</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Deploy-to-remote-sites"><span class="nav-number">1.4.</span> <span class="nav-text">Deploy to remote sites</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#首先需要对以下函数有一定的了解"><span class="nav-number">1.</span> <span class="nav-text">首先需要对以下函数有一定的了解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#下面开始通过测试来分析php输出与http的关系"><span class="nav-number">2.</span> <span class="nav-text">下面开始通过测试来分析php输出与http的关系</span></a></li></ol></div>
             
 
           </div>

@@ -251,6 +251,248 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/06/20/php输出缓冲与http的联系/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/20/php输出缓冲与http的联系/" itemprop="url">php输出缓冲与http的联系</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-20T17:05:22+08:00">
+                2017-06-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <p>最近因为设计网站的时候需要实现一个后台处理的功能，在寻找解决方式的时候了解到了php输出缓冲的功能，让我第一次意识到http具体的传输数据都是什么流程（不会告诉你们我以前一直以为http只有一次数据传输的！），又get到一个新技能点，先记录下来，以后了解的多了再进一步补充吧<br>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2017/06/20/php输出缓冲与http的联系/#more" rel="contents">
+              Weiterlesen &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/06/15/python模块使用记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2017/06/15/python模块使用记录/" itemprop="url">python模块使用记录</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-15T11:41:11+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <p><strong>json</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import json</div><div class="line"></div><div class="line">path = &apos;F:/json.txt&apos;</div><div class="line">_dict = &#123;&apos;key1&apos;:&apos;value1&apos;, &apos;key2&apos;:&apos;value2&apos;&#125;</div><div class="line"></div><div class="line">#将python数据类型转化为json字符串并写入到txt文件中</div><div class="line">fw = open(path, &apos;w&apos;)</div><div class="line">str = json.dumps(_dict) #从python类型转化到json字符串的函数</div><div class="line">fw.write(str)</div><div class="line">fw.close()</div><div class="line"></div><div class="line">#从txt文件中提取json字符串并转化为python数据类型</div><div class="line">fr = open(path, &apos;r&apos;)</div><div class="line">str = fr.read()</div><div class="line">_dict = json.loads(str)         #从json字符串转化到python字典类型的函数</div><div class="line">fr.close()</div><div class="line"></div><div class="line">#一个可以将多个变量作为字典转成json格式的函数，使用python可变参数实现</div><div class="line">def json_encode(**kwargs):</div><div class="line">	return json.dumps(kwargs)</div><div class="line"></div><div class="line">str = json_encode(var1 = &apos;Yiruma&apos;, var2 = &#123;&apos;light&apos;:&apos;music&apos;&#125;, var3 = [1,&apos;2&apos;])</div></pre></td></tr></table></figure></p>
+<p><img src="http://i.imgur.com/JA2uF5O.png" alt=""></p>
+<hr>
+<p><strong>configparser</strong><br>本来学了想用作python的配置文件存储，结果后来一想还是用json存吧，方便不同语言间操作，先记录下来以备后用<br>这是python3的操作方法，具体python2的操作还不太一样，python2<a href="https://docs.python.org/2/library/configparser.html?highlight=configparser#examples" target="_blank" rel="external">走这里</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">import configparser</div><div class="line"></div><div class="line">#configparser写配置：</div><div class="line">fw = open(&apos;F:/crawler.ini&apos;, &apos;w&apos;)</div><div class="line">config = configparser.ConfigParser()</div><div class="line">config[&apos;key1&apos;] = &#123;&quot;var1&quot;:&apos;1&apos;, &quot;var2&quot;:&apos;2&apos;&#125;</div><div class="line">config[&apos;key2&apos;] = &#123;&quot;var3&quot;:&apos;3&apos;, &quot;var4&quot;:&apos;4&apos;&#125;</div><div class="line">config.write(fw)</div><div class="line">fw.close()</div><div class="line"></div><div class="line"></div><div class="line">#configparser读取配置</div><div class="line">config = configparser.ConfigParser()</div><div class="line">config.read(&apos;F:/crawler.ini&apos;)</div><div class="line">config_var = config.sections()</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line">注释：Config parsers do not guess datatypes of values in configuration files, always storing them internally as strings. This means that if you need other datatypes, you should convert on your own:</div><div class="line">在存储的配置文件中，所有的数据都是以字符串形式存储的</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>文件读写</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>os操作</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import os</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>sys</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import sys</div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line"></div><div class="line">  #首先为只有两个参数下的可能的两个场景（version，help）做出解释，之后退出</div><div class="line">  if len(sys.argv) == 2 and sys.argv[1].startswith(&apos;--&apos;):</div><div class="line">    option = sys.argv[1][2:]</div><div class="line">    if option == &apos;version&apos;:</div><div class="line">      print (&apos;Version 1.0&apos;)</div><div class="line">    elif option == &apos;help&apos;:</div><div class="line">      print (&apos;usage python crawler.py blog_nick original_url page_reg article_reg title&apos;)</div><div class="line">    else:</div><div class="line">      print (&apos;Unknown option&apos;)</div><div class="line">    exit()</div><div class="line">  </div><div class="line">  #再为参数个数非6的情况做出解释，告知正确的参数格式</div><div class="line">  elif len(sys.argv) != 6:</div><div class="line">    print (&apos;usage python crawler.py blog_nick original_url page_reg article_reg title&apos;)</div><div class="line">    exit()</div><div class="line"></div><div class="line">  #确定拥有正常个数的参数，接下来就是正常的操作了</div><div class="line">  ...</div><div class="line">  ...</div></pre></td></tr></table></figure></p>
+<h2 id="cauc-http-cauc-me-http-cauc-me-index-php-page-d-1-3-http-cauc-me-d-4-4-d-2-2-d-2-2-from-title"><a href="#cauc-http-cauc-me-http-cauc-me-index-php-page-d-1-3-http-cauc-me-d-4-4-d-2-2-d-2-2-from-title" class="headerlink" title="cauc http://cauc.me http://cauc.me/index.php/page/\d{1,3}/ http://cauc.me/\d{4,4}/\d{2,2}/\d{2,2}/.* from_title"></a>cauc <a href="http://cauc.me" target="_blank" rel="external">http://cauc.me</a> <a href="http://cauc.me/index.php/page/\d{1,3}/" target="_blank" rel="external">http://cauc.me/index.php/page/\d{1,3}/</a> <a href="http://cauc.me/\d{4,4}/\d{2,2}/\d{2,2}/.*" target="_blank" rel="external">http://cauc.me/\d{4,4}/\d{2,2}/\d{2,2}/.*</a> from_title</h2><p><strong>re</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import re</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>bs4.beautifulsoup</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">from bs4 import beautifulsoup</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>requests</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import requests</div></pre></td></tr></table></figure></p>
+
+          
+        
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <div>
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
     <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -1209,245 +1451,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yiruma">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiruma">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/19/PHP弱类型转化的漏洞/" itemprop="url">PHP中弱类型的转化漏洞</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-19T23:15:47+08:00">
-                2017-04-19
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="官方文档中的几句话已经说的很清楚了"><a href="#官方文档中的几句话已经说的很清楚了" class="headerlink" title="官方文档中的几句话已经说的很清楚了"></a>官方文档中的几句话已经说的很清楚了</h2><blockquote>
-<p><strong>==是弱类型漏洞的罪恶根源</strong><br><strong>在==中，<em>数值和字符串比较</em>，则字符串会被转换为数值并且比较按照数值来进行。<em>两个可以完美转化为数值型的字符串</em>（0e123,0x123 但0e4fe，12f3不可），将转化为字符串比较</strong></p>
-<hr>
-<p><strong>当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞</strong></p>
-<hr>
-<p><strong>对了，这些规则经过测试，在mysql的比较中是一样的</strong><br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/19/PHP弱类型转化的漏洞/#more" rel="contents">
-              Weiterlesen &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/04/14/js的DOM操作/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Yiruma">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Yiruma">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/04/14/js的DOM操作/" itemprop="url">js的DOM操作</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Veröffentlicht am</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-14T11:37:28+08:00">
-                2017-04-14
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <blockquote>
-<p>DOM是什么？  </p>
-<p>整个DOM由三种元素所组成：<br><code>Element</code>、<code>Attribute</code>、<code>Text</code>   实际使用的时候通常将<code>Element</code>作为DOM域的划分方式<br>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2017/04/14/js的DOM操作/#more" rel="contents">
-              Weiterlesen &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <div>
-      
-    </div>
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-
-
-    
   </section>
 
   
@@ -1497,7 +1500,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">Artikel</span>
               </a>
             </div>

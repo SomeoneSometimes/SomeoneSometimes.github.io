@@ -1,0 +1,687 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="json12345678910111213141516171819202122import jsonpath = &amp;apos;F:/json.txt&amp;apos;_dict = &amp;#123;&amp;apos;key1&amp;apos;:&amp;apos;value1&amp;apos;, &amp;apos;key2&amp;apos;:&amp;apos;value2&amp;apos;&amp;#125;#将python数据类型转化为json字符串并写入到tx">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="python模块使用记录">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/06/15/python模块使用记录/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="json12345678910111213141516171819202122import jsonpath = &amp;apos;F:/json.txt&amp;apos;_dict = &amp;#123;&amp;apos;key1&amp;apos;:&amp;apos;value1&amp;apos;, &amp;apos;key2&amp;apos;:&amp;apos;value2&amp;apos;&amp;#125;#将python数据类型转化为json字符串并写入到tx">
+<meta property="og:image" content="http://i.imgur.com/JA2uF5O.png">
+<meta property="og:updated_time" content="2017-06-15T09:10:55.344Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="python模块使用记录">
+<meta name="twitter:description" content="json12345678910111213141516171819202122import jsonpath = &amp;apos;F:/json.txt&amp;apos;_dict = &amp;#123;&amp;apos;key1&amp;apos;:&amp;apos;value1&amp;apos;, &amp;apos;key2&amp;apos;:&amp;apos;value2&amp;apos;&amp;#125;#将python数据类型转化为json字符串并写入到tx">
+<meta name="twitter:image" content="http://i.imgur.com/JA2uF5O.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/06/15/python模块使用记录/"/>
+
+
+
+
+
+  <title>python模块使用记录 | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Über
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            menu.link
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/06/15/python模块使用记录/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">python模块使用记录</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-15T11:41:11+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><strong>json</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import json</div><div class="line"></div><div class="line">path = &apos;F:/json.txt&apos;</div><div class="line">_dict = &#123;&apos;key1&apos;:&apos;value1&apos;, &apos;key2&apos;:&apos;value2&apos;&#125;</div><div class="line"></div><div class="line">#将python数据类型转化为json字符串并写入到txt文件中</div><div class="line">fw = open(path, &apos;w&apos;)</div><div class="line">str = json.dumps(_dict) #从python类型转化到json字符串的函数</div><div class="line">fw.write(str)</div><div class="line">fw.close()</div><div class="line"></div><div class="line">#从txt文件中提取json字符串并转化为python数据类型</div><div class="line">fr = open(path, &apos;r&apos;)</div><div class="line">str = fr.read()</div><div class="line">_dict = json.loads(str)         #从json字符串转化到python字典类型的函数</div><div class="line">fr.close()</div><div class="line"></div><div class="line">#一个可以将多个变量作为字典转成json格式的函数，使用python可变参数实现</div><div class="line">def json_encode(**kwargs):</div><div class="line">	return json.dumps(kwargs)</div><div class="line"></div><div class="line">str = json_encode(var1 = &apos;Yiruma&apos;, var2 = &#123;&apos;light&apos;:&apos;music&apos;&#125;, var3 = [1,&apos;2&apos;])</div></pre></td></tr></table></figure></p>
+<p><img src="http://i.imgur.com/JA2uF5O.png" alt=""></p>
+<hr>
+<p><strong>configparser</strong><br>本来学了想用作python的配置文件存储，结果后来一想还是用json存吧，方便不同语言间操作，先记录下来以备后用<br>这是python3的操作方法，具体python2的操作还不太一样，python2<a href="https://docs.python.org/2/library/configparser.html?highlight=configparser#examples" target="_blank" rel="external">走这里</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">import configparser</div><div class="line"></div><div class="line">#configparser写配置：</div><div class="line">fw = open(&apos;F:/crawler.ini&apos;, &apos;w&apos;)</div><div class="line">config = configparser.ConfigParser()</div><div class="line">config[&apos;key1&apos;] = &#123;&quot;var1&quot;:&apos;1&apos;, &quot;var2&quot;:&apos;2&apos;&#125;</div><div class="line">config[&apos;key2&apos;] = &#123;&quot;var3&quot;:&apos;3&apos;, &quot;var4&quot;:&apos;4&apos;&#125;</div><div class="line">config.write(fw)</div><div class="line">fw.close()</div><div class="line"></div><div class="line"></div><div class="line">#configparser读取配置</div><div class="line">config = configparser.ConfigParser()</div><div class="line">config.read(&apos;F:/crawler.ini&apos;)</div><div class="line">config_var = config.sections()</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line">注释：Config parsers do not guess datatypes of values in configuration files, always storing them internally as strings. This means that if you need other datatypes, you should convert on your own:</div><div class="line">在存储的配置文件中，所有的数据都是以字符串形式存储的</div><div class="line">*/</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>文件读写</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>os操作</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import os</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>sys</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import sys</div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line"></div><div class="line">  #首先为只有两个参数下的可能的两个场景（version，help）做出解释，之后退出</div><div class="line">  if len(sys.argv) == 2 and sys.argv[1].startswith(&apos;--&apos;):</div><div class="line">    option = sys.argv[1][2:]</div><div class="line">    if option == &apos;version&apos;:</div><div class="line">      print (&apos;Version 1.0&apos;)</div><div class="line">    elif option == &apos;help&apos;:</div><div class="line">      print (&apos;usage python crawler.py blog_nick original_url page_reg article_reg title&apos;)</div><div class="line">    else:</div><div class="line">      print (&apos;Unknown option&apos;)</div><div class="line">    exit()</div><div class="line">  </div><div class="line">  #再为参数个数非6的情况做出解释，告知正确的参数格式</div><div class="line">  elif len(sys.argv) != 6:</div><div class="line">    print (&apos;usage python crawler.py blog_nick original_url page_reg article_reg title&apos;)</div><div class="line">    exit()</div><div class="line"></div><div class="line">  #确定拥有正常个数的参数，接下来就是正常的操作了</div><div class="line">  ...</div><div class="line">  ...</div></pre></td></tr></table></figure></p>
+<h2 id="cauc-http-cauc-me-http-cauc-me-index-php-page-d-1-3-http-cauc-me-d-4-4-d-2-2-d-2-2-from-title"><a href="#cauc-http-cauc-me-http-cauc-me-index-php-page-d-1-3-http-cauc-me-d-4-4-d-2-2-d-2-2-from-title" class="headerlink" title="cauc http://cauc.me http://cauc.me/index.php/page/\d{1,3}/ http://cauc.me/\d{4,4}/\d{2,2}/\d{2,2}/.* from_title"></a>cauc <a href="http://cauc.me" target="_blank" rel="external">http://cauc.me</a> <a href="http://cauc.me/index.php/page/\d{1,3}/" target="_blank" rel="external">http://cauc.me/index.php/page/\d{1,3}/</a> <a href="http://cauc.me/\d{4,4}/\d{2,2}/\d{2,2}/.*" target="_blank" rel="external">http://cauc.me/\d{4,4}/\d{2,2}/\d{2,2}/.*</a> from_title</h2><p><strong>re</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import re</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>bs4.beautifulsoup</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">from bs4 import beautifulsoup</div></pre></td></tr></table></figure></p>
+<hr>
+<p><strong>requests</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import requests</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/20/php输出缓冲与http的联系/" rel="next" title="php输出缓冲与http的联系">
+                <i class="fa fa-chevron-left"></i> php输出缓冲与http的联系
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/31/mysql数据库编码问题的原因与解决方法/" rel="prev" title="mysql数据库编码问题的原因与解决方法">
+                mysql数据库编码问题的原因与解决方法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">Tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#cauc-http-cauc-me-http-cauc-me-index-php-page-d-1-3-http-cauc-me-d-4-4-d-2-2-d-2-2-from-title"><span class="nav-number">1.</span> <span class="nav-text">cauc http://cauc.me http://cauc.me/index.php/page/\d{1,3}/ http://cauc.me/\d{4,4}/\d{2,2}/\d{2,2}/.* from_title</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
