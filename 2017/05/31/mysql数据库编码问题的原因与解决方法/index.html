@@ -100,7 +100,7 @@
 <meta property="og:image" content="http://i.imgur.com/UthX236.png">
 <meta property="og:image" content="http://i.imgur.com/i6JDGa7.png">
 <meta property="og:image" content="http://i.imgur.com/XVYIRtx.png">
-<meta property="og:updated_time" content="2017-05-31T12:35:51.424Z">
+<meta property="og:updated_time" content="2017-06-26T04:25:16.747Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql数据库编码问题的原因与解决方法">
 <meta name="twitter:description" content="好像这里必须要写点什么才不会显示整篇文章">
@@ -205,7 +205,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -215,7 +215,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            Über
+            About
           </a>
         </li>
       
@@ -285,7 +285,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-05-31T19:35:32+08:00">
                 2017-05-31
@@ -332,6 +332,12 @@
 <p>之后进入到这个数据库再看编码方案，在character_set_database那一栏就会有对应的修改了</p>
 <h3 id="sql语句的编码方案"><a href="#sql语句的编码方案" class="headerlink" title="sql语句的编码方案"></a>sql语句的编码方案</h3><p>也就所输入sql语句是怎样编码的，如果sql语句的编码与mysql中记录的理解方式也就是编码方案不同，那自然也会出现问题。<br>给出几个场景的例子，比如我在cmd中对mysql进行操作，cmd的默认编码是GBK<img src="http://i.imgur.com/i6JDGa7.png" alt=""><br>而mysql中会按照记录中的utf8进行操作，这时就是出现问题<br>再比如PHP所发出的sql语句具体采用什么编码方案，取决于PHP运行环境中的编码（如果你不进行手动的解码再编码到指定码的话），这时也有可能出现于mysql中默认编码方案不同的问题</p>
 <p>解决方式同样很简单，我们进行数据库操作时候，无论是使用命令行，还是调用高级语言的接口，都先指定自己的sql语句是以什么形式编码的，即语句<code>set names 编码方案</code>。这样之后就会修改当前操作下mysql的编码方案，像这张图就是我执行<code>set names gbk</code>后的改变结果：<img src="http://i.imgur.com/XVYIRtx.png" alt=""></p>
+<h3 id="正好今天在用python3链接数据库，把我的编码配置扔出来"><a href="#正好今天在用python3链接数据库，把我的编码配置扔出来" class="headerlink" title="正好今天在用python3链接数据库，把我的编码配置扔出来"></a>正好今天在用python3链接数据库，把我的编码配置扔出来</h3><ul>
+<li>数据库编码还是在创建时改为utf8</li>
+<li>链接时指定客户端编码<br><code>pymysql.connect(host=&#39;localhost&#39;, port=3306, user=&#39;root&#39;, passwd=&#39;root&#39;, db=&#39;blog&#39;, charset=&#39;utf8&#39;)</code></li>
+<li>指定编码格式<br><code>cur.execute(&quot;set names utf8&quot;)</code></li>
+</ul>
+<p>然后就OK了</p>
 
       
     </div>
@@ -429,10 +435,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -453,7 +459,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives">
                 <span class="site-state-item-count">13</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -466,7 +472,7 @@
             <div class="site-state-item site-state-tags">
               
                 <span class="site-state-item-count">1</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-name">tags</span>
               
             </div>
           
@@ -500,7 +506,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库对数据存储的编码方案"><span class="nav-number">1.</span> <span class="nav-text">数据库对数据存储的编码方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sql语句的编码方案"><span class="nav-number">2.</span> <span class="nav-text">sql语句的编码方案</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库对数据存储的编码方案"><span class="nav-number">1.</span> <span class="nav-text">数据库对数据存储的编码方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sql语句的编码方案"><span class="nav-number">2.</span> <span class="nav-text">sql语句的编码方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正好今天在用python3链接数据库，把我的编码配置扔出来"><span class="nav-number">3.</span> <span class="nav-text">正好今天在用python3链接数据库，把我的编码配置扔出来</span></a></li></ol></div>
             
 
           </div>
@@ -532,7 +538,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
