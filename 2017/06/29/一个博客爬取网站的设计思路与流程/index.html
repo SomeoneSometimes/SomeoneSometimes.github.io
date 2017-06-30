@@ -1,0 +1,771 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。 这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="一个博客爬取网站的设计思路与流程">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/06/29/一个博客爬取网站的设计思路与流程/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。 这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不">
+<meta property="og:image" content="http://i.imgur.com/r2IDn4k.png">
+<meta property="og:updated_time" content="2017-06-30T06:48:14.043Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="一个博客爬取网站的设计思路与流程">
+<meta name="twitter:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。 这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不">
+<meta name="twitter:image" content="http://i.imgur.com/r2IDn4k.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/06/29/一个博客爬取网站的设计思路与流程/"/>
+
+
+
+
+
+  <title>一个博客爬取网站的设计思路与流程 | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Über
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            menu.link
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/06/29/一个博客爬取网站的设计思路与流程/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">一个博客爬取网站的设计思路与流程</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-29T20:39:52+08:00">
+                2017-06-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。</p>
+<p><img src="http://i.imgur.com/r2IDn4k.png" alt=""><br>这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不测2333<br>对了，细心的同学应该能够发现，这个页面使用的是github的css文件</p>
+<p>本篇文章我将从以下几方面对开发过程进行描述：</p>
+<ul>
+<li>爬虫的编写<ul>
+<li>爬取逻辑</li>
+<li>解析html以获取页面样式</li>
+<li>入口参数检测以提高爬虫健壮性</li>
+</ul>
+</li>
+<li>后端逻辑的实现<ul>
+<li>php后台处理的实现</li>
+<li>轮询来获取后台程序的运行进度</li>
+<li>后台文件结构与设计</li>
+</ul>
+</li>
+<li>网站安全性的考虑</li>
+<li>样式设计（这方面我第一次接触，非常菜没什么好借鉴的。。。）</li>
+<li>其他的一些问题<ul>
+<li>整个网站的编码</li>
+<li>js的json数据传输</li>
+</ul>
+</li>
+</ul>
+<a id="more"></a>
+<hr>
+<h2 id="爬虫的编写"><a href="#爬虫的编写" class="headerlink" title="爬虫的编写"></a>爬虫的编写</h2><h3 id="首先是爬取逻辑"><a href="#首先是爬取逻辑" class="headerlink" title="首先是爬取逻辑"></a>首先是爬取逻辑</h3><p>我采用的是正则表达式匹配的方式，逻辑是这样的：维护一个目录列表，把博客初始链接放进去作为列表第一个成员，之后对目录列表进行遍历，解析链接中所有符合目录正则表达式的新的目录 url，并将新的目录 url增加到目录列表中，这样在循环结束后，就相当于把所有的目录页面都走了一遍。<br>同时在这个过程中，我们对每个链接的html文件可不只是扫描出符合目录正则表达式的链接，我们同时还会通过article正则表达式扫描出所有文章链接，并添加到文章列表。所以在对目录列表的整个遍历结束之后，我们不仅仅是遍历解析了所有的page页面，还获得了网站中所有的文章链接</p>
+<p>###然后是对单个页面的样式，js代码，图片等的解析下载<br>拿到所有的文章链接后，就是对文章的解析下载了，但是使用python下载链接只能拿到html文件，不包括css文件，js文件，图片这些其他的资源，如果想在本地离线使用的话，就需要解析下载下来，这里我首先使用python的BeautifulSoup模块对html进行了解析，使HTML文件变成可以操作的DOM形式。<br>之后我找了几个常见的博客文章样本进行分析，可以看到基本上需要下载的链接在<code>&lt;link&gt; &lt;img&gt; &lt;script&gt;</code>这几个标签的属性中，于是我就把这些标签都拿出来，从他们的属性中抓取要下载的链接，之后下载下来放到本地就可以了，具体抓那些属性，我都放到了配置文件中，可以随时修改抓取策略<br>通过上面的这种方式，抓取下来的页面基本能够还原原来网页的各种效果</p>
+<p>###关于提高爬虫的健壮性<br>首先要确定由用户指定的对象，也就是程序输入点</p>
+<ul>
+<li>爬取的链接可能无法访问</li>
+<li>用户提供的路径可能不存在或没有权限读写</li>
+</ul>
+<p>除此之外还会存在问题的对象</p>
+<ul>
+<li>本地存放是基于windows文件系统的，在命名上会有要求，在写完整个爬虫后，我最终正则表达式需要去过滤的字符有这些：[\/:*?\”&lt;&gt;|\x20\n\t\r\f\a]</li>
+<li>在爬取中涉及到对html文件解析之后再下载，这些从页面中解析出来的链接可能存在问题</li>
+</ul>
+<p>还有一个之前没太注意过的问题：<br>因为爬取中需要对各种书写方式做出解析，所以用到了很多切片，分割等操作，就可能会存在溢出问题，比如说我想去掉<code>http://</code>，用str[7:]实现，在遇到不是<code>http://</code>格式的时候就会出现溢出问题。这些错误在进行各种程序输入统筹标准化的时候经常出现</p>
+<p>在进行参数检测的时候，需要遵循的原则如下：</p>
+<ul>
+<li>尽量在参数入口进行检测，这样以后用的时候就不用再检测了</li>
+<li>要仔细分析那些是来源不可靠的参数，尽量在他们出现的时候就进行参数检测</li>
+</ul>
+<hr>
+<h2 id="后端逻辑的实现"><a href="#后端逻辑的实现" class="headerlink" title="后端逻辑的实现"></a>后端逻辑的实现</h2><h3 id="php后台处理的实现"><a href="#php后台处理的实现" class="headerlink" title="php后台处理的实现"></a>php后台处理的实现</h3><p>php调用爬虫的方式采用命令行的形式，在php中使用shell_exec()函数来对python爬虫进行调用，但是php程序不可能等待爬虫运行结束，处理的逻辑应该是：在爬虫开始前断开http链接，之后让爬虫自己去运行。具体的实现分析我在<a href="http://cauc.me/2017/06/20/php%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E4%B8%8Ehttp%E7%9A%84%E8%81%94%E7%B3%BB/" target="_blank" rel="external">php输出缓冲与http的联系</a>中已经做出了详细解释</p>
+<h3 id="轮询读取后台程序进度"><a href="#轮询读取后台程序进度" class="headerlink" title="轮询读取后台程序进度"></a>轮询读取后台程序进度</h3><p>后台的程序在断开http链接之后就无法返回给前端任何信息了，这时用户对后台运行的程序无法掌控，对于这种情况，常见的解决方案是轮询或websocket，websocket一般在软件中使用，网站中经常使用轮询的方式。<br>所谓轮询，就是后台的程序把运行的实时进度都写到数据库中，然后在前端使用ajax来不断的去拿取数据库的信息来实现对后台运行程序的实时掌控，因为前端要不断的发起访问请求，所以叫轮询</p>
+<p>可能的更新：<br>关于cgi，fast-cgi这些关于php数据传输方式的名词<br>redist是个后台处理队列的扩展，可能经常在后台大规模计算的时候使用</p>
+<h3 id="php后台文件结构与设计"><a href="#php后台文件结构与设计" class="headerlink" title="php后台文件结构与设计"></a>php后台文件结构与设计</h3><p><strong>因为是第一次写网站，参考火日的xss平台的文件目录，把网站的文件结构设计如下：</strong></p>
+<ul>
+<li>首先是存放静态文件的static文件夹，里面分为css，js，images，font四个文件夹，所有的引用都来自它们</li>
+<li>两个php扩展文件，也放在同级目录下，在调用的时候直接require到对应的路径</li>
+<li>将所有允许直接访问的php文件放到外层目录下</li>
+<li>所有提供辅助功能，也就是让外层php调用的php文件，放到内层目录下，像config.php,function.php,sql.php,auth.php等,这些辅助文件有些像functioin.php，sql.php这样提供各种需要的函数，有些像auth.php,waf.php这样提供一段必要的执行代码</li>
+</ul>
+<p><strong>对于js发出请求的相响应设计</strong><br>这些响应逻辑都在api.php页面中实现，以api接口的形式实现，不做登陆检测，同时为了保证有些api的管理员才能调用特性，需要建立admin_api.php,做管理员登陆检测。<br>基本的api.php书写结构如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">if ( isset( $_GET[&apos;cmd&apos;]) &amp;&amp; $_GET[&apos;cmd&apos;] != &quot;&quot; )&#123;</div><div class="line">    switch( $_GET[&apos;cmd&apos;] )&#123;</div><div class="line"></div><div class="line">        case &apos;deleteblog&apos;:</div><div class="line">            if(isset($_GET[&apos;blog&apos;]) &amp;&amp; $_GET[&apos;blog&apos;] != &quot;&quot;)&#123;</div><div class="line">            &#125;</div><div class="line">            break;</div><div class="line"></div><div class="line">        case &apos;deletecrawlerstate&apos;:</div><div class="line"></div><div class="line">            if(isset($_GET[&apos;blog&apos;]) &amp;&amp; $_GET[&apos;blog&apos;] != &quot;&quot;) &#123;</div><div class="line">            &#125;</div><div class="line">            break;</div><div class="line"></div><div class="line">        case &apos;deletecrawler&apos;:</div><div class="line"></div><div class="line">            if(isset($_GET[&apos;blog&apos;]) &amp;&amp; $_GET[&apos;blog&apos;] != &quot;&quot;) &#123;</div><div class="line">            &#125;</div><div class="line">            break;</div><div class="line">	&#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>除此之外，这些页面返回的数据建议使用json格式，也就是<code>echo(json_encode(变量))</code>，并且在程序开头指明<code>header(&#39;Content-Type: application/json&#39;);</code><br>这样在js接收中$.get(url,function(data, textstates, fn){ })中，data就是可以直接使用的变量格式<br>对了，要注意json只能接受utf编码格式的变量，如果php使用gb2312编码的话，需要转化为utf编码的</p>
+<p><strong>访问控制如下设计:</strong><br>所有内层的辅助函数都禁止直接访问，这样实现<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">if(!defined(&apos;IN_BLOG_PLATFORM&apos;))&#123;</div><div class="line">    exit(&apos;Access Denied&apos;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">如果是管理员页面需要调用的话，还需要加上</div><div class="line">if(!defined(&apos;IS_ADMIN&apos;))&#123;</div><div class="line">    exit(&apos;Access Denied&apos;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">这样的话，在直接访问的时候，就会因为没有定义宏变量而禁止访问</div></pre></td></tr></table></figure></p>
+<p>外层的函数在所有入口点需要进行session检查，将所有未登录的访问都重定向到login.php<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">这个函数在页面入口除了检查了$_SESSION[&apos;isLogin&apos;]外还检查了user_agent值</div><div class="line">if (!( isset($_SESSION[&apos;isLogin&apos;]) &amp;&amp; $_SESSION[&apos;isLogin&apos;] === true &amp;&amp;</div><div class="line">    isset($_SESSION[&apos;user_agent&apos;]) &amp;&amp; $_SESSION[&apos;user_agent&apos;] === $_SERVER[&apos;HTTP_USER_AGENT&apos;] ))&#123;</div><div class="line"></div><div class="line">    $_SESSION[&apos;isLogin&apos;] = false;</div><div class="line">    $_SESSION[&apos;user_IP&apos;] = &quot;&quot;;</div><div class="line">    $_SESSION[&apos;user_agent&apos;] = &quot;&quot;;</div><div class="line">    //清空session会话，清除session变量，结束session会话</div><div class="line">    session_unset();</div><div class="line">    session_destroy();</div><div class="line">    header(&quot;Location: login.php&quot;);</div><div class="line">    exit();</div><div class="line">&#125;</div><div class="line"></div><div class="line">管理员页面需要在入口进行管理员检查，我是这样设计的</div><div class="line">if(isset($_SESSION[&apos;username&apos;]) &amp;&amp; $_SESSION[&apos;username&apos;] != &quot;&quot;)&#123;</div><div class="line"></div><div class="line">    if(!checkAdmin($mysqli, $_SESSION[&apos;username&apos;]))&#123;</div><div class="line">        exit(&apos;Access Denied&apos;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>综上所述，一个页面做出完整的访问控制需要添加如下功能代码：</p>
+<ul>
+<li>定义相应的宏变量，以引入需要的辅助函数<br><code>define(&quot;IN_BLOG_PLATFORM&quot;, true);</code></li>
+<li>引入需要的辅助函数<br><code>require_once (&quot;./libs/waf.php&quot;);</code></li>
+<li>设置http_only并开启session<br><code>ini_set(&quot;session.cookie_httponly&quot;, 1); session_start();</code></li>
+<li>基于session中的值进行个各种检查，像是否登陆，user-agent是否符合等，只有在检查通过的时候才允许访问页面</li>
+<li>链接数据库</li>
+</ul>
+<p><strong>表单提交中token的作用分析</strong><br>之前一直没有注意到过，见到火日师傅的xss平台中使用了，自己也就在表单提交中加上了，所谓表单提交中的token，指的是在表单中隐藏一行input，其值是随机生成的，并存放到session中，然后随着表单数据提交到服务端，服务端会对token值与存储在session的值进行比对，只有在相同的情况下才会继续往下执行<br>一开始使用这项功能的时候没能体会到什么作用，现在多少能理解一点了</p>
+<ul>
+<li>填写表单，提交表单这个流程必须人为完整的走下来才行，如果想直接提交表单参数的话，会因为没有token而被拒绝，这应该能够把很多自动化爬虫，暴力破解都拒之门外。</li>
+<li>我在设计login.php, registe.php页面的时候，这些页面的处理逻辑基本上分成两种情况：一种是没有提交表单参数的，这是展示登陆界面，另一种是提交了表单参数的，这时执行登陆验证逻辑。而区分这两种情况的判断条件，我们可以采用检查token的方式：如果token存在并与session中的存储值相同，就判定为登陆验证情况，反之则为登陆页面展示情况</li>
+</ul>
+<hr>
+<h2 id="网站安全性的考虑"><a href="#网站安全性的考虑" class="headerlink" title="网站安全性的考虑"></a>网站安全性的考虑</h2><p><strong>首先是关于数据库的</strong></p>
+<ol>
+<li><p>对所有的数据库入口参数做过滤，使用的过滤函数如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">	function d_addslashes(array $array)&#123;</div><div class="line"></div><div class="line">    	foreach($array as $key=&gt;$value)&#123;</div><div class="line">        	if(!is_array($value))&#123;</div><div class="line">           	 //查看php的魔术引号是否开启了，如果没有开启则使用addslashes函数自行改变所有的引号</div><div class="line">            	!get_magic_quotes_gpc() &amp;&amp; $value=addslashes($value);</div><div class="line">            	$array[$key]=$value;</div><div class="line">        	&#125;else&#123;</div><div class="line">            	$array[$key] = d_addslashes($array[$key]);</div><div class="line">        	&#125;</div><div class="line">    	&#125;</div><div class="line">    	return $array;</div><div class="line">	&#125;</div><div class="line">使用方式如下,比如要过滤$blog参数</div><div class="line">list($blog) = d_addslashes([$blog]);</div></pre></td></tr></table></figure>
+</li>
+<li><p>对数据库返回的错误代码替换为自定义语句</p>
+</li>
+<li>尽量保证编码的一致性，因为数据处理流程中编码的转换可能导致某些字符的消失，详见ph师傅的文章，这个我的网站真的很难做到，php使用的gbk编码，数据库使用utf8编码。。</li>
+</ol>
+<p><strong>然后是关于访问控制的</strong><br>页面是怎么实现访问控制这点在之前已经叙述过了，除此之外，用户表中不存放明文密码防止拖库，存储密码hash的时候要加盐防止彩虹表攻击，然后应我们密码学老师的强烈要求，把所有的hash函数由md5换成了SHA3</p>
+<p><strong>登陆机制防护</strong></p>
+<ul>
+<li>登陆表单中使用token应该可以在一定程度上防止暴力破解攻击，因为这时候你的暴力遍历速度最高只能和网络速度等同，一次尝试流程需要先接收html页面，从中拿到token值后才能提交尝试的表单</li>
+<li>当然，防止暴力破解攻击，最有效的方式还是使用错误次数限制。在数据库中建立forbidden_ip表，登陆错误的时候将会记录下此ip，在错误次数达上线的时候，ip封禁</li>
+</ul>
+<p><strong>还有个比较有意思的点——记录user-agent</strong><br>在用户登录的时候记录user-agent的值到session中，然后所有的页面在登陆的时候都会与将访问者的user-agent字段与session中记录的值相比较，如果不相同的话就注销用户。<br>具体有什么作用，目前我发现的用处就是增加xss攻击获取cookie后冒充管理员登陆的难度，因为这时你必须要保证user-agent要和管理员所用的一样才行</p>
+<hr>
+<h2 id="样式设计"><a href="#样式设计" class="headerlink" title="样式设计"></a>样式设计</h2><p>好吧，界面样式的设计才是我花费时间最多的地方，虽然之前大一时学习过css但现在基本都忘了。<br>网站中的样式主要有以下来源</p>
+<ul>
+<li>去其他网站寻找符合页面结构的网页，之后F12分析下主要使用的css文件，然后把这些css dump下来，之后仿照着源网页的结构进行编排就好了，我的网站中，登陆与注册界面使用github登陆界面的css文件，admin页面使用的是腾讯云主页的css文件</li>
+<li>对于某些元素，像按钮格式，表格格式这些，可以去网上直接下载模板css文件，书写的时候直接在class中加上对应的标志就好</li>
+<li>还可能在其他页面看到好看的元素样式，可以F12分析后，把此元素的的css都复制下来，添加到我们的标签中。不过经常出现的情况是，你需要仔细分析到底是哪个标签藏着关键的css样式，毕竟一个标签可能有很多层div嵌套，常用的方法是在F12中依次把样式去掉看界面变化效果</li>
+<li>最后实在不行我们可以自己手写嘛，使用bootstrap书写出来的页面还是说的过去的</li>
+</ul>
+<p>在页面中应该尽量使用百分比布局，这样在不同分辨率，不同窗口大小下都能灵活展示。我花费了很多时间，就是在调整页面的布局问题。直接使用其他网站的css文件并仿照div结构编写一般就不会出现这种问题</p>
+<hr>
+<h2 id="网站编写中其他的一些问题"><a href="#网站编写中其他的一些问题" class="headerlink" title="网站编写中其他的一些问题"></a>网站编写中其他的一些问题</h2><h3 id="网站整体编码"><a href="#网站整体编码" class="headerlink" title="网站整体编码"></a>网站整体编码</h3><p>php使用gb2312编码，所以在所有php页面要指定输出页面的编码方式<br><code>header(&quot;Content-type: text/html; charset=gb2312&quot;);</code><br>或者在html代码里加上<code>&lt;meta charset=&quot;gbk&quot;&gt;</code>。<br>当然我建议大家两种方式都写上以防万一</p>
+<p>数据库存储使用utf-8编码，在调用数据库的时候需要指定连接编码方式<code>set names gbk;</code></p>
+<p>api传输数据使用json编码，但是json只接受utf编码的数据，所以php编码要先转化为utf8编码方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">function list_gbk_to_utf_8($data) &#123;</div><div class="line">    if( is_array($data) ) &#123;</div><div class="line">        foreach ($data as $k =&gt; $v) &#123;</div><div class="line">            if ( is_array($v) ) &#123;</div><div class="line">                $data[$k] = list_gbk_to_utf_8($v);</div><div class="line">            &#125; else &#123;</div><div class="line">                $data[$k] = iconv(&apos;gb2312&apos;, &apos;utf-8//IGNORE&apos;, ($data[$k]));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return $data;</div><div class="line">    &#125; else &#123;</div><div class="line">        $data = iconv(&apos;gb2312&apos;, &apos;utf-8//IGNORE&apos;,$data);</div><div class="line">        return $data;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="页面标签事件的触发后传this"><a href="#页面标签事件的触发后传this" class="headerlink" title="页面标签事件的触发后传this"></a>页面标签事件的触发后传this</h3><p>页面中书写如下：<br><code>&lt;xxxx onclick=&quot;test(this)&quot;&gt;</code><br>script代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function test(yiruma)&#123;</div><div class="line">	$(yiruma) 就是触发响应的那个标签了，使用$()的方法是为了将yiruma编码从js格式转到jq格式</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/20/php输出缓冲与http的联系/" rel="prev" title="php输出缓冲与http的联系">
+                php输出缓冲与http的联系 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">Tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫的编写"><span class="nav-number">1.</span> <span class="nav-text">爬虫的编写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先是爬取逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">首先是爬取逻辑</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后端逻辑的实现"><span class="nav-number">2.</span> <span class="nav-text">后端逻辑的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#php后台处理的实现"><span class="nav-number">2.1.</span> <span class="nav-text">php后台处理的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#轮询读取后台程序进度"><span class="nav-number">2.2.</span> <span class="nav-text">轮询读取后台程序进度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php后台文件结构与设计"><span class="nav-number">2.3.</span> <span class="nav-text">php后台文件结构与设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网站安全性的考虑"><span class="nav-number">3.</span> <span class="nav-text">网站安全性的考虑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#样式设计"><span class="nav-number">4.</span> <span class="nav-text">样式设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网站编写中其他的一些问题"><span class="nav-number">5.</span> <span class="nav-text">网站编写中其他的一些问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站整体编码"><span class="nav-number">5.1.</span> <span class="nav-text">网站整体编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面标签事件的触发后传this"><span class="nav-number">5.2.</span> <span class="nav-text">页面标签事件的触发后传this</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
