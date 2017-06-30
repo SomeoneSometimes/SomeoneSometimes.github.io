@@ -99,7 +99,7 @@
 <meta property="og:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。  这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的">
 <meta property="og:image" content="http://i.imgur.com/qNswEah.png">
 <meta property="og:image" content="http://i.imgur.com/r2IDn4k.png">
-<meta property="og:updated_time" content="2017-06-30T07:10:25.843Z">
+<meta property="og:updated_time" content="2017-06-30T07:21:26.670Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个博客爬取网站的设计思路与流程">
 <meta name="twitter:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。  这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的">
@@ -204,7 +204,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -214,7 +214,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            Über
+            About
           </a>
         </li>
       
@@ -284,7 +284,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-06-29T20:39:52+08:00">
                 2017-06-29
@@ -342,7 +342,8 @@
 <li>样式设计（这方面我第一次接触，非常菜没什么好借鉴的。。。）</li>
 <li>其他的一些问题<ul>
 <li>整个网站的编码</li>
-<li>js的json数据传输</li>
+<li>页面标签事件触发后传this</li>
+<li>使用中文智能分词实现模糊搜索</li>
 </ul>
 </li>
 </ul>
@@ -429,7 +430,8 @@
 <h2 id="网站编写中其他的一些问题"><a href="#网站编写中其他的一些问题" class="headerlink" title="网站编写中其他的一些问题"></a>网站编写中其他的一些问题</h2><h3 id="网站整体编码"><a href="#网站整体编码" class="headerlink" title="网站整体编码"></a>网站整体编码</h3><p>php使用gb2312编码，所以在所有php页面要指定输出页面的编码方式<br><code>header(&quot;Content-type: text/html; charset=gb2312&quot;);</code><br>或者在html代码里加上<code>&lt;meta charset=&quot;gbk&quot;&gt;</code>。<br>当然我建议大家两种方式都写上以防万一</p>
 <p>数据库存储使用utf-8编码，在调用数据库的时候需要指定连接编码方式<code>set names gbk;</code></p>
 <p>api传输数据使用json编码，但是json只接受utf编码的数据，所以php编码要先转化为utf8编码方式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">function list_gbk_to_utf_8($data) &#123;</div><div class="line">    if( is_array($data) ) &#123;</div><div class="line">        foreach ($data as $k =&gt; $v) &#123;</div><div class="line">            if ( is_array($v) ) &#123;</div><div class="line">                $data[$k] = list_gbk_to_utf_8($v);</div><div class="line">            &#125; else &#123;</div><div class="line">                $data[$k] = iconv(&apos;gb2312&apos;, &apos;utf-8//IGNORE&apos;, ($data[$k]));</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">        return $data;</div><div class="line">    &#125; else &#123;</div><div class="line">        $data = iconv(&apos;gb2312&apos;, &apos;utf-8//IGNORE&apos;,$data);</div><div class="line">        return $data;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="页面标签事件的触发后传this"><a href="#页面标签事件的触发后传this" class="headerlink" title="页面标签事件的触发后传this"></a>页面标签事件的触发后传this</h3><p>页面中书写如下：<br><code>&lt;xxxx onclick=&quot;test(this)&quot;&gt;</code><br>script代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function test(yiruma)&#123;</div><div class="line">	$(yiruma) 就是触发响应的那个标签了，使用$()的方法是为了将yiruma编码从js格式转到jq格式</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="页面标签事件触发后传this"><a href="#页面标签事件触发后传this" class="headerlink" title="页面标签事件触发后传this"></a>页面标签事件触发后传this</h3><p>页面中书写如下：<br><code>&lt;xxxx onclick=&quot;test(this)&quot;&gt;</code><br>script代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">function test(yiruma)&#123;</div><div class="line">	$(yiruma) 这就是触发响应的那个标签了，使用$()的方法是为了将yiruma标签从js格式转到jq格式</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="使用中文智能分词实现模糊搜索"><a href="#使用中文智能分词实现模糊搜索" class="headerlink" title="使用中文智能分词实现模糊搜索"></a>使用中文智能分词实现模糊搜索</h3><p>百度上可以查到，搜索引擎的模糊搜索是要先进行智能分词的，比如 恶意广告，会分为恶意 与 广告两个关键词，然后还要进行各种过滤匹配，这里我自己实现时暂且先不管那么多，毕竟不是专门做这个方向的，我只使用了中文智能分词的方式。<br>首先在github上找到了php端很流行的scws，使用这些代码提供的接口对搜索框输入的关键字进行分词，之后在每个分词间加上%，在数据库中做like搜索。比如恶意广告就是 <code>where name like &#39;%恶意%广告%&#39;</code>然后把搜索结果返回。<br>当然还有更多的算法，时间紧迫就先做这个最简单的，以后有时间再添加新的匹配规则。</p>
 
       
     </div>
@@ -523,10 +525,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -547,7 +549,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives">
                 <span class="site-state-item-count">14</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -560,7 +562,7 @@
             <div class="site-state-item site-state-tags">
               
                 <span class="site-state-item-count">1</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-name">tags</span>
               
             </div>
           
@@ -594,7 +596,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫的编写"><span class="nav-number">1.</span> <span class="nav-text">爬虫的编写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先是爬取逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">首先是爬取逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#然后是对单个页面的样式，js代码，图片等的解析下载"><span class="nav-number">1.2.</span> <span class="nav-text">然后是对单个页面的样式，js代码，图片等的解析下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于提高爬虫的健壮性"><span class="nav-number">1.3.</span> <span class="nav-text">关于提高爬虫的健壮性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后端逻辑的实现"><span class="nav-number">2.</span> <span class="nav-text">后端逻辑的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#php后台处理的实现"><span class="nav-number">2.1.</span> <span class="nav-text">php后台处理的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#轮询读取后台程序进度"><span class="nav-number">2.2.</span> <span class="nav-text">轮询读取后台程序进度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php后台文件结构与设计"><span class="nav-number">2.3.</span> <span class="nav-text">php后台文件结构与设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网站安全性的考虑"><span class="nav-number">3.</span> <span class="nav-text">网站安全性的考虑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#样式设计"><span class="nav-number">4.</span> <span class="nav-text">样式设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网站编写中其他的一些问题"><span class="nav-number">5.</span> <span class="nav-text">网站编写中其他的一些问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站整体编码"><span class="nav-number">5.1.</span> <span class="nav-text">网站整体编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面标签事件的触发后传this"><span class="nav-number">5.2.</span> <span class="nav-text">页面标签事件的触发后传this</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#爬虫的编写"><span class="nav-number">1.</span> <span class="nav-text">爬虫的编写</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先是爬取逻辑"><span class="nav-number">1.1.</span> <span class="nav-text">首先是爬取逻辑</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#然后是对单个页面的样式，js代码，图片等的解析下载"><span class="nav-number">1.2.</span> <span class="nav-text">然后是对单个页面的样式，js代码，图片等的解析下载</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#关于提高爬虫的健壮性"><span class="nav-number">1.3.</span> <span class="nav-text">关于提高爬虫的健壮性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#后端逻辑的实现"><span class="nav-number">2.</span> <span class="nav-text">后端逻辑的实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#php后台处理的实现"><span class="nav-number">2.1.</span> <span class="nav-text">php后台处理的实现</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#轮询读取后台程序进度"><span class="nav-number">2.2.</span> <span class="nav-text">轮询读取后台程序进度</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php后台文件结构与设计"><span class="nav-number">2.3.</span> <span class="nav-text">php后台文件结构与设计</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网站安全性的考虑"><span class="nav-number">3.</span> <span class="nav-text">网站安全性的考虑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#样式设计"><span class="nav-number">4.</span> <span class="nav-text">样式设计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#网站编写中其他的一些问题"><span class="nav-number">5.</span> <span class="nav-text">网站编写中其他的一些问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网站整体编码"><span class="nav-number">5.1.</span> <span class="nav-text">网站整体编码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#页面标签事件触发后传this"><span class="nav-number">5.2.</span> <span class="nav-text">页面标签事件触发后传this</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#使用中文智能分词实现模糊搜索"><span class="nav-number">5.3.</span> <span class="nav-text">使用中文智能分词实现模糊搜索</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -626,7 +628,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
