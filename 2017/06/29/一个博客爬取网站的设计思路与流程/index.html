@@ -90,19 +90,20 @@
 
 
 
-<meta name="description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。 这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不">
+<meta name="description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。  这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一个博客爬取网站的设计思路与流程">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/06/29/一个博客爬取网站的设计思路与流程/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。 这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不">
+<meta property="og:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。  这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的">
+<meta property="og:image" content="http://i.imgur.com/qNswEah.png">
 <meta property="og:image" content="http://i.imgur.com/r2IDn4k.png">
-<meta property="og:updated_time" content="2017-06-30T06:53:26.224Z">
+<meta property="og:updated_time" content="2017-06-30T07:10:25.843Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="一个博客爬取网站的设计思路与流程">
-<meta name="twitter:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。 这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不">
-<meta name="twitter:image" content="http://i.imgur.com/r2IDn4k.png">
+<meta name="twitter:description" content="前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。  这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的">
+<meta name="twitter:image" content="http://i.imgur.com/qNswEah.png">
 
 
 
@@ -321,6 +322,7 @@
 
       
         <p>前后花了两个月的时间，终于把数据库课设做完了。。。考虑到wooyun关闭后各种wooyun资源dump的流行，加上正好最近在通过各个博客学习安全知识，就想着做一个博客爬取网站吧，首先是写出一个爬虫来爬取整个博客的文章，然后再展示出来。</p>
+<p><img src="http://i.imgur.com/qNswEah.png" alt=""></p>
 <p><img src="http://i.imgur.com/r2IDn4k.png" alt=""><br>这是网站的登陆界面，在左侧的文字概述了我做整个网站的初衷，希望做一个blog的收集平台，能够方便的爬取博客，然后展示这些dump下来的文章，以备wooyun那样的不测2333<br>对了，细心的同学应该能够发现，这个页面使用的是github的css文件</p>
 <p>本篇文章我将从以下几方面对开发过程进行描述：</p>
 <ul>
@@ -367,6 +369,11 @@
 <hr>
 <h2 id="后端逻辑的实现"><a href="#后端逻辑的实现" class="headerlink" title="后端逻辑的实现"></a>后端逻辑的实现</h2><h3 id="php后台处理的实现"><a href="#php后台处理的实现" class="headerlink" title="php后台处理的实现"></a>php后台处理的实现</h3><p>php调用爬虫的方式采用命令行的形式，在php中使用shell_exec()函数来对python爬虫进行调用，但是php程序不可能等待爬虫运行结束，处理的逻辑应该是：在爬虫开始前断开http链接，之后让爬虫自己去运行。具体的实现分析我在<a href="http://cauc.me/2017/06/20/php%E8%BE%93%E5%87%BA%E7%BC%93%E5%86%B2%E4%B8%8Ehttp%E7%9A%84%E8%81%94%E7%B3%BB/" target="_blank" rel="external">php输出缓冲与http的联系</a>中已经做出了详细解释</p>
 <h3 id="轮询读取后台程序进度"><a href="#轮询读取后台程序进度" class="headerlink" title="轮询读取后台程序进度"></a>轮询读取后台程序进度</h3><p>后台的程序在断开http链接之后就无法返回给前端任何信息了，这时用户对后台运行的程序无法掌控，对于这种情况，常见的解决方案是轮询或websocket，websocket一般在软件中使用，网站中经常使用轮询的方式。<br>所谓轮询，就是后台的程序把运行的实时进度都写到数据库中，然后在前端使用ajax来不断的去拿取数据库的信息来实现对后台运行程序的实时掌控，因为前端要不断的发起访问请求，所以叫轮询</p>
+<p>为了减轻带宽与机子压力而采取的措施：</p>
+<ul>
+<li>在js获取更新资源的api函数中，将传输的更新资源在数据库中使用mysqli_fetch_row()获取而不使用mysqli_fetch_arrow()，这两个取出的结果，一个是列表格式，一个是字典格式的，自然列表格式的要更小</li>
+<li>js获取更新资源后，在没有打开进度详情页面的时候，只更新主页面的通知图标，在打开进度详情页面的时候再对详情页面进行实时更新。可以避免对js对页面大量不必要的重写</li>
+</ul>
 <p>可能的更新：<br>关于cgi，fast-cgi这些关于php数据传输方式的名词<br>redist是个后台处理队列的扩展，可能经常在后台大规模计算的时候使用</p>
 <h3 id="php后台文件结构与设计"><a href="#php后台文件结构与设计" class="headerlink" title="php后台文件结构与设计"></a>php后台文件结构与设计</h3><p><strong>因为是第一次写网站，参考火日的xss平台的文件目录，把网站的文件结构设计如下：</strong></p>
 <ul>
