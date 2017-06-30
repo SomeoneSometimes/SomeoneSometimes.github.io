@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
+<meta name="description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP文件包含的利用思路">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
-<meta property="og:updated_time" content="2017-05-12T07:32:15.617Z">
+<meta property="og:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能">
+<meta property="og:updated_time" content="2017-06-30T09:10:57.200Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP文件包含的利用思路">
-<meta name="twitter:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行文件代码">
+<meta name="twitter:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能">
 
 
 
@@ -319,19 +319,20 @@
 
       
         <p>PHP的文件包含函数有两类，分三种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">file_get_contents() </div><div class="line">include()/include_once()  require/require_once()</div></pre></td></tr></table></figure></p>
-<p>第一种用于获取文件的数据，第二种用于包含并执行文件代码<br><a id="more"></a></p>
-<h3 id="file-get-contents"><a href="#file-get-contents" class="headerlink" title="file_get_contents()"></a>file_get_contents()</h3><p>这个函数经常用于获取文件内容，尤其是php文件的代码，配合伪协议中的元封装器php://filter/convert.base64-encode/resource=class.php<br>几乎已经成了公认的文件获取姿势<br>顺便说一句，刚测试的print file_get_contents(“test2.php”)貌似是被禁止了，php类型的文件无法产生任何回显</p>
+<p>第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能<br><a id="more"></a></p>
+<h3 id="file-get-contents"><a href="#file-get-contents" class="headerlink" title="file_get_contents()"></a>file_get_contents()</h3><p>这个函数经常用于获取文件内容，尤其是php文件的代码，配合伪协议中的元封装器php://filter/convert.base64-encode/resource=class.php<br>几乎已经成了公认的文件获取姿势</p>
 <h3 id="include-require"><a href="#include-require" class="headerlink" title="include() / require()"></a>include() / require()</h3><p><strong>首先说下两者的唯一不同</strong></p>
 <ol>
 <li>include是当代码执行到它的时候才加载文件,发生错误的时候只是给一个警告,然后继续往下执行</li>
 <li>require是只要程序一执行就会立即调用文件,发生错误的时候会输出错误信息,并且终止脚本的运行</li>
 </ol>
+<p><strong>此函数利用的原理</strong><br>把参数作为一个php文件去运行，所以基本使用方法有拿运行环境与拿输出代码两种作用</p>
 <p><strong>这种文件包含利用的目的无外乎以下几种：</strong></p>
 <ul>
+<li>使用php://filter/convert.base64-encode/resource=xxx来读文件源码</li>
 <li>包含shell代码文件（自己上传的，写的等各种方式），使代码具有php的执行环境</li>
 <li>包含使用伪协议自定的数据流，常用于写shell</li>
 <li>包含关键文件，获得该文件的输出结果与执行环境（就比如说关键文件中的变量引入）</li>
-<li>如果包含的不是php文件，就会输出</li>
 </ul>
 <p><strong>文件包含有许多种姿势，在这里做出统计</strong><br>1、包含日志文件</p>
 <p>2、包含form-data形式下php创建的临时文件</p>
