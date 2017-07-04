@@ -90,18 +90,21 @@
 
 
 
-<meta name="description" content="还没有完工，先别看这篇">
+<meta name="description" content="目前使用到的模块有：  json configparser 文件读写 os sys re BeautifulSoup requests collections">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python模块使用记录">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/06/15/python模块使用记录/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="还没有完工，先别看这篇">
+<meta property="og:description" content="目前使用到的模块有：  json configparser 文件读写 os sys re BeautifulSoup requests collections">
 <meta property="og:image" content="http://i.imgur.com/JA2uF5O.png">
-<meta property="og:updated_time" content="2017-06-20T10:55:47.770Z">
+<meta property="og:image" content="http://i.imgur.com/UYQlCPe.png">
+<meta property="og:image" content="http://i.imgur.com/rIcy9L1.png">
+<meta property="og:image" content="http://i.imgur.com/Q4QiDFL.png">
+<meta property="og:updated_time" content="2017-07-04T07:55:25.446Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python模块使用记录">
-<meta name="twitter:description" content="还没有完工，先别看这篇">
+<meta name="twitter:description" content="目前使用到的模块有：  json configparser 文件读写 os sys re BeautifulSoup requests collections">
 <meta name="twitter:image" content="http://i.imgur.com/JA2uF5O.png">
 
 
@@ -320,23 +323,38 @@
       
 
       
-        <p>还没有完工，先别看这篇<br><a id="more"></a></p>
+        <p>目前使用到的模块有：</p>
+<ul>
+<li>json</li>
+<li>configparser</li>
+<li>文件读写</li>
+<li>os</li>
+<li>sys</li>
+<li>re</li>
+<li>BeautifulSoup</li>
+<li>requests</li>
+<li>collections</li>
+</ul>
+<a id="more"></a>
 <p><strong>json</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import json</div><div class="line"></div><div class="line">path = &apos;F:/json.txt&apos;</div><div class="line">_dict = &#123;&apos;key1&apos;:&apos;value1&apos;, &apos;key2&apos;:&apos;value2&apos;&#125;</div><div class="line"></div><div class="line">#将python数据类型转化为json字符串并写入到txt文件中</div><div class="line">fw = open(path, &apos;w&apos;)</div><div class="line">str = json.dumps(_dict) #从python类型转化到json字符串的函数</div><div class="line">fw.write(str)</div><div class="line">fw.close()</div><div class="line"></div><div class="line">#从txt文件中提取json字符串并转化为python数据类型</div><div class="line">fr = open(path, &apos;r&apos;)</div><div class="line">str = fr.read()</div><div class="line">_dict = json.loads(str)         #从json字符串转化到python字典类型的函数</div><div class="line">fr.close()</div><div class="line"></div><div class="line">#一个可以将多个变量作为字典转成json格式的函数，使用python可变参数实现</div><div class="line">def json_encode(**kwargs):</div><div class="line">	return json.dumps(kwargs)</div><div class="line"></div><div class="line">str = json_encode(var1 = &apos;Yiruma&apos;, var2 = &#123;&apos;light&apos;:&apos;music&apos;&#125;, var3 = [1,&apos;2&apos;])</div></pre></td></tr></table></figure></p>
 <p><img src="http://i.imgur.com/JA2uF5O.png" alt=""></p>
 <hr>
 <p><strong>configparser</strong><br>本来学了想用作python的配置文件存储，结果后来一想还是用json存吧，方便不同语言间操作，先记录下来以备后用<br>这是python3的操作方法，具体python2的操作还不太一样，python2<a href="https://docs.python.org/2/library/configparser.html?highlight=configparser#examples" target="_blank" rel="external">走这里</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">import configparser</div><div class="line"></div><div class="line">#configparser写配置：</div><div class="line">fw = open(&apos;F:/crawler.ini&apos;, &apos;w&apos;)</div><div class="line">config = configparser.ConfigParser()</div><div class="line">config[&apos;key1&apos;] = &#123;&quot;var1&quot;:&apos;1&apos;, &quot;var2&quot;:&apos;2&apos;&#125;</div><div class="line">config[&apos;key2&apos;] = &#123;&quot;var3&quot;:&apos;3&apos;, &quot;var4&quot;:&apos;4&apos;&#125;</div><div class="line">config.write(fw)</div><div class="line">fw.close()</div><div class="line"></div><div class="line"></div><div class="line">#configparser读取配置</div><div class="line">config = configparser.ConfigParser()</div><div class="line">config.read(&apos;F:/crawler.ini&apos;)</div><div class="line">config_var = config.sections()</div><div class="line"></div><div class="line"></div><div class="line">/**</div><div class="line">注释：Config parsers do not guess datatypes of values in configuration files, always storing them internally as strings. This means that if you need other datatypes, you should convert on your own:</div><div class="line">在存储的配置文件中，所有的数据都是以字符串形式存储的</div><div class="line">*/</div></pre></td></tr></table></figure></p>
 <hr>
-<p><strong>文件读写</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line"></div></pre></td></tr></table></figure></p>
+<p><strong>文件读写</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">f = open(file_path, mode)</div><div class="line"></div><div class="line">文件打开的模式有：</div><div class="line">r 只读方式打开，函数f.read()返回所有  f.readlines()返回列表</div><div class="line">w 只写方式打开，注意会覆盖原来的文件，函数f.write()写入数据</div><div class="line">a 追加方式打开，指针在文件的末尾，函数f.write()写入数据</div><div class="line"></div><div class="line">rb, wb, ab  都是以二进制格式来读写文件</div><div class="line"></div><div class="line">r+, w+, a+  都是打开文件用于读写</div></pre></td></tr></table></figure></p>
 <hr>
-<p><strong>os操作</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import os</div></pre></td></tr></table></figure></p>
+<p><strong>os操作</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div></pre></td><td class="code"><pre><div class="line">import os</div><div class="line"></div><div class="line">#调用命令行</div><div class="line">os.system()</div><div class="line"></div><div class="line">#检查目录或文件是否存在，并返回bool值，python2中注意参数编码需为gbk</div><div class="line">os.path.exists(path)</div><div class="line"></div><div class="line">#列出目录下所有的文件名</div><div class="line">os.listdir(path)</div><div class="line"></div><div class="line">#判断是否是目录</div><div class="line">os.path.isdir()</div><div class="line"></div><div class="line">#判断是否是文件</div><div class="line">os.path.isfile()</div><div class="line"></div><div class="line">#创建文件夹</div><div class="line">os.makedir()</div><div class="line"></div><div class="line">#创建多级文件夹</div><div class="line">os.makedirs()</div><div class="line"></div><div class="line">#文件重命名</div><div class="line">os.rename(old, new)</div><div class="line"></div><div class="line">#文件删除</div><div class="line">os.remove()</div><div class="line"></div><div class="line">#获取当前工作目录</div><div class="line">os.getcwd()</div><div class="line"></div><div class="line">#分离文件名</div><div class="line">os.path.split(r&quot;c:\python\hello.py&quot;) --&gt; (&quot;c:\\python&quot;, &quot;hello.py&quot;)</div><div class="line"></div><div class="line">#分离扩展名</div><div class="line">os.path.splitext(r&quot;c:\python\hello.py&quot;) --&gt; (&quot;c:\\python\\hello&quot;, &quot;.py&quot;)</div></pre></td></tr></table></figure></p>
 <hr>
 <p><strong>sys</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">import sys</div><div class="line">if __name__ == &quot;__main__&quot;:</div><div class="line"></div><div class="line">  #首先为只有两个参数下的可能的两个场景（version，help）做出解释，之后退出</div><div class="line">  if len(sys.argv) == 2 and sys.argv[1].startswith(&apos;--&apos;):</div><div class="line">    option = sys.argv[1][2:]</div><div class="line">    if option == &apos;version&apos;:</div><div class="line">      print (&apos;Version 1.0&apos;)</div><div class="line">    elif option == &apos;help&apos;:</div><div class="line">      print (&apos;usage python crawler.py blog_nick original_url page_reg article_reg title&apos;)</div><div class="line">    else:</div><div class="line">      print (&apos;Unknown option&apos;)</div><div class="line">    exit()</div><div class="line">  </div><div class="line">  #再为参数个数非6的情况做出解释，告知正确的参数格式</div><div class="line">  elif len(sys.argv) != 6:</div><div class="line">    print (&apos;usage python crawler.py blog_nick original_url page_reg article_reg title&apos;)</div><div class="line">    exit()</div><div class="line"></div><div class="line">  #确定拥有正常个数的参数，接下来就是正常的操作了</div><div class="line">  ...</div><div class="line">  ...</div></pre></td></tr></table></figure></p>
 <hr>
-<p><strong>re</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import re</div></pre></td></tr></table></figure></p>
+<p><strong>re</strong><br>更详细的操作方法见<a href="https://www.cnblogs.com/huxi/archive/2010/07/04/1771073.html" title="https://www.cnblogs.com/huxi/archive/2010/07/04/1771073.html" target="_blank" rel="external">https://www.cnblogs.com/huxi/archive/2010/07/04/1771073.html</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">import re</div><div class="line"></div><div class="line">#创建正则表达式，我一般习惯这样书写，可以方便重复使用，毕竟构造正则表达式是很耗费时间的</div><div class="line">reg = re.complie(&apos;xxx&apos;)</div><div class="line"></div><div class="line">#正则表达式的方法：</div><div class="line">reg.findall(str)   #匹配所有匹配到的字符串，并返回一个列表</div><div class="line">reg.sub(new, str)  #将str中所有匹配到的字符串都用new来替换</div><div class="line">reg.search(str)    #用于搜索，如果没有搜索到时返回None，搜索到时返回Match对象</div><div class="line">Match对象：在reg.Match()  reg.search()中都可能返回此对象，包含多种可读属性与方法</div></pre></td></tr></table></figure></p>
+<p><img src="http://i.imgur.com/UYQlCPe.png" alt=""><br><img src="http://i.imgur.com/rIcy9L1.png" alt=""></p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="http://i.imgur.com/Q4QiDFL.png" alt=""></h2><p><strong>bs4.beautifulsoup</strong><br>最全的操作方法见<a href="https://www.crummy.com/software/BeautifulSoup/bs4/doc/index.zh.html" title="https://www.crummy.com/software/BeautifulSoup/bs4/doc/index.zh.html" target="_blank" rel="external">https://www.crummy.com/software/BeautifulSoup/bs4/doc/index.zh.html</a><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">from bs4 import BeautifulSoup</div><div class="line"></div><div class="line">#建立BeautifulSoup对象</div><div class="line">html = s.get(&apos;http://cauc.me&apos;)</div><div class="line">bs = BeautifulSoup(html, &quot;html.parser&quot;)</div><div class="line"></div><div class="line">#BeautifulSoup对象提供的选择器</div><div class="line">bs.a  bs.body  bs.parent  bs.children   bs.next_sibling    bs.previous_sibling</div><div class="line">.findall(id=xxx) .findall(class=xxx)  .findall(&apos;a&apos;)</div><div class="line"></div><div class="line">#BeautifulSoup对象提供对标签的内容选择</div><div class="line">.name节点名字   .string节点内容   .attrs节点属性</div></pre></td></tr></table></figure></p>
 <hr>
-<p><strong>bs4.beautifulsoup</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">from bs4 import beautifulsoup</div></pre></td></tr></table></figure></p>
+<p><strong>requests</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">import requests</div><div class="line">s = requests.session()</div><div class="line"></div><div class="line">方法</div><div class="line">#使用get方式提交</div><div class="line">s.get(url=&quot;&quot;)</div><div class="line"></div><div class="line">#使用post方式提交</div><div class="line">s.post(url=&quot;&quot;,data=dict格式)</div><div class="line"></div><div class="line">#headers参数介绍</div><div class="line">headers以字典方式提交</div><div class="line">s.post(url=&quot;&quot;,headers=dict格式)</div><div class="line">常用的头有：X-Forwarded-For, Cookie, User-Agent等等</div><div class="line"></div><div class="line">#timeout参数介绍</div><div class="line">timeout参数用来指定请求超时的时间，经常在爬虫中用到</div><div class="line">s.post(url=&quot;&quot;, timeout=xx)</div><div class="line"></div><div class="line"></div><div class="line">返回值：</div><div class="line">retu = s.get(&quot;http://cauc.me&quot;)</div><div class="line"></div><div class="line">retu.context       #返回的html文件</div><div class="line">retu.headers       #返回的headers中的信息，是一个字典</div><div class="line">retu.status_code   #返回http的状态值</div><div class="line">#其他的返回值可以自己去测试下，都很简单，上面三个是经常用的</div></pre></td></tr></table></figure></p>
 <hr>
-<p><strong>requests</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">import requests</div></pre></td></tr></table></figure></p>
+<p><strong>collections</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">collections是一个非常方便的python内建集合模块，提供了许多有用的集合类</div><div class="line"></div><div class="line">#defaultdict</div><div class="line">使用dict类型时，如果引用的key不存在，就会抛出KeyError一场，如果希望key不存在时，返回一个默认值，</div><div class="line">就可以使用defaultdict,这在很多场景下会很有用，之前我就经常在统计类型个数的时候使用</div><div class="line">from collections import defaultdict</div><div class="line">dd = defaultdict(0)</div><div class="line">dd[&apos;xie&apos;] += 1</div><div class="line"></div><div class="line">#namedtuple</div><div class="line">有些时候需要创建一个包含数据类型的类，比如要创建二位坐标类，使用Point(1,2)就要使用(1,2)明白的多</div><div class="line">from collections import namedtuple</div><div class="line">point = namedtuple(&apos;point&apos;, [&apos;x&apos;,&apos;y&apos;])</div><div class="line">p = point(1,2)</div><div class="line">p.x</div><div class="line">p.y</div><div class="line"></div><div class="line">#除此之外还有的数据类型有：</div><div class="line">双向列表deque来代替单向列表list</div><div class="line">根据Key顺序对dict排序的OrderedDict</div><div class="line">计数器Counter,但是我一般习惯使用defaultDict来取得同样的效果</div><div class="line">ChinaMap  将map串联起来</div><div class="line">UserDict</div><div class="line">UserList</div><div class="line">UserString</div></pre></td></tr></table></figure></p>
+<hr>
 
       
     </div>
@@ -432,8 +450,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -486,6 +513,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#"><span class="nav-number">1.</span> <span class="nav-text"></span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
