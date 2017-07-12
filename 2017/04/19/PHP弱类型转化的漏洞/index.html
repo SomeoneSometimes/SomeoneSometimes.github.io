@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为字符串比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比">
-<meta property="og:updated_time" content="2017-06-30T08:20:01.069Z">
+<meta property="og:updated_time" content="2017-07-05T07:12:10.781Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP中弱类型的转化漏洞">
 <meta name="twitter:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为字符串比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比">
@@ -351,6 +351,7 @@
 <li><strong>利用’0’+’1’的结果是数值型,这种利用可以用在mysql注入中，这样可以把预定的sex=’xx’转化为sex=数值型对象，接下来就是判断中类型转化的原理了</strong><br>应用：sex=’0’+’1’+’0’ 第一个0用于闭合句式中的前引号，最后一个0用于闭合句式中的后引号，中间的将用于盲注，是0是1将影响输出结果  本题将有两个结果：sex=0 or sex=1 产生两种不同情况以作为盲注判断条件</li>
 <li>使用这样一种判断：<code>$req[&#39;number&#39;]==strval(intval($req[&#39;number&#39;]))</code>,之前一直担心先intval再strval会把进制与科学记数法的姿势限制住，测试后才意识到两边都是字符型的数值下，会进行转换的，因此req[‘number’]=0e00是没有问题的，可以通过比较</li>
 <li>一般弱类型语言都会有浮点数精度问题，像python，php都存在的。<br>所以if(“0.999999999999999999999999” == 1)是成立的，<br>同理if(“1.00000000000000000000001” == 1)也是成立的</li>
+<li>1e-324 == 0成立    (int)1e-324 &gt; 0成立    利用的应该也是精度问题</li>
 </ul>
 
       
@@ -472,7 +473,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">Artikel</span>
               </a>
             </div>

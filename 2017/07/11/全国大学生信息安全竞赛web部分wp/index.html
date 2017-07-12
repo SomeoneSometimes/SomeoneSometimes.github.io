@@ -1,0 +1,683 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="PHP execise题目给出了php代码的执行环境可以执行任意代码，估计就是&amp;lt;?php eval($_GET[&amp;#39;c&amp;#39;])?&amp;gt;来实现的，出题本意应该是考察选手在禁用函数的情况下拿到flag。所以首先上来要看禁用了那些函数。输入phpinfo();后搜索disable_functions查看禁用函数，可以看到shell命令执行，文件包含等函数都被禁用了，然后下面是就是猜测">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="全国大学生信息安全竞赛web部分wp">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/07/11/全国大学生信息安全竞赛web部分wp/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="PHP execise题目给出了php代码的执行环境可以执行任意代码，估计就是&amp;lt;?php eval($_GET[&amp;#39;c&amp;#39;])?&amp;gt;来实现的，出题本意应该是考察选手在禁用函数的情况下拿到flag。所以首先上来要看禁用了那些函数。输入phpinfo();后搜索disable_functions查看禁用函数，可以看到shell命令执行，文件包含等函数都被禁用了，然后下面是就是猜测">
+<meta property="og:image" content="http://i.imgur.com/Bn7ertd.png">
+<meta property="og:image" content="http://i.imgur.com/9oU5VP4.png">
+<meta property="og:image" content="http://i.imgur.com/ep2qmez.png">
+<meta property="og:updated_time" content="2017-07-11T08:49:14.343Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="全国大学生信息安全竞赛web部分wp">
+<meta name="twitter:description" content="PHP execise题目给出了php代码的执行环境可以执行任意代码，估计就是&amp;lt;?php eval($_GET[&amp;#39;c&amp;#39;])?&amp;gt;来实现的，出题本意应该是考察选手在禁用函数的情况下拿到flag。所以首先上来要看禁用了那些函数。输入phpinfo();后搜索disable_functions查看禁用函数，可以看到shell命令执行，文件包含等函数都被禁用了，然后下面是就是猜测">
+<meta name="twitter:image" content="http://i.imgur.com/Bn7ertd.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/07/11/全国大学生信息安全竞赛web部分wp/"/>
+
+
+
+
+
+  <title>全国大学生信息安全竞赛web部分wp | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Über
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            menu.link
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/07/11/全国大学生信息安全竞赛web部分wp/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">全国大学生信息安全竞赛web部分wp</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-11T15:29:44+08:00">
+                2017-07-11
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="PHP-execise"><a href="#PHP-execise" class="headerlink" title="PHP execise"></a>PHP execise</h2><p>题目给出了php代码的执行环境可以执行任意代码，估计就是<code>&lt;?php eval($_GET[&#39;c&#39;])?&gt;</code>来实现的，出题本意应该是考察选手在禁用函数的情况下拿到flag。所以首先上来要看禁用了那些函数。输入<code>phpinfo();</code>后搜索<code>disable_functions</code>查看禁用函数，可以看到shell命令执行，文件包含等函数都被禁用了，然后下面是就是猜测flag到底藏在了哪里。<br>受以前百度杯的一道题的影响，首先查看了这个php文件的全局变量，测试<code>var_dump($GLOBALS);</code>，没有发现，然后试着<code>var_dump($flag);</code>也没有结果。所以就卡住了。。。果然还是太菜，然而峰回路转，就在我刷新页面的时候，突然给出了目录结构，然后就看到了一个疑似flag的php文件，遂想到flag可能放到其他文件里了，需要目录扫描，刚好前几天做过，于是<code>var_dump(scandir(&#39;./&#39;));</code>一发顺利拿到文件名<br><img src="http://i.imgur.com/Bn7ertd.png" alt=""><br>之后包含文件读取flag就好了<code>require_once(&#39;flag_62cfc2dc115277d0c04ed0f74e48e3e9.php&#39;);echo $flag;</code>成功拿到flag<br><img src="http://i.imgur.com/9oU5VP4.png" alt=""></p>
+<p>相同的思路，通过看学长的wp又学习了其他函数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">#glob()是一个对文件目录进行搜索并返回匹配正则表达式的函数，所以也可以做文件扫描</div><div class="line">glob(&apos;./*&apos;);</div><div class="line"></div><div class="line">#highlight()是一个可以以高亮显示文本内容的函数，比赛中有时会直接给出php源码一般就是用这个函数来显示的</div><div class="line">highlight_file(&apos;./flag_62cfc2dc115277d0c04ed0f74e48e3e9.php&apos;);</div></pre></td></tr></table></figure></p>
+<h2 id="wanna-to-see-your-hat"><a href="#wanna-to-see-your-hat" class="headerlink" title="wanna to see your hat?"></a>wanna to see your hat?</h2><p>打开网站看了看，所有的页面都会重定向到route.php这个页面来，然后就是输入用户名显示帽子颜色啥的，输入点简单试了试没有注入思路，然后也看了页面html源码以及http头，也没有发现异常情况，所以考虑是不是代码审计题目，随手扫下目录发现.svn源码泄露，没有用专门的恢复工具，直接在文件中找到了github的地址，访问后分析下的确是比赛题目的环境，下载下来开始代码审计。<br>可以看到$_POST $_GET都经过了转义，这种情况下要么参数从其他地方获取如$_REQUEST,然后是二次注入。ok，我们去找sql点，一共有两个。<br>一个在register页面，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$sql = &quot;insert into t_user (username,nickname,password)  values(&apos;&quot;.$_POST[&apos;username&apos;].&quot;&apos;, &apos;&quot;.$_POST[&apos;nickname&apos;].&quot;&apos;,&apos;&quot;.md5($_POST[&apos;password&apos;]).&quot;&apos;)&quot;;</div><div class="line">  if (mysql_query($sql))&#123;</div><div class="line">    header(&quot;Location: ./route.php?act=login&quot;);</div><div class="line">    exit();</div></pre></td></tr></table></figure></p>
+<p>就是从过滤后的$_POST中提取参数，所以至少这个点应该是没法用的，最多可能会有二次注入。</p>
+<p>另一个在login界面，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line">defined(&apos;black_hat&apos;) or header(&apos;Location: route.php?act=login&apos;);</div><div class="line">session_start();</div><div class="line">include_once &quot;common.php&quot;;</div><div class="line">$connect=mysql_connect(&quot;127.0.0.1&quot;,&quot;root&quot;,&quot;haozigege&quot;) or die(&quot;there is no ctf!&quot;);</div><div class="line">mysql_select_db(&quot;hats&quot;) or die(&quot;there is no hats!&quot;);</div><div class="line">if (isset($_POST[&quot;name&quot;]))&#123;</div><div class="line">  $name = str_replace(&quot;&apos;&quot;, &quot;&quot;, trim(waf($_POST[&quot;name&quot;])));</div><div class="line">  if (strlen($name) &gt; 11)&#123;</div><div class="line">    echo(&quot;&lt;script&gt;alert(&apos;name too long&apos;)&lt;/script&gt;&quot;);</div><div class="line">  &#125;else&#123;</div><div class="line">    $sql = &quot;select count(*) from t_info where username = &apos;$name&apos; or nickname = &apos;$name&apos;&quot;;</div><div class="line">    echo $sql;</div><div class="line">    $result = mysql_query($sql);</div><div class="line">    $row = mysql_fetch_array($result);</div><div class="line">    if ($row[0])&#123;</div><div class="line">      $_SESSION[&apos;hat&apos;] = &apos;black&apos;;</div><div class="line">      echo &apos;good job&apos;;</div><div class="line">    &#125;else&#123;</div><div class="line">	$_SESSION[&apos;hat&apos;] = &apos;green&apos;;</div><div class="line">    &#125;</div><div class="line">    header(&quot;Location: index.php&quot;);</div><div class="line">  &#125;</div><div class="line">  </div><div class="line">&#125;</div><div class="line"></div><div class="line">function waf($value)&#123;</div><div class="line">    $Filt = &quot;\bUNION.+SELECT\b|SELECT.+?FROM&quot;;</div><div class="line">    if (preg_match(&quot;/&quot;.$Filt.&quot;/is&quot;,$value)==1)&#123;</div><div class="line">        die(&quot;found a hacker&quot;);</div><div class="line">    &#125;</div><div class="line">    $value = str_replace(&quot; &quot;,&quot;&quot;,$value);  </div><div class="line">    return $value;</div><div class="line">&#125;</div><div class="line"></div><div class="line">function d_addslashes($array)&#123;</div><div class="line">        foreach($array as $key=&gt;$value)&#123;</div><div class="line">        if(!is_array($value))&#123;</div><div class="line">            !get_magic_quotes_gpc() &amp;&amp; $value=addslashes($value);</div><div class="line">            waf($value);</div><div class="line">            $array[$key]=$value;</div><div class="line">        &#125;   </div><div class="line">    &#125;   </div><div class="line">    return $array;</div><div class="line">&#125;</div><div class="line"></div><div class="line">?&gt;</div></pre></td></tr></table></figure></p>
+<p>和第一个sql点的数据没有关系，所以不是二次注入，本来如果就只是转义处理的话这个点就是安全的，但是它作死的在参数处理流程中加了一些东西。。。</p>
+<ul>
+<li>把经过转义后的参数中的单引号都去掉</li>
+<li>对union select | select from 做了过滤</li>
+<li>转义函数中没有对两层数组过滤，并且过滤函数中加了waf($value)</li>
+</ul>
+<p>最后一个没有发现利用方式<br>第二个过滤其实没有必要，因为参数长度限制在了11，所以也不会用这两种写法，而且想绕过也很简单，我们可以看到在waf函数中检测完后将’ ‘去掉了，所以<code>sel ect from  un ion select</code>就可以绕过，并且过滤结束后又变回正常语句<br>第一个过滤是本题关键所在，因为在转义过滤中会在’前面加上\，之后再把’去掉后就只剩下\了，我们来观察下sql语句：<br><code>select count(*) from t_info where username = &#39;$name&#39; or nickname = &#39;$name&#39;</code><br>name参数如果最后一个字符是’的话，过滤后最后一个字符就变成了\,所以就把后一个单引号转义掉了，这样第一个单引号和第三个单引号成对，我们就实现了单引号闭合，在外面写东西了，通过or 1’就可以满足登陆需求了，但还有个问题是，在语句最后会有一个\’影响执行，就考虑怎么去掉他，我们来看前后两个name的环境，一个是在’’里面，另一个是作为功能性语句出现，所以我们写成or 1#’并不会导致在第一个name处出现问题，于是就能拿到flag了。<br><img src="http://i.imgur.com/ep2qmez.png" alt=""></p>
+<h2 id="方舟计划"><a href="#方舟计划" class="headerlink" title="方舟计划"></a>方舟计划</h2><p>扫描后没有发现源码泄露，然后在注册点的phone参数上发现了注入点，输入’会有报错产生，结合环境是insert语句来看应该是报错注入，正好前几天看到了Ben师傅的一个报错注入的利用，测试后诸如<code>&#39; or if(substring(( {payload} ),{},1)=binary(&#39;{}&#39;),0,1) and ST_LatFromGeoHash(version()) or &#39;</code>语句可以利用，但关键是我卡死在了waf上！！！哎，还是太菜，<code>/*!*/</code>的绕过方式明明以前用过好多次</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/06/29/一个博客爬取网站的设计思路与流程/" rel="prev" title="一个博客爬取网站的设计思路与流程">
+                一个博客爬取网站的设计思路与流程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              
+                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-name">Tags</span>
+              
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP-execise"><span class="nav-number">1.</span> <span class="nav-text">PHP execise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wanna-to-see-your-hat"><span class="nav-number">2.</span> <span class="nav-text">wanna to see your hat?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方舟计划"><span class="nav-number">3.</span> <span class="nav-text">方舟计划</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
