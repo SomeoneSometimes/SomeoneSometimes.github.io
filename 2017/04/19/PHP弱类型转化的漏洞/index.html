@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为字符串比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比">
+<meta name="description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比较">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PHP中弱类型的转化漏洞">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为字符串比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比">
-<meta property="og:updated_time" content="2017-07-05T07:12:10.781Z">
+<meta property="og:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比较">
+<meta property="og:updated_time" content="2017-07-16T02:41:10.637Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP中弱类型的转化漏洞">
-<meta name="twitter:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为字符串比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比">
+<meta name="twitter:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比较">
 
 
 
@@ -201,7 +201,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -211,7 +211,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            Über
+            About
           </a>
         </li>
       
@@ -281,7 +281,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-04-19T23:15:47+08:00">
                 2017-04-19
@@ -319,7 +319,7 @@
 
       
         <h2 id="官方文档中的几句话已经说的很清楚了"><a href="#官方文档中的几句话已经说的很清楚了" class="headerlink" title="官方文档中的几句话已经说的很清楚了"></a>官方文档中的几句话已经说的很清楚了</h2><blockquote>
-<p><strong>==是弱类型漏洞的罪恶根源</strong><br><strong>在==中，<em>数值和字符串比较</em>，则字符串会被转换为数值并且比较按照数值来进行。<em>两个可以完美转化为数值型的字符串</em>（0e123,0x123 但0e4fe，12f3不可），将转化为字符串比较</strong></p>
+<p><strong>==是弱类型漏洞的罪恶根源</strong><br><strong>在==中，<em>数值和字符串比较</em>，则字符串会被转换为数值并且比较按照数值来进行。<em>两个可以完美转化为数值型的字符串</em>（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较</strong></p>
 <hr>
 <p><strong>当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞</strong></p>
 <hr>
@@ -450,10 +450,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -474,7 +474,7 @@
             <div class="site-state-item site-state-posts">
               <a href="/archives">
                 <span class="site-state-item-count">15</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -487,7 +487,7 @@
             <div class="site-state-item site-state-tags">
               
                 <span class="site-state-item-count">1</span>
-                <span class="site-state-item-name">Tags</span>
+                <span class="site-state-item-name">tags</span>
               
             </div>
           
@@ -553,7 +553,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
