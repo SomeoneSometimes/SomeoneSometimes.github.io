@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
+<meta name="description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文件上传漏洞">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/02/文件上传漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
-<meta property="og:updated_time" content="2017-05-06T05:45:39.359Z">
+<meta property="og:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式">
+<meta property="og:updated_time" content="2017-07-20T08:33:07.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传漏洞">
-<meta name="twitter:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 利用其他思路上传shell">
+<meta name="twitter:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式">
 
 
 
@@ -322,12 +322,11 @@
 <li>服务器解析问题的漏洞</li>
 <li>文件名的正则检测漏洞</li>
 <li>其他的检测方式</li>
-<li>利用其他思路上传shell</li>
 </ul>
 <a id="more"></a>
 <h2 id="服务器解析问题的漏洞"><a href="#服务器解析问题的漏洞" class="headerlink" title="服务器解析问题的漏洞"></a>服务器解析问题的漏洞</h2><ol>
 <li>在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行</li>
-<li>在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测<em>（说实话没见过）</em>，文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文件系统时会把00忽略所以相当于获得了文件test.jpg.php  <em>(容易和00截断弄混)</em></li>
+<li>在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测，文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文件系统时会把00忽略所以相当于获得了文件test.jpg.php  <em>(容易和00截断弄混)</em></li>
 <li>老版本的IIS中，存在;漏洞，IIS在解析文件名的时候可能将分号后面的内容丢弃，那么test.asp;jpg如果可以绕过的话就能够执行</li>
 <li>老版本的IIS中，如果网站目录/.asp/下的所有内容都将作为asp脚本来解析</li>
 </ol>
@@ -469,9 +468,6 @@
 </tr>
 </tbody>
 </table>
-<h2 id="利用其他思路上传shell"><a href="#利用其他思路上传shell" class="headerlink" title="利用其他思路上传shell"></a>利用其他思路上传shell</h2><ol>
-<li>通过apache日志上传shell <em>主要是需要文件包含漏洞</em><br>使用telnet来构造包含一句话的http请求头，之后文件包含C:\wamp\logs\access.log即可以执行shell</li>
-</ol>
 
       
     </div>
@@ -640,7 +636,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器解析问题的漏洞"><span class="nav-number">1.</span> <span class="nav-text">服务器解析问题的漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件名的正则检测漏洞"><span class="nav-number">2.</span> <span class="nav-text">文件名的正则检测漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他的检测方式"><span class="nav-number">3.</span> <span class="nav-text">其他的检测方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用其他思路上传shell"><span class="nav-number">4.</span> <span class="nav-text">利用其他思路上传shell</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器解析问题的漏洞"><span class="nav-number">1.</span> <span class="nav-text">服务器解析问题的漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件名的正则检测漏洞"><span class="nav-number">2.</span> <span class="nav-text">文件名的正则检测漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他的检测方式"><span class="nav-number">3.</span> <span class="nav-text">其他的检测方式</span></a></li></ol></div>
             
 
           </div>

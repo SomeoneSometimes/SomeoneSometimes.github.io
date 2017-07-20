@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/CTF中getshell的统计/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
-<meta property="og:updated_time" content="2017-05-12T07:34:50.952Z">
+<meta property="og:updated_time" content="2017-07-20T08:32:50.274Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CTF中getshell的统计">
 <meta name="twitter:description" content="CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧">
@@ -332,8 +332,8 @@
 <li>xxe中仿照实体递归定义的方式书写，最后调用此实体引起溢出</li>
 </ul>
 <p>8、文件上传中上传了改后缀为图片格式的文件，之后被php文件引用了，然后里面的代码就有了php的执行环境，即所谓’图马’</p>
-<p>9、通过日志写shell，之后文件包含日志 目前所见的日志写shell都是通过tencent来实现的</p>
-<p>10、</p>
+<p>9、通过日志写shell，之后文件包含日志，文件包含C:\wamp\logs\access.log即可以执行shell 目前所见的日志写shell都是通过tencent来实现的</p>
+<p>10、<code>select &quot;&lt;?php system($_GET[&#39;c&#39;]);?&gt;&quot; into outfile &#39;/var/www/html/uploads/xie.php&#39;</code>来通过将数据写入指定的文件来写入shell</p>
 <h2 id="基于以上的统计，做出归纳整理"><a href="#基于以上的统计，做出归纳整理" class="headerlink" title="基于以上的统计，做出归纳整理"></a>基于以上的统计，做出归纳整理</h2><h3 id="通过php代码的："><a href="#通过php代码的：" class="headerlink" title="通过php代码的："></a>通过php代码的：</h3><p><strong>shell上传</strong></p>
 <ul>
 <li>通过正常的文件上传流程</li>
