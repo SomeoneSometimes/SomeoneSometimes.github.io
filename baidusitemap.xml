@@ -3,13 +3,30 @@
 
 
     
+    
+    
   <url>
     <loc>https://someonesometimes.github.io/2017/07/23/mysql%E7%9B%B2%E6%B3%A8%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2017-07-23T05:54:36.856Z</lastmod>
+    <lastmod>2017-08-26T11:08:25.450Z</lastmod>
     <data>
         <display>
         <title>mysql盲注的统计学习</title>
         <pubTime>2017-07-23T05:53:32.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://someonesometimes.github.io/2017/05/07/XXE%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
+    <lastmod>2017-08-26T06:35:16.785Z</lastmod>
+    <data>
+        <display>
+        <title>XXE学习笔记</title>
+        <pubTime>2017-05-07T07:23:28.000Z</pubTime>
         
          
            
@@ -198,39 +215,6 @@
     </data>
     </url>
 
-    
-  <url>
-    <loc>https://someonesometimes.github.io/2017/05/07/XXE%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>
-    <lastmod>2017-05-07T12:28:09.046Z</lastmod>
-    <data>
-        <display>
-        <title>XXE学习笔记</title>
-        <pubTime>2017-05-07T07:23:28.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://someonesometimes.github.io/2017/04/14/js%E7%9A%84DOM%E6%93%8D%E4%BD%9C/</loc>
-    <lastmod>2017-04-19T15:32:20.629Z</lastmod>
-    <data>
-        <display>
-        <title>js的DOM操作</title>
-        <pubTime>2017-04-14T03:37:28.000Z</pubTime>
-        
-        <tag>javascript</tag>
-         
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
     
   <url>
     <loc>https://someonesometimes.github.io/2017/04/14/hello-world/</loc>
