@@ -3,14 +3,12 @@
 
 
     
-    
-    
   <url>
-    <loc>https://someonesometimes.github.io/2017/07/23/mysql%E7%9B%B2%E6%B3%A8%E7%9A%84%E7%BB%9F%E8%AE%A1%E5%AD%A6%E4%B9%A0/</loc>
-    <lastmod>2017-08-26T11:08:25.450Z</lastmod>
+    <loc>https://someonesometimes.github.io/2017/07/23/mysql%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/</loc>
+    <lastmod>2017-08-30T11:41:39.643Z</lastmod>
     <data>
         <display>
-        <title>mysql盲注的统计学习</title>
+        <title>mysql注入学习（持续保持更新）</title>
         <pubTime>2017-07-23T05:53:32.000Z</pubTime>
         
          
@@ -19,6 +17,8 @@
     </data>
     </url>
 
+    
+    
     
   <url>
     <loc>https://someonesometimes.github.io/2017/05/07/XXE%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</loc>

