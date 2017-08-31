@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918） 其他不好分类的，零碎想记录的">
-<meta property="og:updated_time" content="2017-08-30T11:47:11.019Z">
+<meta property="og:updated_time" content="2017-08-30T13:17:20.722Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql注入学习（持续保持更新）">
 <meta name="twitter:description" content="对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918） 其他不好分类的，零碎想记录的">
@@ -399,6 +399,8 @@
 <li>如果参数其实并没有被过滤呢？就像TCTF上那道题目，全局参数过滤了GET POST ,然而一个参数点使用的是REQUEST[‘username’]来获得的参数，那其实这注入点的参数并没有被过滤</li>
 <li>有些注入点的参数并不是自定义的，但有可能其最终来源还是用户自定义的，而且来源收录的时候只是进行了转义，记录的数据仍然为脏数据，这样这些存储值不经过滤的传到其他注入点做参数就会构成二次注入。（个人感觉二次注入在黑盒审计中出现的场景比代码审计要多，而且经常出现在用户名注册，之后一些操作直接提取用户名去进行sql操作）</li>
 </ul>
+</li>
+<li><p>TCTF里有一道很有意思的注入题目，是关于列名这个参数点注入的，那个题目使用CI框架写的，在$this-&gt;db-&gt;select()-&gt;from()-&gt;where()的select()这个函数里面装的是列名，这个参数在题目中可以由我们自定义，当然做了很多过滤，同时CI框架本身也做了很多过滤，cuwpo师傅对其进行了仔细分析<a href="http://www.wupco.cn/?p=3646" title="http://www.wupco.cn/?p=3646" target="_blank" rel="external">http://www.wupco.cn/?p=3646</a>，小m师傅当时用了xdebug对运行代码进行了调试，可能也是为了搞清楚CI框架内部做了什么过滤，发现后面加一对’’就没有过滤了。具体的过滤分析找时间再细看，这次先学习下列名注入<br><code>select column_name from test</code>,在column_name可控制下，我们这样写<br><code>select {table_name from information_schema.tables where table_schema=&#39;blog&#39; union select 1} from test</code>这样就可以构造注入了</p>
 </li>
 </ol>
 
