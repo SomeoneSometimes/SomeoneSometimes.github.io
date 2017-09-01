@@ -100,7 +100,7 @@
 <meta property="og:image" content="http://i.imgur.com/Bn7ertd.png">
 <meta property="og:image" content="http://i.imgur.com/9oU5VP4.png">
 <meta property="og:image" content="http://i.imgur.com/ep2qmez.png">
-<meta property="og:updated_time" content="2017-07-18T00:27:41.143Z">
+<meta property="og:updated_time" content="2017-09-01T07:49:43.495Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="全国大学生信息安全竞赛web部分wp">
 <meta name="twitter:description" content="比赛好不人性啊，连着24小时，还半夜放题，感觉结束后快猝死了2333。看着其它队伍的表哥嗖嗖的日题也只有喊666的份了，当然对于我这种小白来说重点还是在于赛后的总结学习，嘛，开始吧。">
@@ -347,7 +347,7 @@
 <li>一个在主页中提交，将由管理员触发，触发页面是个html文件，<br><code>http://106.75.119.64:8888/uploads/2017-07-10-05-08-29-8cY7kyvOpoND.html</code>像这样会每次变化</li>
 <li>还有一个重命名的xss点，回显处在主页上</li>
 </ul>
-<h3 id="题目拿去flag思路"><a href="#题目拿去flag思路" class="headerlink" title="题目拿去flag思路"></a>题目拿去flag思路</h3><p>这道题目的flag存放在cookie中，尝试了读取触发页面，以及触发页面的cookie都没有有效数据，然后也没有明确的提示信息说只有admin可以进行访问，之后就可以考虑flag存放在子目录的cookie的情况了，我们尝试读取触发页面的document.referer可以看到触发点是<code>http://106.75.119.64:8888/admin/review.php</code>，然后再xss接收中可以看到访问请求的来源是<code>http://106.75.119.64:8888/uploads/2017-07-10-05-08-29-8cY7kyvOpoND.html</code>，所以bot的机制应该是首先访问review.php，然后被重定向到写有我们js代码的html文件，两个文件并不在同一个目录，所以我们要做的就是去访问/admin目录下的文件，然后读取cookie</p>
+<h3 id="题目拿取flag思路"><a href="#题目拿取flag思路" class="headerlink" title="题目拿取flag思路"></a>题目拿取flag思路</h3><p>这道题目的flag存放在cookie中，尝试了读取触发页面，以及触发页面的cookie都没有有效数据，然后也没有明确的提示信息说只有admin可以进行访问，之后就可以考虑flag存放在子目录的cookie的情况了，我们尝试读取触发页面的document.referer可以看到触发点是<code>http://106.75.119.64:8888/admin/review.php</code>，然后再xss接收中可以看到访问请求的来源是<code>http://106.75.119.64:8888/uploads/2017-07-10-05-08-29-8cY7kyvOpoND.html</code>，所以bot的机制应该是首先访问review.php，然后被重定向到写有我们js代码的html文件，两个文件并不在同一个目录，所以我们要做的就是去访问/admin目录下的文件，然后读取cookie</p>
 <h3 id="综合自己发现的以及表哥们的绕过思路做个统计："><a href="#综合自己发现的以及表哥们的绕过思路做个统计：" class="headerlink" title="综合自己发现的以及表哥们的绕过思路做个统计："></a>综合自己发现的以及表哥们的绕过思路做个统计：</h3><p><strong>对后台数据过滤的绕过</strong></p>
 <ol>
 <li>可以使用window[‘loca’+’tion’].href这种写法来绕过检测</li>
@@ -525,7 +525,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP-execise"><span class="nav-number">1.</span> <span class="nav-text">PHP execise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wanna-to-see-your-hat"><span class="nav-number">2.</span> <span class="nav-text">wanna to see your hat?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方舟计划"><span class="nav-number">3.</span> <span class="nav-text">方舟计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Guest-Book"><span class="nav-number">4.</span> <span class="nav-text">Guest Book</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#防御措施："><span class="nav-number">4.1.</span> <span class="nav-text">防御措施：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题目拿去flag思路"><span class="nav-number">4.2.</span> <span class="nav-text">题目拿去flag思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#综合自己发现的以及表哥们的绕过思路做个统计："><span class="nav-number">4.3.</span> <span class="nav-text">综合自己发现的以及表哥们的绕过思路做个统计：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#收集并分析做题的思路"><span class="nav-number">4.4.</span> <span class="nav-text">收集并分析做题的思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flag-vending-machine"><span class="nav-number">5.</span> <span class="nav-text">flag vending machine</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#PHP-execise"><span class="nav-number">1.</span> <span class="nav-text">PHP execise</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#wanna-to-see-your-hat"><span class="nav-number">2.</span> <span class="nav-text">wanna to see your hat?</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#方舟计划"><span class="nav-number">3.</span> <span class="nav-text">方舟计划</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Guest-Book"><span class="nav-number">4.</span> <span class="nav-text">Guest Book</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#防御措施："><span class="nav-number">4.1.</span> <span class="nav-text">防御措施：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#题目拿取flag思路"><span class="nav-number">4.2.</span> <span class="nav-text">题目拿取flag思路</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#综合自己发现的以及表哥们的绕过思路做个统计："><span class="nav-number">4.3.</span> <span class="nav-text">综合自己发现的以及表哥们的绕过思路做个统计：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#收集并分析做题的思路"><span class="nav-number">4.4.</span> <span class="nav-text">收集并分析做题的思路</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#flag-vending-machine"><span class="nav-number">5.</span> <span class="nav-text">flag vending machine</span></a></li></ol></div>
             
 
           </div>
