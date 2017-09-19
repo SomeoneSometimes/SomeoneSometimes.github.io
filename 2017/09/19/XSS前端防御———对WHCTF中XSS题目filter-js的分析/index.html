@@ -1,0 +1,691 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="最早的时候是从今年的Bctf的xss题目中遇到的filter.js这种过滤形式，但当时对xss题目一直全程懵逼所以也没有留下代码来好好分析过这种过滤，这次Ben师傅出的xss题目恰好使用了这种防御机制，于是打算好好整理一下。（PS：一看到题目的背景图片就知道这题一定是Ben师傅出的，赛后一问果然是2333）这种前端的XSS防御主要由两部分构成：  静态检测 动态检测">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XSS前端防御———对WHCTF中xss题目filter.js的分析">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/09/19/XSS前端防御———对WHCTF中XSS题目filter-js的分析/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="最早的时候是从今年的Bctf的xss题目中遇到的filter.js这种过滤形式，但当时对xss题目一直全程懵逼所以也没有留下代码来好好分析过这种过滤，这次Ben师傅出的xss题目恰好使用了这种防御机制，于是打算好好整理一下。（PS：一看到题目的背景图片就知道这题一定是Ben师傅出的，赛后一问果然是2333）这种前端的XSS防御主要由两部分构成：  静态检测 动态检测">
+<meta property="og:updated_time" content="2017-09-19T16:27:32.577Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="XSS前端防御———对WHCTF中xss题目filter.js的分析">
+<meta name="twitter:description" content="最早的时候是从今年的Bctf的xss题目中遇到的filter.js这种过滤形式，但当时对xss题目一直全程懵逼所以也没有留下代码来好好分析过这种过滤，这次Ben师傅出的xss题目恰好使用了这种防御机制，于是打算好好整理一下。（PS：一看到题目的背景图片就知道这题一定是Ben师傅出的，赛后一问果然是2333）这种前端的XSS防御主要由两部分构成：  静态检测 动态检测">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: 'Penulis'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/09/19/XSS前端防御———对WHCTF中XSS题目filter-js的分析/"/>
+
+
+
+
+
+  <title>XSS前端防御———对WHCTF中xss题目filter.js的分析 | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            Arsip
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            Tentang
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/links" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-question-circle"></i> <br />
+            
+            menu.link
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/09/19/XSS前端防御———对WHCTF中XSS题目filter-js的分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">XSS前端防御———对WHCTF中xss题目filter.js的分析</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Diposting di</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2017-09-19T23:15:14+08:00">
+                2017-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最早的时候是从今年的Bctf的xss题目中遇到的filter.js这种过滤形式，但当时对xss题目一直全程懵逼所以也没有留下代码来好好分析过这种过滤，这次Ben师傅出的xss题目恰好使用了这种防御机制，于是打算好好整理一下。（PS：一看到题目的背景图片就知道这题一定是Ben师傅出的，赛后一问果然是2333）<br>这种前端的XSS防御主要由两部分构成：</p>
+<ul>
+<li>静态检测</li>
+<li>动态检测</li>
+</ul>
+<a id="more"></a>
+<h3 id="首先阐述下filter-js这种的前端xss防御基本原理："><a href="#首先阐述下filter-js这种的前端xss防御基本原理：" class="headerlink" title="首先阐述下filter.js这种的前端xss防御基本原理："></a>首先阐述下filter.js这种的前端xss防御基本原理：</h3><p>在HTML文档的最开头部分就引入这些js代码，需要保证在这些代码执行的时候敏感标签还没有生成，只有这样才会触发我们的检测，比如最简单的一个html文件<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;default-src &apos;self&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos;;style-src &apos;self&apos; &apos;unsafe-inline&apos;;img-src *;&quot;&gt;</div><div class="line">//注意我们尽早的引入了filter.js，使其在下面的标签还没有渲染的时候就开始执行了，这样才能够成功监测到之后标签的各种行为</div><div class="line">&lt;script src=&apos;filter.js&apos;&gt;&lt;/script&gt;</div><div class="line">&lt;h2&gt;Phone&lt;/h2&gt; sdsd&lt;br&gt;&lt;h2&gt;secret&lt;/h2&gt;&lt;br&gt;</div><div class="line">&lt;iframe src=&quot;flag.php&quot; id=&quot;xie&quot;&gt;&lt;/iframe&gt;</div><div class="line">&lt;script&gt;</div><div class="line">	alert(&apos;123&apos;);</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="我们从静态检测开始"><a href="#我们从静态检测开始" class="headerlink" title="我们从静态检测开始"></a>我们从静态检测开始</h2><p>在阐述具体的实现代码之前，我们必须了解静态检测的局限性，这十分重要所以我不得不先声明：</p>
+<ul>
+<li>如果用动态代码加载的话，就算监听到了标签执行，也无法得到加载的动态代码，就比如script的src</li>
+<li>使用js动态生成的标签不会触发任何事件，静态检测只能监听那些一开始在html文件里有的标签</li>
+</ul>
+<p>静态检测的原理就是利用<code>MutationObserver</code>对象实现对标签行为的监测，设定在哪些标签行为下触发我们的自定义处理函数</p>
+<ol>
+<li>首先是做一些配置<br><code>var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;</code></li>
+<li><p>然后我们实例化一个新的Mutation观察者对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">var observer = new MutationObserver(function(mutations) &#123;</div><div class="line">        mutations.forEach(function(mutation) &#123;</div><div class="line">			</div><div class="line">		nodes = mutation.addedNodes;</div><div class="line">    	for (var i = 0; i &lt; nodes.length; i++)&#123;</div><div class="line">        	var node = nodes[i];</div><div class="line">			</div><div class="line">			//这里就可以基于捕获的node来愉快的进行自定义的操作了！！			</div><div class="line"></div><div class="line">        &#125;);</div><div class="line">    &#125;);</div></pre></td></tr></table></figure>
+</li>
+<li><p>为观察者对象指定配置——声明观察者在<strong>哪些标签</strong>触发<strong>什么行为</strong>下调用函数<br> 这里推荐一组练习，看过之后基本就明白了</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">observer.observe(target, &#123;childList:true&#125;)                              //childList属性只观察子节点的新建与删除,子节点本身的任何变化都不会去理会  </div><div class="line">target.appendChild(document.createElement(&quot;div&quot;))                       //添加了一个元素子节点,触发回调函数.</div><div class="line">target.appendChild(document.createTextNode(&quot;foo&quot;))                      //添加了一个文本子节点,触发回调函数.</div><div class="line">target.removeChild(target.childNodes[0])                                //移除第一个子节点,触发回调函数.</div><div class="line">target.childNodes[0].appendChild(document.createElement(&quot;div&quot;))         //为第一个子节点添加一个子节点,不会触发回调函数,如果需要触发,则需要设置subtree属性为true.</div><div class="line"></div><div class="line">observer.observe(target, &#123;childList:true,subtree:true&#125;)                 //subtree属性让观察行为进行&quot;递归&quot;,这时,以target节点为根节点的整棵DOM树发生的变化都可能会被观察到 </div><div class="line">observer.observe(document, &#123;childList:true,subtree:true&#125;)               //如果target为document或者document.documentElement,则当前文档中所有的节点添加与删除操作都会被观察到</div><div class="line">observer.observe(document, &#123;childList:true,attributes:true,characterData:true,subtree:true&#125;)   //当前文档中几乎所有类型的节点变化都会被观察到(包括属性节点的变化和文本节点的变化等)</div><div class="line"></div><div class="line">observer.observe(target, &#123;childList:true&#125;)                              //假设此时target的outHTML内容为&lt;div&gt;foo&lt;div&gt;,则: </div><div class="line">target.childNodes[0].data = &quot;bar&quot;                                       //不会触发回调函数,因为childList只观察节点的新建与删除,而这里target节点的子节点仍然只有一个,没有多,没有少</div><div class="line">observer.observe(target, &#123;childList:true,characterData:true&#125;)           //加上characterData属性,允许观察文本节点的变化,行不行? </div><div class="line">target.childNodes[0].data = &quot;bar&quot;                                       //还是不会触发回调函数,因为发生变化的是target节点的子节点,我们目前的目标节点只有一个,就是target.</div><div class="line">observer.observe(target, &#123;childList:true,characterData:true,subtree:true&#125;)  //加上subtree属性,观察所有后代节点 </div><div class="line">target.childNodes[0].data = &quot;bar&quot;                                       //触发了回调函数,发生变化的是target节点的文本子节点(必须同时有characterData和subtree属性,才能观察到一个元素目标节点里的文本内容的变化)</div><div class="line"></div><div class="line">observer.observe(target, &#123;attributes:true&#125;)                             //只观察目标节点的属性节点</div><div class="line">target.setAttribute(&quot;foo&quot;,&quot;bar&quot;)                                        //不管foo属性存在不存在,都会触发回调函数</div><div class="line">target.setAttribute(&quot;foo&quot;,&quot;bar&quot;)                                        //即使前后两次的属性值一样,还是会触发回调函数</div><div class="line">target.removeAttribute(&quot;foo&quot;)                                           //移除foo属性节点,触发回调函数</div><div class="line">target.removeAttribute(&quot;foo&quot;)                                           //不会触发回调函数,因为已经没有属性节点可移除了</div><div class="line">observer.observe(target, &#123;attributes:true,attributeFilter:[&quot;bar&quot;]&#125;)     //指定要观察的属性名</div><div class="line">target.setAttribute(&quot;foo&quot;,&quot;bar&quot;)                                        //不会触发回调函数,因为attributeFilter数组不包含&quot;foo&quot;</div><div class="line">target.setAttribute(&quot;bar&quot;,&quot;foo&quot;)</div></pre></td></tr></table></figure>
+</li>
+</ol>
+<p><strong>嗯，然后我们就可以实现对所有标签的触发事件监听了，下面是filter.js中的代码</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div></pre></td><td class="code"><pre><div class="line">function interceptionStaticScript()</div><div class="line">&#123;</div><div class="line">    var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;</div><div class="line"></div><div class="line">    //实例化一个新的Mutation观察者对象</div><div class="line">    var observer = new MutationObserver(function(mutations) &#123;</div><div class="line">        mutations.forEach(function(mutation) &#123;</div><div class="line">            begininterceptionstatic(mutation)</div><div class="line">        &#125;);</div><div class="line">    &#125;);</div><div class="line"></div><div class="line">    //为观察者对象传入要观察的对象，并设置config</div><div class="line">    //这里的对象为document，配置为subtree+childList，也就表示会在所有的节点的子节点新建或时触发事件</div><div class="line">    observer.observe(document, &#123;</div><div class="line">        subtree: true,</div><div class="line">        childList: true</div><div class="line">    &#125;);</div><div class="line">&#125;</div><div class="line"></div><div class="line">//事件触发时的响应函数</div><div class="line">function begininterceptionstatic(mutation)</div><div class="line">&#123;</div><div class="line"></div><div class="line">    var nodes = mutation.addedNodes;</div><div class="line"></div><div class="line">    for (var i = 0; i &lt; nodes.length; i++)</div><div class="line">    &#123;</div><div class="line">        var node = nodes[i];</div><div class="line"></div><div class="line">        //挑选出来script标签与iframe标签</div><div class="line">        if (node.tagName === &apos;SCRIPT&apos; || node.tagName === &apos;IFRAME&apos;)</div><div class="line">        &#123;	</div><div class="line">        	//如果iframe标签有srcdoc的话就在dom里删除此标签</div><div class="line">            if (node.tagName === &apos;IFRAME&apos; &amp;&amp; node.srcdoc)</div><div class="line">            &#123;</div><div class="line">                node.parentNode.removeChild(node);</div><div class="line">                console.log(&apos;f4ck you! don\&apos;t use iframe&apos;, node.srcdoc);</div><div class="line"></div><div class="line">            &#125;</div><div class="line">            //检测script以及iframe标签的匹配方式，只有通过白名单的才行</div><div class="line">            else if (node.src)</div><div class="line">            &#123;</div><div class="line">                if (!whileListMatch(whiteList, node.src))</div><div class="line">                &#123;</div><div class="line">                    node.parentNode.removeChild(node);</div><div class="line">                    console.log(&apos;f4ck you!&apos;, node.src);</div><div class="line">                &#125;</div><div class="line">            &#125;</div><div class="line">            //对iframe以及script标签的内容也就是innerHTML进行黑名单检测</div><div class="line">            else if (blackregmatch(jswordblacklist,node.textContent))</div><div class="line">            &#123;</div><div class="line">                node.parentNode.removeChild(node);</div><div class="line">                console.log(&apos;f4ck you! &apos;+node.textContent);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="开始我们的动态检测部分"><a href="#开始我们的动态检测部分" class="headerlink" title="开始我们的动态检测部分"></a>开始我们的动态检测部分</h2><p>动态检测相比于静态检测更加准确，毕竟这是从原生代码层面上进行的重写，所有的行为最终还是要调用这些系统原生代码的，就算是静态检测无法防御的动态标签生成也可以被检测到<br>动态检测采用了Hook的原理，通过对一些敏感函数进行Hook后，在其运行期间加上一些代码以起到防御的作用。</p>
+<p>首先我们来尝试所有标签src属性的Hook<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//保存原始的setter变量</div><div class="line">var raw_setter = HTMLScriptElement.prototype.__lookupSetter__(&apos;src&apos;);</div><div class="line"></div><div class="line">//重写Setter访问器，这个访问器是会在src属性添加时调用的系统代码</div><div class="line">HTMLScriptElement.prototype.__defineSetter__(&apos;src&apos;, function(url) &#123;</div><div class="line"></div><div class="line">    //自定义对src的操作</div><div class="line">    if (!whileListMatch(whiteList,url))</div><div class="line">    &#123;</div><div class="line">        console.log(&apos;f4ck you! &apos;+url);</div><div class="line">        return ;</div><div class="line">    &#125;</div><div class="line">    //处理结束的时候通过刚才被保存的原始setter变量继续执行系统代码</div><div class="line">    raw_setter.call(this, url);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>类似的，Hook所有的innerHTML生成：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//同样先保存原始的setter变量</div><div class="line">var raw_setter = HTMLScriptElement.prototype.__lookupSetter__(&apos;innerHTML&apos;);</div><div class="line"></div><div class="line">//然后重写setter访问器</div><div class="line">HTMLScriptElement.prototype.__defineSetter__(&apos;innerHTML&apos;, function(url) &#123;</div><div class="line"></div><div class="line">	//然后添加任意处理代码</div><div class="line">    if (blackregmatch(wordblacklistinnerHTML, url))</div><div class="line">    &#123;</div><div class="line">        console.log(&apos;f4ck you! &apos;+url);</div><div class="line">        return ;</div><div class="line">    &#125;</div><div class="line">	//处理结束的时候通过刚才被保存的原始setter变量继续执行系统代码</div><div class="line">    raw_setter.call(this, url);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<p>尝试Hook一个系统函数document.write()，对其参数进行操作处理<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line">//首先获得这个函数的对象</div><div class="line">var old_write = window.document.write;</div><div class="line">//然后重写此函数</div><div class="line">window.document.write = function(string)</div><div class="line">&#123;</div><div class="line">	//基于函数的参数进行自定义的操作</div><div class="line">    if (blackregmatch(wordblacklistDocumetnWrite, string))</div><div class="line">    &#123;</div><div class="line">        console.log(&apos;f4ck you! &apos;, string);</div><div class="line">        return;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    //接着运行函数原生代码：使用函数对象.apply(document, arguments)这种写法</div><div class="line">    old_write.apply(document, arguments);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>同理，我们Hook敏感的ajax函数<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div></pre></td><td class="code"><pre><div class="line">//存储xhr对象open函数以便之后继续运行</div><div class="line">var s_ajaxListener = new Object();</div><div class="line">s_ajaxListener.tempOpen = this.XMLHttpRequest.prototype.open;</div><div class="line">s_ajaxListener.tempSend = this.XMLHttpRequest.prototype.send;</div><div class="line"></div><div class="line">//开始重写xhr的open函数</div><div class="line">this.XMLHttpRequest.prototype.open = function(a,b)</div><div class="line">&#123;</div><div class="line">	//在执行xhr的open函数前插入自定义的操作</div><div class="line">    if (!a) var a=&apos; &apos;;</div><div class="line">    if (!b) var b=&apos; &apos;;</div><div class="line">    var open_method=a;</div><div class="line">    //拿到xhr的url，并对其做白名单检测</div><div class="line">    var open_url=b;</div><div class="line">    if (!whileListMatch(whiteList,open_url))</div><div class="line">    &#123;</div><div class="line">        console.log(&apos;f4ck you! url:&apos;+open_method+&apos;:&apos;+open_url);</div><div class="line">        return ;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">	//接着运行函数原生代码</div><div class="line">    s_ajaxListener.tempOpen.apply(this, arguments);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>我们这些对象都是在当前的window窗口下操作，并不能Hook到iframe标签内的各种行为，所以我们还需要将所有的iframe标签的窗口都进行Hook，这里代码是使用静态检测完成的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;</div><div class="line"></div><div class="line">var observer = new MutationObserver(function(mutations)</div><div class="line">&#123;</div><div class="line">    mutations.forEach(function(mutation)</div><div class="line">    &#123;</div><div class="line">        var nodes = mutation.addedNodes;</div><div class="line"></div><div class="line">        for (var i = 0; i &lt; nodes.length; i++)</div><div class="line">        &#123;</div><div class="line">        	//将installHook的操作对所有iframe中的标签也进行Hook，但是这里还是存在静态检测的固有问题的</div><div class="line">            var node = nodes[i];</div><div class="line"></div><div class="line">            if (node.tagName == &apos;IFRAME&apos;)</div><div class="line">            &#123;</div><div class="line">                installHook(node.contentWindow);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
+<h2 id="过滤代码的一些问题"><a href="#过滤代码的一些问题" class="headerlink" title="过滤代码的一些问题"></a>过滤代码的一些问题</h2><p>实际上这种过滤方式如果配置严格可以起到很强的过滤性，但据Ben师傅说他出题时不小心将filter.js用成了修改之前的，所以过滤效果微乎其微，通读下来，是有这些原因的</p>
+<ul>
+<li>首先过滤方式分为黑名单过滤与白名单过滤，黑名单那个倒是没多少问题，当时白名单的正则式里面有这一条<code>.*?</code>，这是会匹配到所有字符串的，所以白名单根本就没有起到过滤效果。。。</li>
+<li>另外一点是，js毕竟是种写法多样的语言，一种写法被过滤了，总有相应的其他写法来代替，而本filter.js文件中其实并没有对多少关键写法进行限制，像<code>&lt;iframe src=&quot;javascript：&quot;&gt;</code>,<code>xhr</code>,等等都没有限制严格，所以实际上很多写法都是可行的</li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/04/Padding-Oracle-Attack/" rel="prev" title="Padding Oracle Attack">
+                Padding Oracle Attack <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            Daftar Isi
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            Ikhtisar
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-name">posting</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#首先阐述下filter-js这种的前端xss防御基本原理："><span class="nav-number">1.</span> <span class="nav-text">首先阐述下filter.js这种的前端xss防御基本原理：</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#我们从静态检测开始"><span class="nav-number"></span> <span class="nav-text">我们从静态检测开始</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始我们的动态检测部分"><span class="nav-number"></span> <span class="nav-text">开始我们的动态检测部分</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#过滤代码的一些问题"><span class="nav-number"></span> <span class="nav-text">过滤代码的一些问题</span></a></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+</div>
+
+
+<div class="powered-by">
+  Powered by <a class="theme-link" href="https://hexo.io">Hexo</a>
+</div>
+
+<div class="theme-info">
+  Tema -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
