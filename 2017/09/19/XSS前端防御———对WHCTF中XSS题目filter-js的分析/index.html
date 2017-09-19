@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/09/19/XSS前端防御———对WHCTF中XSS题目filter-js的分析/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="最早的时候是从今年的Bctf的xss题目中遇到的filter.js这种过滤形式，但当时对xss题目一直全程懵逼所以也没有留下代码来好好分析过这种过滤，这次Ben师傅出的xss题目恰好使用了这种防御机制，于是打算好好整理一下。（PS：一看到题目的背景图片就知道这题一定是Ben师傅出的，赛后一问果然是2333）这种前端的XSS防御主要由两部分构成：  静态检测 动态检测">
-<meta property="og:updated_time" content="2017-09-19T16:33:10.637Z">
+<meta property="og:updated_time" content="2017-09-19T16:34:19.268Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XSS前端防御———对WHCTF中xss题目filter.js的分析">
 <meta name="twitter:description" content="最早的时候是从今年的Bctf的xss题目中遇到的filter.js这种过滤形式，但当时对xss题目一直全程懵逼所以也没有留下代码来好好分析过这种过滤，这次Ben师傅出的xss题目恰好使用了这种防御机制，于是打算好好整理一下。（PS：一看到题目的背景图片就知道这题一定是Ben师傅出的，赛后一问果然是2333）这种前端的XSS防御主要由两部分构成：  静态检测 动态检测">
@@ -349,7 +349,7 @@
 <p>我们这些对象都是在当前的window窗口下操作，并不能Hook到iframe标签内的各种行为，所以我们还需要将所有的iframe标签的窗口都进行Hook，这里代码是使用静态检测完成的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div></pre></td><td class="code"><pre><div class="line">var MutationObserver = window.MutationObserver || window.WebKitMutationObserver || window.MozMutationObserver;</div><div class="line"></div><div class="line">var observer = new MutationObserver(function(mutations)</div><div class="line">&#123;</div><div class="line">    mutations.forEach(function(mutation)</div><div class="line">    &#123;</div><div class="line">        var nodes = mutation.addedNodes;</div><div class="line"></div><div class="line">        for (var i = 0; i &lt; nodes.length; i++)</div><div class="line">        &#123;</div><div class="line">        	//将installHook的操作对所有iframe中的标签也进行Hook，但是这里还是存在静态检测的固有问题的</div><div class="line">            var node = nodes[i];</div><div class="line"></div><div class="line">            if (node.tagName == &apos;IFRAME&apos;)</div><div class="line">            &#123;</div><div class="line">                installHook(node.contentWindow);</div><div class="line">            &#125;</div><div class="line">        &#125;</div><div class="line">    &#125;);</div><div class="line">&#125;);</div></pre></td></tr></table></figure></p>
 <h2 id="过滤代码的一些问题"><a href="#过滤代码的一些问题" class="headerlink" title="过滤代码的一些问题"></a>过滤代码的一些问题</h2><p>实际上这种过滤方式如果配置严格可以起到很强的过滤性，但据Ben师傅说他出题时不小心将filter.js用成了修改之前的，所以过滤效果微乎其微，通读下来，是有这些原因的</p>
 <ul>
-<li>首先过滤方式分为黑名单过滤与白名单过滤，黑名单那个倒是没多少问题，当时白名单的正则式里面有这一条<code>.*?</code>，这是会匹配到所有字符串的，所以白名单根本就没有起到过滤效果。。。</li>
+<li>首先过滤方式分为黑名单过滤与白名单过滤，黑名单那个倒是没多少问题，但是白名单的正则式里面有这一条<code>.*?</code>，这是会匹配到所有字符串的，所以白名单根本就没有起到过滤效果。。。</li>
 <li>另外一点是，js毕竟是种写法多样的语言，一种写法被过滤了，总有相应的其他写法来代替，而本filter.js文件中其实并没有对多少关键写法进行限制，像<code>&lt;iframe src=&quot;javascript：&quot;&gt;</code>,<code>xhr</code>,等等都没有限制严格，所以实际上很多写法都是可行的</li>
 </ul>
 
