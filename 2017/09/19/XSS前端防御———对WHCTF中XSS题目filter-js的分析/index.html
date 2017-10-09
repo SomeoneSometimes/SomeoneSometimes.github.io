@@ -329,7 +329,7 @@
 <li>动态检测</li>
 </ul>
 <a id="more"></a>
-<h2 id="首先阐述下filter-js这种的前端xss防御基本原理："><a href="#首先阐述下filter-js这种的前端xss防御基本原理：" class="headerlink" title="首先阐述下filter.js这种的前端xss防御基本原理："></a>首先阐述下filter.js这种的前端xss防御基本原理：</h2><p>在HTML文档的最开头部分就引入这些js代码，需要保证在这些代码执行的时候敏感标签还没有生成，只有这样才会触发我们的检测，比如最简单的一个html文件<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Security-Policy"</span> <span class="attr">content</span>=<span class="string">"default-src 'self'; script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline';img-src *;"</span>&gt;</span></div><div class="line">//注意我们尽早的引入了filter.js，使其在下面的标签还没有渲染的时候就开始执行了，这样才能够成功监测到之后标签的各种行为</div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'filter.js'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>Phone<span class="tag">&lt;/<span class="name">h2</span>&gt;</span> sdsd<span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;<span class="name">h2</span>&gt;</span>secret<span class="tag">&lt;/<span class="name">h2</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">"flag.php"</span> <span class="attr">id</span>=<span class="string">"xie"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="undefined"></span></div><div class="line">	alert('123');</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
+<h2 id="首先阐述下filter-js这种的前端xss防御基本原理："><a href="#首先阐述下filter-js这种的前端xss防御基本原理：" class="headerlink" title="首先阐述下filter.js这种的前端xss防御基本原理："></a>首先阐述下filter.js这种的前端xss防御基本原理：</h2><p>在HTML文档的最开头部分就引入这些js代码，需要保证在这些代码执行的时候敏感标签还没有生成，只有这样才会触发我们的检测，比如最简单的一个html文件<br><figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Content-Security-Policy"</span> <span class="attr">content</span>=<span class="string">"default-src 'self'; script-src 'self' 'unsafe-inline';style-src 'self' 'unsafe-inline';img-src *;"</span>&gt;</span></div><div class="line">//注意我们尽早的引入了filter.js，使其在下面的标签还没有渲染的时候就开始执行了，这样才能够成功监测到之后标签的各种行为</div><div class="line"><span class="tag">&lt;<span class="name">script</span> <span class="attr">src</span>=<span class="string">'filter.js'</span>&gt;</span><span class="undefined"></span><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">h2</span>&gt;</span>Phone<span class="tag">&lt;/<span class="name">h2</span>&gt;</span> sdsd<span class="tag">&lt;<span class="name">br</span>&gt;</span><span class="tag">&lt;<span class="name">h2</span>&gt;</span>secret<span class="tag">&lt;/<span class="name">h2</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">iframe</span> <span class="attr">src</span>=<span class="string">"flag.php"</span> <span class="attr">id</span>=<span class="string">"xie"</span>&gt;</span><span class="tag">&lt;/<span class="name">iframe</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span><span class="javascript"></span></div><div class="line">	alert(<span class="string">'123'</span>);</div><div class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></div></pre></td></tr></table></figure></p>
 <h2 id="我们从静态检测开始"><a href="#我们从静态检测开始" class="headerlink" title="我们从静态检测开始"></a>我们从静态检测开始</h2><p>在阐述具体的实现代码之前，我们必须了解静态检测的局限性，这十分重要所以我不得不先声明：</p>
 <ul>
 <li>如果用动态代码加载的话，就算监听到了标签执行，也无法得到加载的动态代码，就比如script的src</li>
@@ -392,6 +392,10 @@
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/30/给信息安全入门者的一些建议/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
             
           </div>
 
@@ -475,7 +479,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

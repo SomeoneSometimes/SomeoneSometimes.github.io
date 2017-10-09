@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能">
-<meta property="og:updated_time" content="2017-06-30T09:10:57.200Z">
+<meta property="og:updated_time" content="2017-10-09T13:28:16.213Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP文件包含的利用思路">
 <meta name="twitter:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能">
@@ -359,6 +359,8 @@
 /boot.ini/………[…]…………
 (php版本小于5.2.8(?)可以成功，只适用windows，点号需要长于256)
 </code></pre><p>8、使用伪协议php://  data:// 构造输入流</p>
+<p>9、可以考虑使用软链接的方式<br>如果环境会将我们上传的文件包含并输出的话，并且上传的文件是压缩文件，可以考虑使用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ln -s /etc/passwd 1.txt</div><div class="line">tar -czvf test.tar.gz 1.txt</div></pre></td></tr></table></figure></p>
+<p>来上传软链接文件实现服务器对应目录上的东西</p>
 
       
     </div>
@@ -481,7 +483,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
