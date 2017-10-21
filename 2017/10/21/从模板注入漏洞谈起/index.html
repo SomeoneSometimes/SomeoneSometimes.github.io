@@ -1,0 +1,743 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="并不想说什么">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从模板注入漏洞谈起，到一个烂尾寻找python沙盒绕过的代码">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/10/21/从模板注入漏洞谈起/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="并不想说什么">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1fkq0jmaixzj20i1051q69.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1fkq0hprcbhj20id04nt8x.jpg">
+<meta property="og:updated_time" content="2017-10-21T10:18:23.534Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="从模板注入漏洞谈起，到一个烂尾寻找python沙盒绕过的代码">
+<meta name="twitter:description" content="并不想说什么">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/93e435bbly1fkq0jmaixzj20i1051q69.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/10/21/从模板注入漏洞谈起/"/>
+
+
+
+
+
+  <title>从模板注入漏洞谈起，到一个烂尾寻找python沙盒绕过的代码 | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-link"></i> <br />
+            
+            友链
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/10/21/从模板注入漏洞谈起/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">从模板注入漏洞谈起，到一个烂尾寻找python沙盒绕过的代码</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-10-21T18:17:03+08:00">
+                2017-10-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>并不想说什么</p>
+<a id="more"></a>
+<h3 id="从模板注入漏洞谈起"><a href="#从模板注入漏洞谈起" class="headerlink" title="从模板注入漏洞谈起"></a>从模板注入漏洞谈起</h3><p>不管是什么语言，php也好，python也好，在做前端的时候都会有模板技术，这可以将前端框架与后端所提供的动态值分离，对于后台开发者来说，只需要拿着前端模板然后像””.format()一样，来为里面的参数提供不同的值</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$twig = <span class="keyword">new</span> Twig_Environment(<span class="keyword">new</span> Twig_Loader_String());</div><div class="line"><span class="comment">// 这里面Hello &#123;&#123;name&#125;&#125;就是模板，array("name" =&gt; $_GET["name"])就是在为其赋值</span></div><div class="line">$output = $twig-&gt;render(<span class="string">"Hello &#123;&#123;name&#125;&#125;"</span>, <span class="keyword">array</span>(<span class="string">"name"</span> =&gt; $_GET[<span class="string">"name"</span>]));  </div><div class="line"><span class="keyword">echo</span> $output;</div></pre></td></tr></table></figure>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$twig = <span class="keyword">new</span> Twig_Environment(<span class="keyword">new</span> Twig_Loader_String());</div><div class="line"><span class="comment">// 这种情况是直接填入到里面去</span></div><div class="line">$output = $twig-&gt;render(<span class="string">"Hello &#123;$_GET['name']&#125;"</span>);  </div><div class="line"><span class="keyword">echo</span> $output;</div></pre></td></tr></table></figure>
+<p>上述两种都可以实现填充，然而会存在一种问题：<br>第一种是类似format()的函数实现，大多数模板实现这个功能的时候都会进行转义，所以xss是没法构造的，然而第二种的方式就是将<code>$_GET[&#39;name&#39;]</code>直接放到了模板里面，不会进行转义，所以可以构造xss</p>
+<h3 id="模板可能还支持对应语言的“编程功能”以及一些简单的运算"><a href="#模板可能还支持对应语言的“编程功能”以及一些简单的运算" class="headerlink" title="模板可能还支持对应语言的“编程功能”以及一些简单的运算"></a>模板可能还支持对应语言的“编程功能”以及一些简单的运算</h3><p>模板并不是静态的放进去，虽然模板产品类型很多，但或多或少都能执行一些逻辑</p>
+<p>在Twig中，模板支持运行这样简单的逻辑，如果并没有运行的话，可能是关键字符被过滤，并不是模板不支持这样写</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">name=&#123;&#123;<span class="number">2</span>*<span class="number">10</span>&#125;&#125;   name=&#123;&#123;<span class="number">2</span>+<span class="number">2</span>&#125;&#125;</div></pre></td></tr></table></figure>
+<p>而在python的Jinja2模板中，就能支持更多更强大的逻辑：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> jinja2 <span class="keyword">import</span> Template</div><div class="line"></div><div class="line">str = <span class="string">"&#123;% for i in [1,2,3] %&#125;&#123;&#123; i &#125;&#125;&#123;% endfor %&#125;"</span></div><div class="line">template = Template(<span class="string">'your input: &#123;&#125;'</span>.format(str))</div><div class="line"><span class="keyword">print</span> (template.render())</div></pre></td></tr></table></figure>
+<p>是不是感觉很像python的语法？那么是不是我们就相当于拿到了python的任意代码执行？其实还差的远，因为虽然我们能在模板里书写任意代码，但并不是能够调用任意函数，就像python程序里没有import os就不能使用os.system()一样。在Jinja2里如果我们想“import os”，需要这样做</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">template.globals[<span class="string">'os'</span>] = os</div></pre></td></tr></table></figure>
+<p>但显然我们没有写这种代码的能力。。。但其实还是可以的，我们不用import os模块就能使用os的，这里就需要了解python的沙盒绕过了，也是今天我花时间最多却没搞出来的点。。。</p>
+<h3 id="python沙盒绕过"><a href="#python沙盒绕过" class="headerlink" title="python沙盒绕过"></a>python沙盒绕过</h3><p>还是先大致统计下目前已知的需要用到沙盒绕过的情景</p>
+<ul>
+<li>本文中通过模板引擎注入代码，但没法import，也就相当于限制了一些关键函数的使用</li>
+<li>昨天USTC比赛里见到了python反序列化，所以也相当于可以执行任意代码的，只是一些关键的模块被禁用了</li>
+<li>。。。。还没接触到</li>
+</ul>
+<p><strong>如果程序不从函数注册来判断那些函数可以使用的话，我们可以通过以下过程来得到我们要用的模块或者函数</strong></p>
+<p>通过一个类的各种属性或方法，可以得到很多相关的东西，其中就可能包含我们想要的模块或函数</p>
+<ul>
+<li><code>class.__dict__</code></li>
+<li><code>class.__init__.__globals__</code></li>
+<li><code>class.func_globals</code></li>
+</ul>
+<p>应该还有很多，我们可以自己去测试</p>
+<p><img src="https://ws1.sinaimg.cn/large/93e435bbly1fkq0jmaixzj20i1051q69.jpg" alt=""></p>
+<p>通过<code>class.__class__.__base__.__subclasses__()</code>我们就可以得到很多子类，其实在对上面的方法进行测试的时候，我们有时也可以看到很多类</p>
+<p><img src="https://ws1.sinaimg.cn/large/93e435bbly1fkq0hprcbhj20id04nt8x.jpg" alt="![img](https://ws1.sinaimg.cn/large/93e435bbly1fkq0hprcbhj20id04nt8x.jpg)"></p>
+<p>于是我们通过一个个跳转，就可以最终找到我们要的函数或者模块，举个例子</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> [].__class__.__base__.__subclasses__():</div><div class="line">    <span class="keyword">if</span> i.__name__ == <span class="string">"catch_warnings"</span>:</div><div class="line">        <span class="keyword">print</span> i.__init__.func_globals[<span class="string">'linecache'</span>].__dict__[<span class="string">'os'</span>]</div><div class="line">        </div><div class="line">output:</div><div class="line">  &lt;module <span class="string">'os'</span> <span class="keyword">from</span> <span class="string">'C:\Python27\lib\os.pyc'</span>&gt;</div></pre></td></tr></table></figure>
+<h3 id="考虑实现自动查找定位到一个函数要走的路径"><a href="#考虑实现自动查找定位到一个函数要走的路径" class="headerlink" title="考虑实现自动查找定位到一个函数要走的路径"></a>考虑实现自动查找定位到一个函数要走的路径</h3><p>注意，代码烂尾了。。。最后并没有实现想要的功能，哪里出问题了有说不太清，最后时间预算不够了，就只能烂尾了。。。如果以后有时间再尝试写写吧</p>
+<p>首先阐述下我的实现：</p>
+<p>我们有一个初始类，一般是[]或()，然后通过<code>.__class__.__base__.__subclasses__()</code>扩展成很多的子类，于是我们就维护一个类列表，去遍历分析它，虽然一开始列表里只有一个，但我们对每一个分析的类都去寻找子类并将新找到的类及时添加到列表末尾</p>
+<p>然后在对每个类分析的过程中，尝试通过上面提到的一种获取函数的方法<code>.__init__.__globals__</code>来从中提取函数，如果找到了输出出来，有一点比较复杂的是，在提取函数语句的输出结果中，有很多中可能，有可能我们要的函数是在一个列表或字典中，这时候还需要再深入去分析，所以我就写成了一个递归</p>
+<p>然后就是代码了，烂尾的代码。。。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#coding=utf-8</span></div><div class="line"><span class="keyword">import</span> os</div><div class="line"><span class="keyword">import</span> warnings</div><div class="line"></div><div class="line"><span class="string">"""</span></div><div class="line">大致的过程：</div><div class="line">- 首先从一个类生成多个类</div><div class="line">- 对类生成各种各样的东西，分这几种类型：</div><div class="line">    - 函数直接看是不是</div><div class="line">    - 类的话，就放到类遍历列表里面去，当然要先判断有没有才行</div><div class="line">    - 字典的话，生成value去再来分析</div><div class="line">    - 列表的话，直接去分析</div><div class="line">"""</div><div class="line"></div><div class="line">class_list = []</div><div class="line">class_original = []</div><div class="line">class_list.append(class_original)</div><div class="line">goal_function = open</div><div class="line"></div><div class="line"><span class="comment">#通过__class__.__base__.__subclasses__生成子class</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_subclass</span><span class="params">(_class)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">return</span> _class.__class__.__base__.__subclasses__()</div><div class="line">    <span class="keyword">except</span>:</div><div class="line">        <span class="keyword">return</span> []</div><div class="line"></div><div class="line"><span class="comment">#从class中通过.__init__.__globals__来得到所有的各种类型的值</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_something</span><span class="params">(_class)</span>:</span></div><div class="line">    <span class="keyword">if</span> hasattr(_class.__init__, <span class="string">'__globals__'</span>):</div><div class="line">        <span class="keyword">return</span> _class.__init__.__globals__</div><div class="line"></div><div class="line"><span class="comment">#递归式的对一个列表进行分析</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">analysis_list</span><span class="params">(list)</span>:</span></div><div class="line">    <span class="keyword">if</span> list:</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> list:</div><div class="line">            <span class="keyword">if</span> type(i) == type([]):</div><div class="line">                analysis_list(i)</div><div class="line">                <span class="keyword">break</span></div><div class="line">            <span class="keyword">if</span> type(i) == type(&#123;&#125;):</div><div class="line">                analysis_dict(i)</div><div class="line">                <span class="keyword">break</span></div><div class="line">            <span class="keyword">if</span> hasattr(i, <span class="string">'__call__'</span>):</div><div class="line">                <span class="keyword">if</span> i == goal_function:</div><div class="line">                    <span class="keyword">print</span> (i)</div><div class="line">                <span class="keyword">break</span></div><div class="line">            <span class="comment">#还不是话，就推断是类了,但是目前还不敢肯定就这几种类型</span></div><div class="line">            <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> class_list:</div><div class="line">                class_list.append(i)</div><div class="line"></div><div class="line"><span class="comment">#递归式的对一个字典进行分析</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">analysis_dict</span><span class="params">(dict)</span>:</span></div><div class="line">    <span class="keyword">if</span> dict:</div><div class="line">        <span class="keyword">for</span> i <span class="keyword">in</span> dict.values() :</div><div class="line">            <span class="keyword">if</span> type(i) == type([]):</div><div class="line">                analysis_list(i)</div><div class="line">                <span class="keyword">break</span></div><div class="line">            <span class="keyword">if</span> type(i) == type(&#123;&#125;):</div><div class="line">                analysis_dict(i)</div><div class="line">                <span class="keyword">break</span></div><div class="line">            <span class="keyword">if</span> hasattr(i, <span class="string">'__call__'</span>):</div><div class="line">                <span class="keyword">if</span> i == goal_function:</div><div class="line">                    <span class="keyword">print</span> (i)</div><div class="line">                <span class="keyword">break</span></div><div class="line">            <span class="comment">#还不是话，就推断是类了,但是目前还不敢肯定就这几种类型</span></div><div class="line">            <span class="keyword">if</span> i <span class="keyword">not</span> <span class="keyword">in</span> class_list:</div><div class="line">                class_list.append(i)</div><div class="line"></div><div class="line"></div><div class="line"><span class="keyword">for</span> i <span class="keyword">in</span> class_list:</div><div class="line">	<span class="comment">#首先增加一波子类</span></div><div class="line">    <span class="keyword">for</span> j <span class="keyword">in</span> get_subclass(i):</div><div class="line">        <span class="keyword">if</span> j <span class="keyword">not</span> <span class="keyword">in</span> class_list:</div><div class="line">            class_list.append(j)</div><div class="line">    <span class="comment"># print class_list</span></div><div class="line"></div><div class="line">    <span class="comment">#开始对这个类进行深入的查找</span></div><div class="line">    analysis_dict(get_something(i))</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/10/01/给信息安全入门者的一些建议/" rel="prev" title="给信息安全入门者的一点建议">
+                给信息安全入门者的一点建议 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTE1OS83NzA4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#从模板注入漏洞谈起"><span class="nav-number">1.</span> <span class="nav-text">从模板注入漏洞谈起</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#模板可能还支持对应语言的“编程功能”以及一些简单的运算"><span class="nav-number">2.</span> <span class="nav-text">模板可能还支持对应语言的“编程功能”以及一些简单的运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python沙盒绕过"><span class="nav-number">3.</span> <span class="nav-text">python沙盒绕过</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#考虑实现自动查找定位到一个函数要走的路径"><span class="nav-number">4.</span> <span class="nav-text">考虑实现自动查找定位到一个函数要走的路径</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

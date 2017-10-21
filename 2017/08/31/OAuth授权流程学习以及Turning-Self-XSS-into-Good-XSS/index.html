@@ -98,7 +98,7 @@
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="说起来是因为对BCTF的Dairy题目重新复习才写了这篇笔记，原谅我当时没吃透这道题的原理，近日看Ven师傅的wp中提到了OAuth授权，才意识到出这道题目的用意。。。">
 <meta property="og:image" content="http://i.imgur.com/m2gvx3I.png">
-<meta property="og:updated_time" content="2017-10-01T16:41:53.274Z">
+<meta property="og:updated_time" content="2017-10-18T09:54:31.643Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="OAuth授权流程学习以及Turning Self-XSS into Good-XSS">
 <meta name="twitter:description" content="说起来是因为对BCTF的Dairy题目重新复习才写了这篇笔记，原谅我当时没吃透这道题的原理，近日看Ven师傅的wp中提到了OAuth授权，才意识到出这道题目的用意。。。">
@@ -330,10 +330,10 @@
 <h2 id="学习OAuth"><a href="#学习OAuth" class="headerlink" title="学习OAuth"></a>学习OAuth</h2><p>首先需要学习OAuth，这里推荐这篇文章———<a href="http://www.ruanyifeng.com/blog/2014/05/oauth_2_0.html" target="_blank" rel="external">理解OAuth 2.0</a>，只看其中最常见的授权码模式就可以了，本题就用的这种模式。说白了就是平常我们上网站经常看到登陆的时候可以选择通过qq登陆，微信登陆，微博登陆啊这种登录模式，点击后我们在跳出来的页面上给出授权，就可以成功登陆网站了<br><img src="http://i.imgur.com/m2gvx3I.png" alt=""><br>我们可以举个例子来体验下阮老师文章里所说的过程，我是使用freebuf测试的</p>
 <ol>
 <li><p>freebuf将我们导向qq的认证服务器，同时附加上所需要的参数    </p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">https://graph.qq.com/oauth2.0/authorize</div><div class="line">?response_type=code   授权类型response_type=code表示是授权码模式的验证</div><div class="line">&amp;client_id=100578783  表明自己客户端的id</div><div class="line">&amp;redirect_uri=https://account.tophant.com/qq.html  指定重定向的url redirect_uri</div><div class="line">&amp;state=2d5c6bac1ec4c0be640766dacbd2127c   自己的状态码</div><div class="line">&amp;scope=get_user_info   客户端要的权限scope</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">https://graph.qq.com/oauth2.0/authorize</div><div class="line">?response_type=code   授权类型response_type=code表示是授权码模式的验证</div><div class="line">&amp;client_id=100578783  表明自己客户端的id</div><div class="line">&amp;redirect_uri=https://account.tophant.com/qq.html  指定重定向的url redirect_uri</div><div class="line">&amp;state=2d5c6bac1ec4c0be640766dacbd2127c   自己的状态码</div><div class="line">&amp;scope=get_user_info   客户端要的权限scope</div></pre></td></tr></table></figure>
 </li>
 <li><p>在我点击授权后，qq将我们重定向到freebuf所指定的redirect_uri，并携带有授权码code</p>
- <figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">https://account.tophant.com/qq.html</div><div class="line">?code=6DDBE8E30017C9C44C55F45B2A53A015   关键的授权码code</div><div class="line">&amp;state=875cf715b9163b0e73f6f6b88afb9475  状态码，非必要</div></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">https://account.tophant.com/qq.html</div><div class="line">?code=6DDBE8E30017C9C44C55F45B2A53A015   关键的授权码code</div><div class="line">&amp;state=875cf715b9163b0e73f6f6b88afb9475  状态码，非必要</div></pre></td></tr></table></figure>
 </li>
 <li><p>在第一条链接中我们可以看到freebuf申请的权限是get_user_info，那么之后freebuf就可以拿着code向qq获取我的用户信息来作为freebuf的登陆识别</p>
 </li>
@@ -341,8 +341,10 @@
 <p>最后多嘴一句，这里要分清两种登陆状态，一种是qq的登陆状态，也就是资源提供者，另一种是freebuf的登陆状态，是通过访问qq认证之后拿到code码实现登陆的</p>
 <h2 id="结合Diary题目学习Turning-Self-XSS-into-Good-XSS"><a href="#结合Diary题目学习Turning-Self-XSS-into-Good-XSS" class="headerlink" title="结合Diary题目学习Turning Self-XSS into Good-XSS"></a>结合Diary题目学习Turning Self-XSS into Good-XSS</h2><p><strong>题目有两个域</strong></p>
 <ul>
-<li>diary.bctf.xctf.org.cn</li>
-<li>auth.bctf.xctf.org.cn</li>
+<li><p>diary.bctf.xctf.org.cn</p>
+</li>
+<li><p>auth.bctf.xctf.org.cn</p>
+</li>
 </ul>
 <p><strong>登陆机制介绍</strong><br>如果想登陆diary域的话，会被定向到auth域内，输入用户名密码实现登陆后，会发送链接到auth.bctf.xctf.org.cn/o/authorize/来获取code，auth域会给code并将用户定位到diary域来实现diary域的登陆，所以可以看到这里auth域扮演者类似qq的资源提供者的角色，而diary域扮演着类似freebuf的客户端的角色</p>
 <p><strong>两个xss点介绍</strong><br>然后再看下xss点，我们可以给admin发送链接，通过这个url漏洞可以将admin定位到任意url点<code>http://diary.bctf.xctf.org.cn/static/%5c%5cxss平台/xss.html</code><br>另外一个xss点是在我们以自己的身份登陆的时候可以在diary域看到自己的留言，这块只能让admin以我们的身份登陆的时候才能看到并触发</p>
@@ -475,7 +477,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>

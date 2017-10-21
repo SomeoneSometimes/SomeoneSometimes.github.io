@@ -4,6 +4,36 @@
 
     
   <url>
+    <loc>https://someonesometimes.github.io/2017/10/21/%E4%BB%8E%E6%A8%A1%E6%9D%BF%E6%B3%A8%E5%85%A5%E6%BC%8F%E6%B4%9E%E8%B0%88%E8%B5%B7/</loc>
+    <lastmod>2017-10-21T10:18:23.534Z</lastmod>
+    <data>
+        <display>
+        <title>从模板注入漏洞谈起，到一个烂尾寻找python沙盒绕过的代码</title>
+        <pubTime>2017-10-21T10:17:03.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://someonesometimes.github.io/2017/08/31/OAuth%E6%8E%88%E6%9D%83%E6%B5%81%E7%A8%8B%E5%AD%A6%E4%B9%A0%E4%BB%A5%E5%8F%8ATurning-Self-XSS-into-Good-XSS/</loc>
+    <lastmod>2017-10-18T09:54:31.643Z</lastmod>
+    <data>
+        <display>
+        <title>OAuth授权流程学习以及Turning Self-XSS into Good-XSS</title>
+        <pubTime>2017-08-31T07:17:26.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
     <loc>https://someonesometimes.github.io/2017/10/01/%E7%BB%99%E4%BF%A1%E6%81%AF%E5%AE%89%E5%85%A8%E5%85%A5%E9%97%A8%E8%80%85%E7%9A%84%E4%B8%80%E4%BA%9B%E5%BB%BA%E8%AE%AE/</loc>
     <lastmod>2017-10-09T15:57:00.069Z</lastmod>
     <data>
@@ -85,21 +115,6 @@
         <display>
         <title>XXE学习笔记</title>
         <pubTime>2017-05-07T07:23:28.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://someonesometimes.github.io/2017/08/31/OAuth%E6%8E%88%E6%9D%83%E6%B5%81%E7%A8%8B%E5%AD%A6%E4%B9%A0%E4%BB%A5%E5%8F%8ATurning-Self-XSS-into-Good-XSS/</loc>
-    <lastmod>2017-10-01T16:41:53.274Z</lastmod>
-    <data>
-        <display>
-        <title>OAuth授权流程学习以及Turning Self-XSS into Good-XSS</title>
-        <pubTime>2017-08-31T07:17:26.000Z</pubTime>
         
          
            
