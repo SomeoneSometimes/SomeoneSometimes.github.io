@@ -483,7 +483,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/11/PHP文件包含的利用思路/">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yiruma">
@@ -502,7 +502,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/05/11/PHP文件包含的利用思路/" itemprop="url">PHP文件包含的利用思路</a></h1>
+                <a class="post-title-link" href="/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/" itemprop="url">PHP文件包含，文件读取的利用思路，以及配合伪协议的trick</a></h1>
         
 
         <div class="post-meta">
@@ -550,11 +550,14 @@
 
       
         
-          <p>PHP的文件包含函数有两类，分三种：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">file_get_contents() </div><div class="line">include()/include_once()  require/require_once()</div></pre></td></tr></table></figure></p>
-<p>第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能<br>
+          <p><strong>PHP的文件包含函数有两类，分三种：</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">file_get_contents() </div><div class="line"><span class="keyword">include</span>()/<span class="keyword">include_once</span>()  <span class="keyword">require</span>/<span class="keyword">require_once</span>()</div></pre></td></tr></table></figure></p>
+<p>第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能</p>
+<p><strong>php写文件的函数</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file_put_contents()</div></pre></td></tr></table></figure>
+<p>基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了</p>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2017/05/11/PHP文件包含的利用思路/#more" rel="contents">
+            <a class="btn" href="/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -667,32 +670,10 @@
 
       
         
-          <p>伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议</p>
-<blockquote>
-<p><strong>伪协议可以分为以下几类：</strong></p>
-<ul>
-<li>生成数据流<ul>
-<li>php://input</li>
-<li>data://text/plain;base64,base64编码字符串</li>
-</ul>
-</li>
-<li>数据流过滤器<ul>
-<li>php://filter/convert.base64-encode/resource=xxx</li>
-<li>php://filter/convert.base64-decode/resource=xxx</li>
-<li>phar://</li>
-<li>zip://</li>
-</ul>
-</li>
-<li>远程文件访问<ul>
-<li>http://</li>
-<li>ftp://</li>
-</ul>
-</li>
-<li>本地文件访问<ul>
-<li>file:///</li>
-</ul>
-</li>
-</ul>
+          <blockquote>
+<p>伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议</p>
+<p>现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用</p>
+<p>关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。</p>
 </blockquote>
           <!--noindex-->
           <div class="post-button text-center">

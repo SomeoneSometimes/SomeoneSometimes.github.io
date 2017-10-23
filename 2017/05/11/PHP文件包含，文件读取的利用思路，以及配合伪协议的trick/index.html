@@ -90,17 +90,17 @@
 
 
 
-<meta name="description" content="伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议 现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用 关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。">
+<meta name="description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能 php写文件的函数 1file_put_contents() 基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PHP伪协议">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP伪协议/index.html">
+<meta property="og:title" content="PHP文件包含，文件读取的利用思路，以及配合伪协议的trick">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议 现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用 关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。">
-<meta property="og:updated_time" content="2017-10-23T09:27:36.197Z">
+<meta property="og:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能 php写文件的函数 1file_put_contents() 基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了">
+<meta property="og:updated_time" content="2017-10-23T09:21:49.924Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="PHP伪协议">
-<meta name="twitter:description" content="伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议 现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用 关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。">
+<meta name="twitter:title" content="PHP文件包含，文件读取的利用思路，以及配合伪协议的trick">
+<meta name="twitter:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能 php写文件的函数 1file_put_contents() 基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了">
 
 
 
@@ -128,13 +128,13 @@
 
 
 
-  <link rel="canonical" href="https://someonesometimes.github.io/2017/05/11/PHP伪协议/"/>
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/"/>
 
 
 
 
 
-  <title>PHP伪协议 | Yiruma</title>
+  <title>PHP文件包含，文件读取的利用思路，以及配合伪协议的trick | Yiruma</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -254,7 +254,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/11/PHP伪协议/">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yiruma">
@@ -271,7 +271,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">PHP伪协议</h1>
+          <h1 class="post-title" itemprop="name headline">PHP文件包含，文件读取的利用思路，以及配合伪协议的trick</h1>
         
 
         <div class="post-meta">
@@ -283,7 +283,7 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-11T21:53:23+08:00">
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-11T21:54:08+08:00">
                 2017-05-11
               </time>
             
@@ -323,57 +323,49 @@
       
 
       
-        <blockquote>
-<p>伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议</p>
-<p>现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用</p>
-<p>关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。</p>
-</blockquote>
+        <p><strong>PHP的文件包含函数有两类，分三种：</strong><br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">file_get_contents() </div><div class="line"><span class="keyword">include</span>()/<span class="keyword">include_once</span>()  <span class="keyword">require</span>/<span class="keyword">require_once</span>()</div></pre></td></tr></table></figure></p>
+<p>第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能</p>
+<p><strong>php写文件的函数</strong></p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file_put_contents()</div></pre></td></tr></table></figure>
+<p>基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了</p>
 <a id="more"></a>
-<p><strong>伪协议可以分为以下几类：</strong></p>
+<h3 id="file-get-contents"><a href="#file-get-contents" class="headerlink" title="file_get_contents()"></a>file_get_contents()</h3><p>这个函数经常用于获取文件内容，尤其是php文件的代码，配合伪协议中的元封装器php://filter/convert.base64-encode/resource=class.php<br>几乎已经成了公认的文件获取姿势</p>
+<h3 id="include-require"><a href="#include-require" class="headerlink" title="include() / require()"></a>include() / require()</h3><p><strong>首先说下两者的唯一不同</strong></p>
+<ol>
+<li>include是当代码执行到它的时候才加载文件,发生错误的时候只是给一个警告,然后继续往下执行</li>
+<li>require是只要程序一执行就会立即调用文件,发生错误的时候会输出错误信息,并且终止脚本的运行</li>
+</ol>
+<p><strong>此函数利用的原理</strong><br>把参数作为一个php文件去运行，所以基本使用方法有拿运行环境与拿输出代码两种作用</p>
+<p><strong>这种文件包含利用的目的无外乎以下几种：</strong></p>
 <ul>
-<li>生成数据流 （上面两种在wamp 5.6php版本中都被禁用了）<ul>
-<li>php://input</li>
-<li>data://text/plain;base64,base64编码字符串</li>
+<li>使用php://filter/convert.base64-encode/resource=xxx来读文件源码</li>
+<li>包含shell代码文件（自己上传的，写的等各种方式），使代码具有php的执行环境</li>
+<li>包含使用伪协议自定的数据流，常用于写shell</li>
+<li>包含关键文件，获得该文件的输出结果与执行环境（就比如说关键文件中的变量引入）</li>
 </ul>
-</li>
-<li>数据流过滤器（测试可以看到在5.6版本的php中还没有被禁用）<ul>
-<li>php://filter/convert.base64-encode/resource=xxx</li>
-<li>php://filter/convert.base64-decode/resource=xxx</li>
-<li>phar://</li>
-<li>zip://</li>
-</ul>
-</li>
-<li>远程文件访问<ul>
-<li>http://</li>
-<li>ftp://</li>
-</ul>
-</li>
-<li>本地文件访问<ul>
-<li>file:///</li>
-</ul>
-</li>
-</ul>
-<p>现在将逐一介绍这些伪协议以及其常用的应用场景</p>
-<hr>
-<h3 id="php-input"><a href="#php-input" class="headerlink" title="php://input"></a>php://input</h3><p>很常用的数据流构造器，将读取提交的数据作为数据流的输入，也就是post的部分</p>
-<h3 id="data-text-plain-base64-base编码字符串"><a href="#data-text-plain-base64-base编码字符串" class="headerlink" title="data://text/plain;base64,base编码字符串"></a>data://text/plain;base64,base编码字符串</h3><p>很常用的数据流构造器，将读取后面base编码字符串后解码的数据作为数据流的输入</p>
-<h3 id="php-filter-convert-base64-encode-decode-resource-xxx"><a href="#php-filter-convert-base64-encode-decode-resource-xxx" class="headerlink" title="php://filter/convert.base64-[encode/decode]/resource=xxx"></a>php://filter/convert.base64-[encode/decode]/resource=xxx</h3><p>base64本来就有不少小trick，结合文件包含更是会有各种妙用，看下面这些:</p>
-<ul>
-<li><p>在引入resource所指的资源时，通过过滤器进行base64进行编码或解码通常用于获取文件数据时，将文件进行编码后传输</p>
-</li>
-<li><p>Ph师傅的文章中介绍到了这样一种很巧妙的场景，文件包含参数可控制，可上传内容为固定8种字符，于是首先使用可控制的文件包含结合php://filter读到源码，上传文件因为只能包含8种字符，可以使用base64的小trick经过n次编码将shell转换成只有8种字符的要求，然后文件包含shell中利用多次过滤器嵌套来实现多次base64解码，最终解析到shell</p>
-<p><code>php://filter/convert.base64-decode/resource=php://filter/convert.base64-decode/resource=.....</code></p>
-</li>
-</ul>
-<h3 id="php-filter-read-write-string-rot13-strip-tags-…-resource-xxx"><a href="#php-filter-read-write-string-rot13-strip-tags-…-resource-xxx" class="headerlink" title="php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx"></a>php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx</h3><p>过滤器里还支持用一些字符串处理函数进行过滤，这样选择的范围就更多了，但目前也就从p牛的博客里看到有这两个函数，其他的没有找到，strip_tags可以用来去掉字符串中的标签</p>
-<p>注意这个过滤器是要分清read与write两个情景的，用错的话就不会产生相应的效果。在file_put_contents()中就要使用write才有过滤效果，在include(),file_get_contents()中就要使用read才有效</p>
-<h3 id="phar-archive-zip-file-txt"><a href="#phar-archive-zip-file-txt" class="headerlink" title="phar://archive.zip/file.txt"></a>phar://archive.zip/file.txt</h3><p>经测试，其实可以将任意后缀名的文件(必须要有后缀名)，只要是zip格式压缩的，都可以进行解压，因此上面可以改为phar://archive.abc/file.txt也可以运行</p>
-<p>应用场景比较具体：<br>在文件上传再进行文件包含的情况下，文件上传部分就可以将shell.php进行zip压缩后，改为任意可通过验证的后缀名上传，之后文件包含调用的时候使用phar://伪协议解压出shell.php作为参数传入即可</p>
-<p>同样是文件上传+上传tar文件的trick，虽然这里没有用到伪协议（因为没有可控的文件上传点），但还是提一下吧</p>
-<p>功能如下：文件上传+上传文件的解压缩展示  可以使用到软连接的技巧，传一个快捷方式上去</p>
-<h3 id="zip-archive-zip-file-txt"><a href="#zip-archive-zip-file-txt" class="headerlink" title="zip://archive.zip#file.txt"></a>zip://archive.zip#file.txt</h3><p>用处和phar是一样的，应用场景也一样，但是要注意<strong> ‘#’ </strong>书写的时候要编码为%23才行，因为url的#后面是默认不传输的</p>
-<p>还有测试上，不知为什么，同样是5.6版本，在kali虚拟机上测试通过了，但在windows下就没有通过，也许是配置的问题</p>
-<p>### </p>
+<h3 id="file-put-contents"><a href="#file-put-contents" class="headerlink" title="file_put_contents()"></a>file_put_contents()</h3><p>用来写文件进去，其中文件名参数是支持伪协议的，用于将第二个参数content进行过滤器后再写进文件里面去</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">file_put_contents($_POST[<span class="string">'filename'</span>], <span class="string">"&lt;?php system($_GET['c']);?&gt;"</span>);</div></pre></td></tr></table></figure>
+<h3 id="以上函数有许多种利用姿势，结合伪协议又可以实现各种检测的绕过，在这里做出统计"><a href="#以上函数有许多种利用姿势，结合伪协议又可以实现各种检测的绕过，在这里做出统计" class="headerlink" title="以上函数有许多种利用姿势，结合伪协议又可以实现各种检测的绕过，在这里做出统计"></a>以上函数有许多种利用姿势，结合伪协议又可以实现各种检测的绕过，在这里做出统计</h3><p>1、<br><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$content = <span class="string">'&lt;?php exit; ?&gt;'</span>;</div><div class="line">$content .= $_POST[<span class="string">'txt'</span>];</div><div class="line">file_put_contents($_POST[<span class="string">'filename'</span>], $content);</div></pre></td></tr></table></figure></p>
+<p>写文件的时候在之前加上了exit函数，可以使用伪协议的base64，rot13，strip_tags来处理下</p>
+<p>2、包含form-data形式下php创建的临时文件</p>
+<p>3、文件包含函数的参数有固定的后缀<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$file = $_GET[&apos;file&apos;].&apos;.php&apos;;</div><div class="line">include($file);</div></pre></td></tr></table></figure></p>
+<p>考虑使用phar://或zip://伪协议来绕过</p>
+<p>4、压缩文件上传后再解压文件读取，可以考虑软连接的形式<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">ln -s /etc/passwd 1.txt</div><div class="line">tar -czvf test.tar.gz 1.txt</div></pre></td></tr></table></figure></p>
+<p>5、使用伪协议php://  data:// 构造输入流</p>
+<p>6、包含session文件<br>session文件一般在/tmp目录下，格式为sess_[phpsessid]</p>
+<p>7、文件包含函数参数有其他样式的后缀，</p>
+<pre><code>%00截断
+/etc/passwd%00
+(需要 magic_quotes_gpc=off，PHP小于5.3.4有效)
+
+ 路径长度截断：
+/etc/passwd/././././././.[…]/./././././.
+(php版本小于5.2.8(?)可以成功，linux需要文件名长于4096，windows需要长于256)
+
+点号截断：
+/boot.ini/………[…]…………
+(php版本小于5.2.8(?)可以成功，只适用windows，点号需要长于256)
+</code></pre><p>8、远程文件包含shell，这个在5.6下测试过了，php代码可以正常执行，但是不知为什么马运行不了，莫非是权限问题？？？好像记得ph师傅说过远程文件包含默认是禁用的。<br>9、包含日志文件</p>
 
       
     </div>
@@ -410,8 +402,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/" rel="next" title="PHP文件包含，文件读取的利用思路，以及配合伪协议的trick">
-                <i class="fa fa-chevron-left"></i> PHP文件包含，文件读取的利用思路，以及配合伪协议的trick
+              <a href="/2017/05/28/优化-pythonic/" rel="next" title="优化 pythonic">
+                <i class="fa fa-chevron-left"></i> 优化 pythonic
               </a>
             
           </div>
@@ -420,8 +412,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/11/CTF中getshell的统计/" rel="prev" title="CTF中getshell的统计">
-                CTF中getshell的统计 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/05/11/PHP伪协议/" rel="prev" title="PHP伪协议">
+                PHP伪协议 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -535,7 +527,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#php-input"><span class="nav-number">1.</span> <span class="nav-text">php://input</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-text-plain-base64-base编码字符串"><span class="nav-number">2.</span> <span class="nav-text">data://text/plain;base64,base编码字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-filter-convert-base64-encode-decode-resource-xxx"><span class="nav-number">3.</span> <span class="nav-text">php://filter/convert.base64-[encode/decode]/resource=xxx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-filter-read-write-string-rot13-strip-tags-…-resource-xxx"><span class="nav-number">4.</span> <span class="nav-text">php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phar-archive-zip-file-txt"><span class="nav-number">5.</span> <span class="nav-text">phar://archive.zip/file.txt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zip-archive-zip-file-txt"><span class="nav-number">6.</span> <span class="nav-text">zip://archive.zip#file.txt</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#file-get-contents"><span class="nav-number">1.</span> <span class="nav-text">file_get_contents()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#include-require"><span class="nav-number">2.</span> <span class="nav-text">include() / require()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#file-put-contents"><span class="nav-number">3.</span> <span class="nav-text">file_put_contents()</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#以上函数有许多种利用姿势，结合伪协议又可以实现各种检测的绕过，在这里做出统计"><span class="nav-number">4.</span> <span class="nav-text">以上函数有许多种利用姿势，结合伪协议又可以实现各种检测的绕过，在这里做出统计</span></a></li></ol></div>
             
 
           </div>
