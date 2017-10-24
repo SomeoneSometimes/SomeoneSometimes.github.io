@@ -97,7 +97,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/10/23/Java阻塞队列学习及LinkedBlockingQueue源码分析/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="Java阻塞队列最近在学习Java的多线程编程，对并发编程的认识也从之前用python写简单多线程程序里对并发代码块上锁，到生产者消费者模型，wait()，notify()，阻塞队列这些概念，那么这里要介绍的阻塞队列是什么呢？ 考虑生产者消费者模型这种情况，在从队列中取元素与拿元素时加锁，但在这种场景下仅加锁是不够的，因为生产者往里面放元素的时候，还要考虑队列有没有满，如果已经满了的话就要wait">
-<meta property="og:updated_time" content="2017-10-24T08:47:05.055Z">
+<meta property="og:updated_time" content="2017-10-24T08:49:52.217Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Java阻塞队列学习及LinkedBlockingQueue源码分析">
 <meta name="twitter:description" content="Java阻塞队列最近在学习Java的多线程编程，对并发编程的认识也从之前用python写简单多线程程序里对并发代码块上锁，到生产者消费者模型，wait()，notify()，阻塞队列这些概念，那么这里要介绍的阻塞队列是什么呢？ 考虑生产者消费者模型这种情况，在从队列中取元素与拿元素时加锁，但在这种场景下仅加锁是不够的，因为生产者往里面放元素的时候，还要考虑队列有没有满，如果已经满了的话就要wait">
@@ -326,6 +326,7 @@
         <h2 id="Java阻塞队列"><a href="#Java阻塞队列" class="headerlink" title="Java阻塞队列"></a>Java阻塞队列</h2><p>最近在学习Java的多线程编程，对并发编程的认识也从之前用python写简单多线程程序里对并发代码块上锁，到生产者消费者模型，wait()，notify()，阻塞队列这些概念，那么这里要介绍的阻塞队列是什么呢？</p>
 <p>考虑生产者消费者模型这种情况，在从队列中取元素与拿元素时加锁，但在这种场景下仅加锁是不够的，因为生产者往里面放元素的时候，还要考虑队列有没有满，如果已经满了的话就要wait一直到队列不满的时候再往里面放，消费者也是一样的，从队列里面拿元素的时候还要考虑队列是不是空的，如果是空的就要一直wait到非空的时候。注意这里我们就从加锁操作引出了wait(), notify()两个概念，在并发编程中结合这两个概念可以实现更多更精巧复杂的多线程场景。</p>
 <p>好像扯得有点远，还没有说到我们要介绍的阻塞队列的概念，其实阻塞队列就源自于生产者消费者模型中所涉及到的场景，在多线程下很多场景都要有一些临界资源，这些资源可能被多个线程同时访问，所以就要进行加锁啊，wait()，notify()等操作，其实个人觉得加锁还好，就是将一个对临界资源操作的语句块圈起来就好，但要实现wait，notify操作就有些麻烦了，放东西的时候需要一直判断是不是满了，满了还要wait，然后操作完了后还要记得唤醒各种线程防止死锁等等，如果都自己实现的话就有点太麻烦了，更重要的是容易出错，所以这里就引入了阻塞队列的概念，不是临界资源的操作需要加锁，判满，判空等等各种操作嘛，那好，临界资源你直接用我给你写的类，我在类里面已经对所有需要处理的多线程场景进行了处理，使其变得线程安全了，使用这种类的话，自己完全不需要考虑多线程的线程安全问题，而这种类就是我们要介绍的阻塞队列。</p>
+<a id="more"></a>
 <h2 id="LinkedBlockingQueue源码分析"><a href="#LinkedBlockingQueue源码分析" class="headerlink" title="LinkedBlockingQueue源码分析"></a>LinkedBlockingQueue源码分析</h2><p>还是蛮幸运的，划分分析方向的时候我正好被分到去分析这个类，这个类用的场景还是挺多的，最经典的就是消费者生产者问题，所以在源码分析中我们可以接着结合生产者消费者这个场景来理解</p>
 <h3 id="对LinkedBlockingQueue简单的介绍"><a href="#对LinkedBlockingQueue简单的介绍" class="headerlink" title="对LinkedBlockingQueue简单的介绍"></a>对LinkedBlockingQueue简单的介绍</h3><p>以下摘自Javadoc中的描述</p>
 <blockquote>
