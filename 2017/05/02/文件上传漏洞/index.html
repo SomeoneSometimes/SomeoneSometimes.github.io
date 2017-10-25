@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/02/文件上传漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 关联知识预览">
-<meta property="og:updated_time" content="2017-07-20T09:47:21.668Z">
+<meta property="og:updated_time" content="2017-10-25T11:29:05.012Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="文件上传漏洞">
 <meta name="twitter:description" content="服务器解析问题的漏洞 文件名的正则检测漏洞 其他的检测方式 关联知识预览">
@@ -371,13 +371,13 @@
 </ul>
 <a id="more"></a>
 <h2 id="服务器解析问题的漏洞"><a href="#服务器解析问题的漏洞" class="headerlink" title="服务器解析问题的漏洞"></a>服务器解析问题的漏洞</h2><ol>
-<li>在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的，文件test.php.jpg如果可以绕过的话就能够执行</li>
+<li>在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的</li>
 <li>在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测，文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文件系统时会把00忽略所以相当于获得了文件test.jpg.php  <em>(容易和00截断弄混)</em></li>
 <li>老版本的IIS中，存在;漏洞，IIS在解析文件名的时候可能将分号后面的内容丢弃，那么test.asp;jpg如果可以绕过的话就能够执行</li>
 <li>老版本的IIS中，如果网站目录/.asp/下的所有内容都将作为asp脚本来解析</li>
 </ol>
 <h2 id="文件名的正则检测漏洞"><a href="#文件名的正则检测漏洞" class="headerlink" title="文件名的正则检测漏洞"></a>文件名的正则检测漏洞</h2><ol>
-<li>00截断，形如test.php%00.jpg的文件属于正常后缀能够通过检测，而文件系统读取文件时会有00截断，因此相当于得到了文件test.php</li>
+<li>00截断，形如test.php%00.jpg的文件在<code>$_FILES[&#39;file&#39;][&#39;name&#39;]</code>的时候就已经产生了截断，后端这时候获得的是test.php</li>
 <li>因为是正则表达式，所以可以尝试以下写法能否绕过并被php解释器执行<blockquote>
 <p>test.PhP<br>test.php3 test.php4</p>
 </blockquote>
@@ -385,103 +385,9 @@
 </ol>
 <h2 id="其他的检测方式"><a href="#其他的检测方式" class="headerlink" title="其他的检测方式"></a>其他的检测方式</h2><ul>
 <li>HTTP协议规定了上传资源的时候在Header中加上一项文件的MIMETYPE，类型的判断是由浏览器完成的，结果即为HTTP头中的Content-Type，使用burp拦截后修改为image/jpeg 或 text/plain 等即可</li>
-<li>后端再验证文件格式，可以为php文件加上相应的幻术头来通过检测，一般加GIF的，因为这个直接加文本<code>GIF89a</code>即可</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>格式</th>
-<th style="text-align:center">文件头</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>GIF</td>
-<td style="text-align:center">GIF89a  对应二进制为474946383961</td>
-</tr>
-<tr>
-<td>JPG</td>
-<td style="text-align:center">FFD8FFE000104A464946</td>
-</tr>
-<tr>
-<td>PNG</td>
-<td style="text-align:center">89504E47</td>
-</tr>
-<tr>
-<td>TIFF (tif)</td>
-<td style="text-align:center">49492A00</td>
-</tr>
-<tr>
-<td>Windows Bitmap (bmp)</td>
-<td style="text-align:center">424D</td>
-</tr>
-<tr>
-<td>CAD (dwg)</td>
-<td style="text-align:center">41433130</td>
-</tr>
-<tr>
-<td>Adobe Photoshop (psd)</td>
-<td style="text-align:center">38425053</td>
-</tr>
-<tr>
-<td>Rich Text Format (rtf)</td>
-<td style="text-align:center">7B5C727466</td>
-</tr>
-<tr>
-<td>MS Word/Excel (xls.or.doc)</td>
-<td style="text-align:center">D0CF11E0</td>
-</tr>
-<tr>
-<td>MS Access (mdb)</td>
-<td style="text-align:center">5374616E64617264204A</td>
-</tr>
-<tr>
-<td>ZIP Archive (zip)，</td>
-<td style="text-align:center">504B0304</td>
-</tr>
-<tr>
-<td>RAR Archive (rar)，</td>
-<td style="text-align:center">52617221</td>
-</tr>
-<tr>
-<td>Wave (wav)，</td>
-<td style="text-align:center">57415645</td>
-</tr>
-<tr>
-<td>AVI (avi)，</td>
-<td style="text-align:center">41564920</td>
-</tr>
-<tr>
-<td>Real Media (rm)，</td>
-<td style="text-align:center">2E524D46</td>
-</tr>
-<tr>
-<td>MPEG (mpg)，</td>
-<td style="text-align:center">000001BA</td>
-</tr>
-<tr>
-<td>MPEG (mpg)，</td>
-<td style="text-align:center">000001B3</td>
-</tr>
-<tr>
-<td>Quicktime (mov)，</td>
-<td style="text-align:center">6D6F6F76</td>
-</tr>
-<tr>
-<td>Adobe Acrobat (pdf)，</td>
-<td style="text-align:center">255044462D312E</td>
-</tr>
-<tr>
-<td>Windows Media (asf)，</td>
-<td style="text-align:center">3026B2758E66CF11</td>
-</tr>
-<tr>
-<td>MIDI (mid)，</td>
-<td style="text-align:center">4D546864</td>
-</tr>
-</tbody>
-</table>
-<ul>
+<li><p>后端再验证文件格式，可以为php文件加上相应的幻术头来通过检测，一般加GIF的，因为这个直接加文本<code>GIF89a</code>即可</p>
+<p>| 格式                         |            文件头             |<br>| ————————– | :————————: |<br>| GIF                        | GIF89a  对应二进制为474946383961 |<br>| JPG                        |    FFD8FFE000104A464946    |<br>| PNG                        |          89504E47          |<br>| TIFF (tif)                 |          49492A00          |<br>| Windows Bitmap (bmp)       |            424D            |<br>| CAD (dwg)                  |          41433130          |<br>| Adobe Photoshop (psd)      |          38425053          |<br>| Rich Text Format (rtf)     |         7B5C727466         |<br>| MS Word/Excel (xls.or.doc) |          D0CF11E0          |<br>| MS Access (mdb)            |    5374616E64617264204A    |<br>| ZIP Archive (zip)，         |          504B0304          |<br>| RAR Archive (rar)，         |          52617221          |<br>| Wave (wav)，                |          57415645          |<br>| AVI (avi)，                 |          41564920          |<br>| Real Media (rm)，           |          2E524D46          |<br>| MPEG (mpg)，                |          000001BA          |<br>| MPEG (mpg)，                |          000001B3          |<br>| Quicktime (mov)，           |          6D6F6F76          |<br>| Adobe Acrobat (pdf)，       |       255044462D312E       |<br>| Windows Media (asf)，       |      3026B2758E66CF11      |<br>| MIDI (mid)，                |          4D546864          |</p>
+</li>
 <li>通过.htaccess文件进行的限制，相应的可以使用.htaccess覆盖的方式来进行反制，书写并上传.htaccess文件即可</li>
 </ul>
 <table>
@@ -515,6 +421,10 @@
 </tbody>
 </table>
 <h2 id="关联知识预览"><a href="#关联知识预览" class="headerlink" title="关联知识预览"></a>关联知识预览</h2><p>文件上传之前我们只是在讨论单纯文件名，文件格式的检测绕过方法，但如果涉及到上传文件的恶意代码检测方面的话，就需要继续考虑文件内容的绕过了，所谓<strong>免杀，一句话木马的变种，代码混淆</strong>都是与此相关的概念</p>
+<h2 id="CTF中文件上传的结合出题点记录"><a href="#CTF中文件上传的结合出题点记录" class="headerlink" title="CTF中文件上传的结合出题点记录"></a>CTF中文件上传的结合出题点记录</h2><p>如何上传php可执行文件，这是用到的最多的，也是这篇笔记中尝试去总结的</p>
+<p>文件上传+文件包含     在文件包含的笔记中记录了一些情景</p>
+<p>文件上传+文件展示     相关的有软连接攻击啥的</p>
+<p>文件上传+目录遍历      结合各种目录遍历漏洞得到上传文件的名字</p>
 
       
     </div>
@@ -683,7 +593,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器解析问题的漏洞"><span class="nav-number">1.</span> <span class="nav-text">服务器解析问题的漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件名的正则检测漏洞"><span class="nav-number">2.</span> <span class="nav-text">文件名的正则检测漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他的检测方式"><span class="nav-number">3.</span> <span class="nav-text">其他的检测方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关联知识预览"><span class="nav-number">4.</span> <span class="nav-text">关联知识预览</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#服务器解析问题的漏洞"><span class="nav-number">1.</span> <span class="nav-text">服务器解析问题的漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#文件名的正则检测漏洞"><span class="nav-number">2.</span> <span class="nav-text">文件名的正则检测漏洞</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#其他的检测方式"><span class="nav-number">3.</span> <span class="nav-text">其他的检测方式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关联知识预览"><span class="nav-number">4.</span> <span class="nav-text">关联知识预览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CTF中文件上传的结合出题点记录"><span class="nav-number">5.</span> <span class="nav-text">CTF中文件上传的结合出题点记录</span></a></li></ol></div>
             
 
           </div>

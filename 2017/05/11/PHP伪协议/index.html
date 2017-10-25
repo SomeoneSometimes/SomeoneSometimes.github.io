@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP伪协议/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议 现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用 关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。">
-<meta property="og:updated_time" content="2017-10-23T09:27:36.197Z">
+<meta property="og:updated_time" content="2017-10-25T09:36:04.489Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP伪协议">
 <meta name="twitter:description" content="伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议 现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用 关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。">
@@ -407,10 +407,9 @@
 </ul>
 <h3 id="php-filter-read-write-string-rot13-strip-tags-…-resource-xxx"><a href="#php-filter-read-write-string-rot13-strip-tags-…-resource-xxx" class="headerlink" title="php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx"></a>php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx</h3><p>过滤器里还支持用一些字符串处理函数进行过滤，这样选择的范围就更多了，但目前也就从p牛的博客里看到有这两个函数，其他的没有找到，strip_tags可以用来去掉字符串中的标签</p>
 <p>注意这个过滤器是要分清read与write两个情景的，用错的话就不会产生相应的效果。在file_put_contents()中就要使用write才有过滤效果，在include(),file_get_contents()中就要使用read才有效</p>
-<h3 id="phar-archive-zip-file-txt"><a href="#phar-archive-zip-file-txt" class="headerlink" title="phar://archive.zip/file.txt"></a>phar://archive.zip/file.txt</h3><p>经测试，其实可以将任意后缀名的文件(必须要有后缀名)，只要是zip格式压缩的，都可以进行解压，因此上面可以改为phar://archive.abc/file.txt也可以运行</p>
-<p>应用场景比较具体：<br>在文件上传再进行文件包含的情况下，文件上传部分就可以将shell.php进行zip压缩后，改为任意可通过验证的后缀名上传，之后文件包含调用的时候使用phar://伪协议解压出shell.php作为参数传入即可</p>
-<p>同样是文件上传+上传tar文件的trick，虽然这里没有用到伪协议（因为没有可控的文件上传点），但还是提一下吧</p>
-<p>功能如下：文件上传+上传文件的解压缩展示  可以使用到软连接的技巧，传一个快捷方式上去</p>
+<h3 id="phar-archive-zip-jpg-png…-file-txt"><a href="#phar-archive-zip-jpg-png…-file-txt" class="headerlink" title="phar://archive.[zip/jpg/png…]/file.txt"></a>phar://archive.[zip/jpg/png…]/file.txt</h3><p>经测试，其实可以将任意后缀名的文件(必须要有后缀名)，只要是zip格式压缩的，都可以进行解压，因此上面可以改为phar://archive.abc/file.txt也可以运行</p>
+<p>phar简直就是文件上传+文件包含场景中的神器：</p>
+<p>如果文件上传后可以利用文件包含实现代码执行的话，文件上传中的后缀名过滤基本上一点用都没有了，我们其实可以上传任意后缀名的压缩文件，压缩文件里面包含着我们的任意文件，然后在文件包含的时候使用phar伪协议将我们的文件从压缩包里面提取出来</p>
 <h3 id="zip-archive-zip-file-txt"><a href="#zip-archive-zip-file-txt" class="headerlink" title="zip://archive.zip#file.txt"></a>zip://archive.zip#file.txt</h3><p>用处和phar是一样的，应用场景也一样，但是要注意<strong> ‘#’ </strong>书写的时候要编码为%23才行，因为url的#后面是默认不传输的</p>
 <p>还有测试上，不知为什么，同样是5.6版本，在kali虚拟机上测试通过了，但在windows下就没有通过，也许是配置的问题</p>
 <p>### </p>
@@ -582,7 +581,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#php-input"><span class="nav-number">1.</span> <span class="nav-text">php://input</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-text-plain-base64-base编码字符串"><span class="nav-number">2.</span> <span class="nav-text">data://text/plain;base64,base编码字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-filter-convert-base64-encode-decode-resource-xxx"><span class="nav-number">3.</span> <span class="nav-text">php://filter/convert.base64-[encode/decode]/resource=xxx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-filter-read-write-string-rot13-strip-tags-…-resource-xxx"><span class="nav-number">4.</span> <span class="nav-text">php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phar-archive-zip-file-txt"><span class="nav-number">5.</span> <span class="nav-text">phar://archive.zip/file.txt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zip-archive-zip-file-txt"><span class="nav-number">6.</span> <span class="nav-text">zip://archive.zip#file.txt</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#php-input"><span class="nav-number">1.</span> <span class="nav-text">php://input</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#data-text-plain-base64-base编码字符串"><span class="nav-number">2.</span> <span class="nav-text">data://text/plain;base64,base编码字符串</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-filter-convert-base64-encode-decode-resource-xxx"><span class="nav-number">3.</span> <span class="nav-text">php://filter/convert.base64-[encode/decode]/resource=xxx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#php-filter-read-write-string-rot13-strip-tags-…-resource-xxx"><span class="nav-number">4.</span> <span class="nav-text">php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#phar-archive-zip-jpg-png…-file-txt"><span class="nav-number">5.</span> <span class="nav-text">phar://archive.[zip/jpg/png…]/file.txt</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#zip-archive-zip-file-txt"><span class="nav-number">6.</span> <span class="nav-text">zip://archive.zip#file.txt</span></a></li></ol></div>
             
 
           </div>
