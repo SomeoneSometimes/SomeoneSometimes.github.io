@@ -92,17 +92,17 @@
 
 
 
-<meta name="description" content="基础 对内建模块__builtins__的理解，方法对应对象的引用 dir()查看模块内的方法  并且可以__dict__来以字符串的形式调用方法 还可以使用非属性的方法，即__base__ __mro__ globals  事实上魔术方法大多基于这个找到更多的对象，globals返回的是字典类型，所以pop做不了 注意到很多都有个pop函数可以使用，可以取列表里的值 内建模块  基础知识内建名称">
+<meta name="description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
 <meta name="keywords">
 <meta property="og:type" content="article">
 <meta property="og:title" content="python沙盒的几种绕过方式">
 <meta property="og:url" content="https://someonesometimes.github.io/2017/11/16/python沙盒的几种绕过方式/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="基础 对内建模块__builtins__的理解，方法对应对象的引用 dir()查看模块内的方法  并且可以__dict__来以字符串的形式调用方法 还可以使用非属性的方法，即__base__ __mro__ globals  事实上魔术方法大多基于这个找到更多的对象，globals返回的是字典类型，所以pop做不了 注意到很多都有个pop函数可以使用，可以取列表里的值 内建模块  基础知识内建名称">
-<meta property="og:updated_time" content="2017-11-16T09:59:28.093Z">
+<meta property="og:description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
+<meta property="og:updated_time" content="2017-11-16T10:35:49.118Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python沙盒的几种绕过方式">
-<meta name="twitter:description" content="基础 对内建模块__builtins__的理解，方法对应对象的引用 dir()查看模块内的方法  并且可以__dict__来以字符串的形式调用方法 还可以使用非属性的方法，即__base__ __mro__ globals  事实上魔术方法大多基于这个找到更多的对象，globals返回的是字典类型，所以pop做不了 注意到很多都有个pop函数可以使用，可以取列表里的值 内建模块  基础知识内建名称">
+<meta name="twitter:description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
 
 
 
@@ -363,13 +363,8 @@
       
 
       
-        <h4 id="基础"><a href="#基础" class="headerlink" title="基础"></a>基础</h4><ul>
-<li>对内建模块<code>__builtins__</code>的理解，方法对应对象的引用</li>
-<li>dir()查看模块内的方法  并且可以<code>__dict__</code>来以字符串的形式调用方法</li>
-<li>还可以使用非属性的方法，即<code>__base__ __mro__ globals</code>  事实上魔术方法大多基于这个找到更多的对象，globals返回的是字典类型，所以pop做不了</li>
-<li>注意到很多都有个pop函数可以使用，可以取列表里的值</li>
-<li>内建模块</li>
-</ul>
+        <p>对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结</p>
+<a id="more"></a>
 <h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="内建名称空间-builtins"><a href="#内建名称空间-builtins" class="headerlink" title="内建名称空间 __builtins__"></a>内建名称空间 <code>__builtins__</code></h3><p>在启动Python解释器之后，即使没有创建任何的变量或者函数，还是会有许多函数可以使用，这些函数就是内建函数，并不需要我们自己做定义，而是在启动python解释器的时候，就已经导入到内存中供我们使用，想要了解这里面的工作原理，我们可以从名称空间开始</p>
 <p>名称空间在python是个非常重要的概念，只得是从名称到对象的映射，而在python程序的执行过程中，至少会存在两个名称空间</p>
 <ul>
@@ -432,21 +427,7 @@
 <p>解决方案是在import上下手，python中有很多内置模块可以import进去，我们可以在里面找到一些和eval类似的。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 用于测试代码的运行时间</span></div><div class="line"><span class="keyword">import</span> timeit</div><div class="line">timeit.timeit(<span class="string">"__import__('os').system('ls')"</span>, number=<span class="number">1</span>)</div></pre></td></tr></table></figure>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 一般用于显示各种配置信息</span></div><div class="line"><span class="keyword">import</span> platform</div><div class="line">platform.popen(<span class="string">'ls'</span>, mode=<span class="string">'r'</span>).read()</div></pre></td></tr></table></figure>
-<p>​</p>
-<p>​</p>
 </li>
-</ol>
-<p>其实思路上面刚刚介绍过，就是通</p>
-<ol>
-<li>第一种就是通过<code>__builtins__</code>来搞事情，我们从<code>__builtins__</code>中可以拿到内建对象的列表，有下面几种用法<ul>
-<li><code>__builtins__.__import__(&#39;os&#39;)</code>导入os模块就可以使用该模块了</li>
-<li><code>reload(__builtins__)</code>   重新导入<code>__builtins__</code>模块来恢复被删掉的一些函数</li>
-<li>一些其他的危险的内建函数<code>eval()  execfile()  open()</code></li>
-</ul>
-</li>
-</ol>
-<ol>
-<li>第二种</li>
 </ol>
 
       
@@ -612,7 +593,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#基础"><span class="nav-number">1.</span> <span class="nav-text">基础</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number"></span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内建名称空间-builtins"><span class="nav-number"></span> <span class="nav-text">内建名称空间 __builtins__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python中的类继承以及全局变量方法"><span class="nav-number"></span> <span class="nav-text">python中的类继承以及全局变量方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从沙盒编写中看沙盒逃逸思路"><span class="nav-number"></span> <span class="nav-text">从沙盒编写中看沙盒逃逸思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过删除内建空间中的成员来限制"><span class="nav-number"></span> <span class="nav-text">通过删除内建空间中的成员来限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过对参数的匹配来进行过滤"><span class="nav-number"></span> <span class="nav-text">通过对参数的匹配来进行过滤</span></a></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内建名称空间-builtins"><span class="nav-number">1.1.</span> <span class="nav-text">内建名称空间 __builtins__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python中的类继承以及全局变量方法"><span class="nav-number">1.2.</span> <span class="nav-text">python中的类继承以及全局变量方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从沙盒编写中看沙盒逃逸思路"><span class="nav-number">2.</span> <span class="nav-text">从沙盒编写中看沙盒逃逸思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过删除内建空间中的成员来限制"><span class="nav-number">2.1.</span> <span class="nav-text">通过删除内建空间中的成员来限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过对参数的匹配来进行过滤"><span class="nav-number">2.2.</span> <span class="nav-text">通过对参数的匹配来进行过滤</span></a></li></ol></li></ol></div>
             
 
           </div>
