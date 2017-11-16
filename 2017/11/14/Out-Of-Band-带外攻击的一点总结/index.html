@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
-<meta property="og:updated_time" content="2017-11-14T15:58:23.665Z">
+<meta property="og:updated_time" content="2017-11-15T10:42:10.708Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Out Of Band 带外攻击的一点总结">
 <meta name="twitter:description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
@@ -388,6 +388,7 @@
 </ul>
 <p>有一点要提醒的是，测试中看到，发送数据有换行的话，或多或少的都会有问题，因为建议将数据进行编码后再传输，比如在命令注入中可以使用<code>cat /etc/passwd | base64</code>来将回显结果进行编码</p>
 <h3 id="通过DNS解析方式来获得回显"><a href="#通过DNS解析方式来获得回显" class="headerlink" title="通过DNS解析方式来获得回显"></a>通过DNS解析方式来获得回显</h3><p>这也是在HCTF中才知道的姿势（哎，感觉自己孤陋寡闻，真的好菜。。。）。大致原理是这样的，还是发送一个链接，我们将回显信息放到域名里去，大致就是<a href="http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据" target="_blank" rel="external">http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据</a></p>
+<p>但是DNS回显是有限制的，因为回显字符作为域名的一部分，就要遵守域名的规则，根据规定，只能使用英文字符，数字，-，且-不能用作开头和结尾，域名长度也限制在了63，这样看来，DNS携带比较适用于携带hash后密码这些数据</p>
 <p>讲道理这种方式很明显没有直接通过http发送数据来的方便，但的确在某些时候只能用这种方式来对外发送请求将数据传输出来，通过对HCTF中那道sql题目的测试，可以发现loadfile(‘\\\\vips\x\‘?id=123)在平台上是接收不到请求的，从sql执行结果上看执行时间是0s，看来没有发送网络请求，只有我们换一个域名，在不同域名的时候，sql执行结果才会显示花费了一定的时间，看来是用来进行DNS查询了，在这种sql的带外攻击中，loadfile函数只能配合DNS方式的回显才能做到</p>
 <h2 id="一些payload"><a href="#一些payload" class="headerlink" title="一些payload"></a>一些payload</h2><p>可以直接参见ceye的网站，里面有各种攻击场景下的payload，还是很全的</p>
 <p><a href="http://ceye.io/payloads" target="_blank" rel="external">http://ceye.io/payloads</a></p>
@@ -426,6 +427,10 @@
       
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/16/python沙盒的几种绕过方式/" rel="next" title="python沙盒的几种绕过方式">
+                <i class="fa fa-chevron-left"></i> python沙盒的几种绕过方式
+              </a>
             
           </div>
 
@@ -509,7 +514,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">22</span>
+                <span class="site-state-item-count">23</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
