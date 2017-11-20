@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="在sql注入中的记录  对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918 其他不好分类的，零碎想记录的">
-<meta property="og:updated_time" content="2017-11-20T07:39:42.475Z">
+<meta property="og:updated_time" content="2017-11-20T11:52:32.720Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql注入学习（持续保持更新）">
 <meta name="twitter:description" content="在sql注入中的记录  对ctf题目中盲注思路以及waf绕过的总结 sqlmap的参数学习（算了不写了，直接看小m师傅的吧，文笔比我好多了。。http://www.melodia.pw/?p=918 其他不好分类的，零碎想记录的">
@@ -524,13 +524,23 @@
 <p>另外注意域名中只支持英文字母，数字，-，且-不能用作开头和结尾，且长度限制在了63，所以比较适合用于携带hash后的密码这些数据</p>
 <h2 id="单引号转义下的注入思路整理"><a href="#单引号转义下的注入思路整理" class="headerlink" title="单引号转义下的注入思路整理"></a>单引号转义下的注入思路整理</h2><p>讲道理在单引号被转义而无法使用下，就基本GG了，但在一些特殊的配置下仍可能实现注入，在做题时也偶尔会碰到这些有意思的场景，把历来的思路做个记录。</p>
 <ul>
-<li>宽字节注入<code>%df%2f</code>，通过%df来吃掉\组成一个字符</li>
-<li>存在切割操作，从对转义后的字符串中切割出一个<strong>真正的<code>\</code></strong>，使用这个反斜杠来转义最后一个单引号，适用于两个可控注入点的情况<code>select * from user where id=&#39;$_GET[&#39;id&#39;] and username=&#39;$_GET[&#39;username&#39;]&#39;</code>，在后一个可控点进行注入</li>
-<li>只转义了单引号，可以通过添加一个\来转义转义单引号的反斜杠，将单引号解放出来</li>
-<li>像国赛里的一道题目样自己作死，在转义后又将单引号去掉，导致又出现了和第二条一样的一个<strong>真正的<code>\</code></strong>，然后与第二条同样的用法</li>
-<li>转义可能仍有疏漏，比如对get,post转义，但参数用的request[‘id’]，这个是没有转义的</li>
-<li>也许只是虚晃一枪呢？的确转义的天衣无缝，但我们找到了一个数值型的注入点，并不需要单引号:)</li>
-<li>利用二次注入中数据库存储的最大长度实现截断出一个反斜杠。考虑这样一种情况，二次注入点并没有过滤，但是实际存储中进行了两次转义存储，所以数据库中存的的<code>\&#39;</code>，导致二次注入仍然无法利用。我们可以寻找一个二次注入语句有两个参数的点，通过数据库中存储的最大长度实现截断出来一个真正的<code>\</code>，实现引号闭合然后供第二个参数去注入</li>
+<li><p>宽字节注入<code>%df%2f</code>，通过%df来吃掉\组成一个字符</p>
+</li>
+<li><p>存在切割操作，从对转义后的字符串中切割出一个<strong>真正的<code>\</code></strong>，使用这个反斜杠来转义最后一个单引号，适用于两个可控注入点的情况<code>select * from user where id=&#39;$_GET[&#39;id&#39;] and username=&#39;$_GET[&#39;username&#39;]&#39;</code>，在后一个可控点进行注入</p>
+</li>
+<li><p>只转义了单引号，可以通过添加一个\来转义转义单引号的反斜杠，将单引号解放出来</p>
+</li>
+<li><p>像国赛里的一道题目样自己作死，在转义后又将单引号去掉，导致又出现了和第二条一样的一个<strong>真正的<code>\</code></strong>，然后与第二条同样的用法</p>
+</li>
+<li><p>转义可能仍有疏漏，比如对get,post转义，但参数用的request[‘id’]，这个是没有转义的</p>
+</li>
+<li><p>也许只是虚晃一枪呢？的确转义的天衣无缝，但我们找到了一个数值型的注入点，并不需要单引号:)</p>
+</li>
+<li><p>利用二次注入中数据库存储的最大长度实现截断出一个反斜杠。考虑这样一种情况，二次注入点并没有过滤，但是实际存储中进行了两次转义存储，所以数据库中存的的<code>\&#39;</code>，导致二次注入仍然无法利用。我们可以寻找一个二次注入语句有两个参数的点，通过数据库中存储的最大长度实现截断出来一个真正的<code>\</code>，实现引号闭合然后供第二个参数去注入</p>
+</li>
+<li><p>连续两次sprintf调用来实现sql语句的拼接，在第一个位置使用<code>%&#39;</code>，转义后为<code>%\&#39;</code>，在第二次拼接中，<code>%</code>将吃掉<code>\</code>字符，导致单引号逃逸。为了保证格式化参数个数正确，使用<code>%1$&#39;</code>即可。原理参见<a href="https://paper.seebug.org/386/" target="_blank" rel="external">https://paper.seebug.org/386/</a>里面还有一些其他的利用方法</p>
+<p>​</p>
+</li>
 </ul>
 <h2 id="一些零碎记录的点"><a href="#一些零碎记录的点" class="headerlink" title="一些零碎记录的点"></a>一些零碎记录的点</h2><ol>
 <li><p>针对sql注入做的waf防护，常见的有以下几种</p>
