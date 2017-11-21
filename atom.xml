@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://someonesometimes.github.io/"/>
-  <updated>2017-11-17T01:41:26.739Z</updated>
+  <updated>2017-11-21T03:57:35.169Z</updated>
   <id>https://someonesometimes.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>服务端URL处理问题学习笔记 SSRF/CRLF/其他</title>
+    <link href="https://someonesometimes.github.io/2017/11/20/%E6%9C%8D%E5%8A%A1%E7%AB%AFURL%E5%A4%84%E7%90%86%E9%97%AE%E9%A2%98%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-SSRF-CRLF-%E5%85%B6%E4%BB%96/"/>
+    <id>https://someonesometimes.github.io/2017/11/20/服务端URL处理问题学习笔记-SSRF-CRLF-其他/</id>
+    <published>2017-11-20T15:34:58.000Z</published>
+    <updated>2017-11-21T03:57:35.169Z</updated>
+    
+    <content type="html"><![CDATA[<p>LCTF里好多涉及到服务端对url进行处理的问题啊，也暴露出了自己对这一块知识的严重欠缺，ssrf也做过些笔记，但总感觉还不足以专门写东西发出来，通过在LCTF中的一些知识点收集以及自己的一些搜索，感觉在服务端的URL处理这块已经比较全面了，故做下整理，虽然现在认识还很浅，以后慢慢补充吧，保持更新~</p><p>顺便膜一下orange大大，orange师傅在blackhat上的议题再一次刷新了自己对一名真正的黑客的认知，这里就不奢望能达到orange师傅的水平了，只是希望自己能在以后的安全路上时时警醒自己，一名真正的安全从业人员应该是什么样的。</p><a id="more"></a><p>还是先从场景开始，我们经常可以看到用户提交一条URL，之后服务器会对此链接进行处理，如果进行访问并对用户做出某些反馈的话，在操作不当的情况下就可能产生各种各样的问题，基本就是以下几个方面</p><ul><li>ssrf  对任意url都进行访问，就有可能实现内网探测，文件读取等功能</li><li>crlf   实现HTTP头的注入，因为可以控制HTTP头了，就可用于构造各种基于HTTP的协议。可以控制cookie所以也可能实现会话控制</li><li>利用一些发送请求库中的特殊功能，这就需要仔细阅读发送请求库的功能了</li></ul><p>下面就对上面这三点展开详细的介绍</p><h2 id="SSRF"><a href="#SSRF" class="headerlink" title="SSRF"></a>SSRF</h2><p>我们如果想限制用户发来的危险url的话，就需要对host进行一些判断，这里ph师傅有一篇文章写的很全<a href="https://www.leavesongs.com/PYTHON/defend-ssrf-vulnerable-in-python.html" target="_blank" rel="external">谈一谈如何在Python开发中拒绝SSRF漏洞</a></p><p>ph师傅讲一个比较安全的判断流程应该是这样的</p><ol><li><p>解析目标URL，获取其Host </p></li><li><p>将域名进行解析成ip</p></li><li><p>将ip统一转化成相同的格式</p></li><li><p>然后判定ip是不是属于局域网网段</p></li><li><p>对每一次访问都要做出上述判定，因为考虑到302跳转的存在</p></li></ol><p>那么如果并没有按照上述推荐流程来处理用户发来的url的话，我们可以看到如下攻击方式：</p><h4 id="在URL解析上混淆"><a href="#在URL解析上混淆" class="headerlink" title="在URL解析上混淆"></a>在URL解析上混淆</h4><p>orange大大在bh上的议题中已经做了详细的阐释并归纳了一张图告诉我们哪些库的处理可能存在问题</p><p><img src="https://ws1.sinaimg.cn/large/93e435bbly1flphsusxx4j20j50b00u1.jpg" alt=""></p><p>url虽然在RFC2396, RFC3986 进行了明确的标准定义，但这只是推荐标准，具体不同的语言，甚至不同的库都有其自己的实现，所以可能url解析获取并验证的是一种host，而在发送请求的库中使用的是另一种host，就造成了这种问题，要避免这种问题，url的解析与url的请求需要使用相同的标准。orange也举了一些php中解析不一致的例子，这些环境下会存在漏洞：</p><p><strong>php的<code>parse_url() 与readfile()</code>的解析不一致</strong></p><p><img src="https://ws1.sinaimg.cn/large/93e435bbly1flpi9k6ptcj20lm0jedha.jpg" alt=""></p><p><strong>php中<code>parse_url() 与curl</code>解析不一致</strong></p><p>我们可以看到，不仅是php中的parse_url()，其他的注入NOdeJS的URL()，Go的net/url等，在url的解析上都与curl出现了差异。</p><p>第一种情况在curl之前的版本中已经修复了</p><p>第二种情况在curl7.54.0版本中也会修复</p><p><img src="https://ws1.sinaimg.cn/large/93e435bbly1flpidcno9lj20kc0bb766.jpg" alt=""></p><p>到这里我们可以简单考虑下，为什么通过上述的符号会存在解析不一致呢？在url中，<code>@</code>符号之前表示user成分，@之前的的user中又通过<code>:</code>对user与pass做了分割，<code>#</code>后面是fragment成分，port前需要有<code>:</code>，host则是以<code>/</code>或者<code>:</code>或者<code>?</code>等作为结尾等等，可以看到这么多的关键字符在里面，那么他们同时出现时应该以什么优先级进行解析？多个相同符号出现时应该以前面的还是后面的为准？正是这些并没有统一规定的东西最终造成了解析对url解析不一致的问题。</p><p>这种问题是如此严重，我们可以看到同一个url，甚至python的三种库中都产生了不同的解析结果 XD</p><p><img src="https://ws1.sinaimg.cn/large/93e435bbly1flpislsoajj20d806adg6.jpg" alt=""></p><h4 id="没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面"><a href="#没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面" class="headerlink" title="没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面"></a>没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面</h4><p>通过这个网站<a href="http://xip.io/" target="_blank" rel="external">http://xip.io/</a>可以将域名解析到本地ip</p><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">ping 127.0.0.1.xip.io -n 1</div><div class="line"></div><div class="line">正在 Ping 127.0.0.1.xip.io [127.0.0.1] 具有 32 字节的数据:</div><div class="line">来自 127.0.0.1 的回复: 字节=32 时间&lt;1ms TTL=128</div></pre></td></tr></table></figure><h4 id="通过其他支持的ip写法来绕过host检测"><a href="#通过其他支持的ip写法来绕过host检测" class="headerlink" title="通过其他支持的ip写法来绕过host检测"></a>通过其他支持的ip写法来绕过host检测</h4><ul><li>八进制及八进制缩写           0177.0.0.1   017700000001</li><li>十六进制及十六进制缩写   0x7f.0.0.1    0x7f000001</li><li>十进制缩写                           2130706433</li><li>省略0   127.1    0177.1    0x7f.1</li><li>127其实是127/8的，所以127.233.233.233也是支持的，并不是只有127.0.0.1</li><li>这一种比较少见，也很可能没有防护：在linux中，0是可以传输到本机IP的，所以也可以作为linux服务器下的一种选择方案</li></ul><h4 id="通过302跳转方式来绕过检测"><a href="#通过302跳转方式来绕过检测" class="headerlink" title="通过302跳转方式来绕过检测"></a>通过302跳转方式来绕过检测</h4><p>如果检测完成没有问题的话，url还是不能直接扔到库里面请求的，因为可能不少库都支持在接收到302的HTTP时直接跳转。比如python的requests库，默认的参数为<code>allow_redirects=True</code>也就是在302下会自动跳转。那么我们可以在自己的vps上构造这样的内容</p><figure class="highlight php"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="number">302.</span>php</div><div class="line"></div><div class="line"><span class="meta">&lt;?php</span></div><div class="line">header(<span class="string">"Location:  http://127.0.0.1"</span>);</div><div class="line"><span class="meta">?&gt;</span></div></pre></td></tr></table></figure><p>然后向服务器发送链接<code>http://vps/302.php</code>，最终就会跳转到内网地址127.0.0.1上</p><p>所以在安全处理中，我们需要对每一次的http访问的参数都做出过滤，而不是只简单过滤一次后就扔到请求库中，这里可以模仿ph师傅的方式，采用requests中的hook支持来对库中的代码做出改善，对每一次请求的参数都进行过滤</p><h2 id="CRLF"><a href="#CRLF" class="headerlink" title="CRLF"></a>CRLF</h2><p>orange师傅同样整理了一份当前存在CRLF漏洞的名单出来，在攻击时首先将请求指向自己的vps看看服务端是用什么发出的请求，如果在库里面，就存在CRLF可以利用</p><p>可以看到常见的urllib2,wget,NodeJS http,Java net.URL都存在这种问题</p><p><img src="https://ws1.sinaimg.cn/large/93e435bbly1flphsi6huij20d90b0q4i.jpg" alt=""></p><p>比如在lctf中的一个题目，可以看到url是urllib2发起的，所以使用<code>0:8000?url=http://118.89.16.36%0d%0aheaderInject:%20Inject:80/x/</code>就可以访问到自己的vps，同时带有可控的header头，然后利用header头可控来实现控制redis。</p><p><strong>利用CRLF可以实现的一些东西</strong></p><ul><li><code>%0d%0a</code>代表http中的一个换行，也就可以新引入一个header头，如果连用两次，就代表头结束了，接下来的是内容，所以可以将后面一些比较讨厌的头去掉，比如CSP2333  。 还可以写任意的传输数据，比如写一些xss啥的。</li><li>自己可以添加任意的头，比如Cookie实现会话控制，比如实现一些特殊的协议，就像lctf中的实现redis的控制，orange的通过https发送SMTP报文</li></ul><h2 id="利用发送请求库的特殊功能"><a href="#利用发送请求库的特殊功能" class="headerlink" title="利用发送请求库的特殊功能"></a>利用发送请求库的特殊功能</h2><ul><li><p>curl支持file协议，所以url为<code>file:///etc/passwd</code>是可以看实现本地文件读取的</p></li><li><p>wget支持一些有趣的参数，比如-O 参数可以将get到的文件存放到指定的位置，最重要的是可以实现任意的重命名</p></li><li><p>curl中支持@参数，可以实现本地文件读取，在php5.6中就已经默认禁用了，在7.0版本后直接去掉了这个功能，我们可以通过如下语句打开@参数的功能</p><p><code>curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);</code>，之后就可以url=@index.php实现curl读取本地文件读取</p></li><li><p>curl支持拼接命令<code>curl http://xxx/{2222.jpg,flag.php}</code></p><p>​</p></li></ul>]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;LCTF里好多涉及到服务端对url进行处理的问题啊，也暴露出了自己对这一块知识的严重欠缺，ssrf也做过些笔记，但总感觉还不足以专门写东西发出来，通过在LCTF中的一些知识点收集以及自己的一些搜索，感觉在服务端的URL处理这块已经比较全面了，故做下整理，虽然现在认识还很浅，以后慢慢补充吧，保持更新~&lt;/p&gt;
+&lt;p&gt;顺便膜一下orange大大，orange师傅在blackhat上的议题再一次刷新了自己对一名真正的黑客的认知，这里就不奢望能达到orange师傅的水平了，只是希望自己能在以后的安全路上时时警醒自己，一名真正的安全从业人员应该是什么样的。&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
   
   <entry>
     <title>XXE注入攻击</title>
@@ -406,29 +425,6 @@
     <summary type="html">
     
       &lt;p&gt;&lt;strong&gt;CTF题目中有不少题目的最终结果就是getshell，从现在开始对所遇到的情况进行统计，积累的多了，也许就能慢慢摸出套路了吧&lt;/strong&gt;&lt;/p&gt;
-    
-    </summary>
-    
-    
-  </entry>
-  
-  <entry>
-    <title>文件上传漏洞</title>
-    <link href="https://someonesometimes.github.io/2017/05/02/%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0%E6%BC%8F%E6%B4%9E/"/>
-    <id>https://someonesometimes.github.io/2017/05/02/文件上传漏洞/</id>
-    <published>2017-05-02T12:03:26.000Z</published>
-    <updated>2017-10-25T11:29:05.012Z</updated>
-    
-    <content type="html"><![CDATA[<ul><li>服务器解析问题的漏洞</li><li>文件名的正则检测漏洞</li><li>其他的检测方式</li><li>关联知识预览</li></ul><a id="more"></a><h2 id="服务器解析问题的漏洞"><a href="#服务器解析问题的漏洞" class="headerlink" title="服务器解析问题的漏洞"></a>服务器解析问题的漏洞</h2><ol><li>在apache服务器中，扩展名是从右往左读的，在未知扩展名时，会自动读取下一个扩展名，像.rar .abc 等扩展名都是不能识别的</li><li>在ngnix中存在空字节漏洞，利用原理感觉比较极限，如果检测方式在遇到00时会抛弃后面的检测，文件test.jpg%00.php就能通过检测，这种情况在ngnix解析文件系统时会把00忽略所以相当于获得了文件test.jpg.php  <em>(容易和00截断弄混)</em></li><li>老版本的IIS中，存在;漏洞，IIS在解析文件名的时候可能将分号后面的内容丢弃，那么test.asp;jpg如果可以绕过的话就能够执行</li><li>老版本的IIS中，如果网站目录/.asp/下的所有内容都将作为asp脚本来解析</li></ol><h2 id="文件名的正则检测漏洞"><a href="#文件名的正则检测漏洞" class="headerlink" title="文件名的正则检测漏洞"></a>文件名的正则检测漏洞</h2><ol><li>00截断，形如test.php%00.jpg的文件在<code>$_FILES[&#39;file&#39;][&#39;name&#39;]</code>的时候就已经产生了截断，后端这时候获得的是test.php</li><li>因为是正则表达式，所以可以尝试以下写法能否绕过并被php解释器执行<blockquote><p>test.PhP<br>test.php3 test.php4</p></blockquote></li></ol><h2 id="其他的检测方式"><a href="#其他的检测方式" class="headerlink" title="其他的检测方式"></a>其他的检测方式</h2><ul><li>HTTP协议规定了上传资源的时候在Header中加上一项文件的MIMETYPE，类型的判断是由浏览器完成的，结果即为HTTP头中的Content-Type，使用burp拦截后修改为image/jpeg 或 text/plain 等即可</li><li><p>后端再验证文件格式，可以为php文件加上相应的幻术头来通过检测，一般加GIF的，因为这个直接加文本<code>GIF89a</code>即可</p><p>| 格式                         |            文件头             |<br>| ————————– | :————————: |<br>| GIF                        | GIF89a  对应二进制为474946383961 |<br>| JPG                        |    FFD8FFE000104A464946    |<br>| PNG                        |          89504E47          |<br>| TIFF (tif)                 |          49492A00          |<br>| Windows Bitmap (bmp)       |            424D            |<br>| CAD (dwg)                  |          41433130          |<br>| Adobe Photoshop (psd)      |          38425053          |<br>| Rich Text Format (rtf)     |         7B5C727466         |<br>| MS Word/Excel (xls.or.doc) |          D0CF11E0          |<br>| MS Access (mdb)            |    5374616E64617264204A    |<br>| ZIP Archive (zip)，         |          504B0304          |<br>| RAR Archive (rar)，         |          52617221          |<br>| Wave (wav)，                |          57415645          |<br>| AVI (avi)，                 |          41564920          |<br>| Real Media (rm)，           |          2E524D46          |<br>| MPEG (mpg)，                |          000001BA          |<br>| MPEG (mpg)，                |          000001B3          |<br>| Quicktime (mov)，           |          6D6F6F76          |<br>| Adobe Acrobat (pdf)，       |       255044462D312E       |<br>| Windows Media (asf)，       |      3026B2758E66CF11      |<br>| MIDI (mid)，                |          4D546864          |</p></li><li>通过.htaccess文件进行的限制，相应的可以使用.htaccess覆盖的方式来进行反制，书写并上传.htaccess文件即可</li></ul><table><thead><tr><th>.htaccess语法</th><th style="text-align:center">作用</th></tr></thead><tbody><tr><td><code>AddType application/x-httpd-php .txt</code></td><td style="text-align:center">将.txt文件使用php解释器执行</td></tr><tr><td><code>AddType text/plain .pl .py .php</code></td><td style="text-align:center">将以上后缀名的文件以纯文本的形式展示出来</td></tr><tr><td><code>&lt;FilesMatch &quot;\.(php)$&quot;&gt; ForceType text/plain &lt;/FilesMatch&gt;</code></td><td style="text-align:center">强行让apache将文件识别为你指定的类型</td></tr><tr><td><code>&lt;Files ^(*.jpeg)&gt;order deny,allow deny from all&lt;/Files&gt;</code></td><td style="text-align:center">使得该文件夹里面只有图片扩展名的文件才可以被访问，其他类型都是拒绝访问</td></tr><tr><td><code>Options -ExecCGI AddHandler cgi-script .php .pl .py .jsp .asp .htm .shtml .sh .cgi</code></td><td style="text-align:center">以上几种类型的文件被访问的时候，会返回403 Forbidden的错误</td></tr></tbody></table><h2 id="关联知识预览"><a href="#关联知识预览" class="headerlink" title="关联知识预览"></a>关联知识预览</h2><p>文件上传之前我们只是在讨论单纯文件名，文件格式的检测绕过方法，但如果涉及到上传文件的恶意代码检测方面的话，就需要继续考虑文件内容的绕过了，所谓<strong>免杀，一句话木马的变种，代码混淆</strong>都是与此相关的概念</p><h2 id="CTF中文件上传的结合出题点记录"><a href="#CTF中文件上传的结合出题点记录" class="headerlink" title="CTF中文件上传的结合出题点记录"></a>CTF中文件上传的结合出题点记录</h2><p>如何上传php可执行文件，这是用到的最多的，也是这篇笔记中尝试去总结的</p><p>文件上传+文件包含     在文件包含的笔记中记录了一些情景</p><p>文件上传+文件展示     相关的有软连接攻击啥的</p><p>文件上传+目录遍历      结合各种目录遍历漏洞得到上传文件的名字</p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;ul&gt;
-&lt;li&gt;服务器解析问题的漏洞&lt;/li&gt;
-&lt;li&gt;文件名的正则检测漏洞&lt;/li&gt;
-&lt;li&gt;其他的检测方式&lt;/li&gt;
-&lt;li&gt;关联知识预览&lt;/li&gt;
-&lt;/ul&gt;
     
     </summary>
     
