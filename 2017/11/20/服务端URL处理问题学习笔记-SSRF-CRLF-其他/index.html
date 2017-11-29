@@ -104,7 +104,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flpidcno9lj20kc0bb766.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flpislsoajj20d806adg6.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flphsi6huij20d90b0q4i.jpg">
-<meta property="og:updated_time" content="2017-11-21T04:13:12.804Z">
+<meta property="og:updated_time" content="2017-11-23T09:50:57.093Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="服务端URL处理问题学习笔记 SSRF/CRLF/其他">
 <meta name="twitter:description" content="LCTF里好多涉及到服务端对url进行处理的问题啊，也暴露出了自己对这一块知识的严重欠缺，ssrf也做过些笔记，但总感觉还不足以专门写东西发出来，通过在LCTF中的一些知识点收集以及自己的一些搜索，感觉在服务端的URL处理这块已经比较全面了，故做下整理，虽然现在认识还很浅，以后慢慢补充吧，保持更新~ 顺便膜一下orange大大，orange师傅在blackhat上的议题再一次刷新了自己对一名真正的">
@@ -441,6 +441,8 @@
 <p><code>curl_setopt($ch, CURLOPT_SAFE_UPLOAD, false);</code>，之后就可以url=@index.php实现curl读取本地文件读取</p>
 </li>
 <li><p>curl支持拼接命令<code>curl http://xxx/{2222.jpg,flag.php}</code></p>
+</li>
+<li><p>curl里面，如果使用file协议的话，不管host是什么，都会尝试在本地的path中寻找，所以能用用file读取本地文件时对host检查是没用的，比如lctf的签到题</p>
 <p>​</p>
 </li>
 </ul>
