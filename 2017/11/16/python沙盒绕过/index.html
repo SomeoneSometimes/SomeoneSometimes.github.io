@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/11/16/python沙盒绕过/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
-<meta property="og:updated_time" content="2017-11-19T06:15:48.798Z">
+<meta property="og:updated_time" content="2017-12-20T05:52:08.195Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="python沙盒的几种绕过方式">
 <meta name="twitter:description" content="对python沙盒的编写以及现有几种常见的沙盒绕过策略的一点总结">
@@ -425,8 +425,8 @@
 <li><p>接着上面提到的非模板注入下场景如果过滤了<code>__</code>暂时没有绕过方法这个话题，08067的比赛中有个有趣的场景</p>
 <p>一个在线代码练习的网站，首先肯定不能禁用掉import，否则用户体验极差。。所以主要的过滤在基于字符的上面，过滤掉了<code>__</code>等字符，此时没必要执着在那个长长的魔术方法流程上了，用不了啦，<code>__builtins__</code>所提供的思路也用不了啦，既然是字符过滤，那么就考虑怎样使用字符形式的调用方法来绕过字符检测就好了。最开始自然想到eval，但是被删掉了。</p>
 <p>解决方案是在import上下手，python中有很多内置模块可以import进去，我们可以在里面找到一些和eval类似的。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 用于测试代码的运行时间</span></div><div class="line"><span class="keyword">import</span> timeit</div><div class="line">timeit.timeit(<span class="string">"__import__('os').system('ls')"</span>, number=<span class="number">1</span>)</div></pre></td></tr></table></figure>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 一般用于显示各种配置信息</span></div><div class="line"><span class="keyword">import</span> platform</div><div class="line">platform.popen(<span class="string">'ls'</span>, mode=<span class="string">'r'</span>).read()</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 用于测试代码的运行时间，可以将运行语句以字符串形式写出来，类似exec</span></div><div class="line"><span class="keyword">import</span> timeit</div><div class="line">timeit.timeit(<span class="string">"__import__('os').system('ls')"</span>, number=<span class="number">1</span>)</div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="comment"># 一般用于显示各种配置信息，可以直接写命令</span></div><div class="line"><span class="keyword">import</span> platform</div><div class="line"><span class="keyword">print</span> platform.popen(<span class="string">'ls'</span>, mode=<span class="string">'r'</span>).read()</div></pre></td></tr></table></figure>
 </li>
 </ol>
 
@@ -551,7 +551,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">24</span>
+                <span class="site-state-item-count">25</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -620,7 +620,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2017</span>
+  <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>

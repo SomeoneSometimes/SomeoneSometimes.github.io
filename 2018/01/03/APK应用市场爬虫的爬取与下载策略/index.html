@@ -1,0 +1,1164 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Hexo, NexT" />
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="Yiruma" type="application/atom+xml" />
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1" />
+
+
+
+
+
+
+<meta name="description" content="最近在集中突击项目，队友在用机器学习算法做应用分析的时候需要大量的软件样本。其中恶意软件可以在公开的病毒中下载https://virusshare.com，从论文中可以看到基本上所有的做恶意软件分析的项目都是从这个库中下载的恶意软件样本，这个网站要联系作者提供邀请码才能注册，虽然作者回复的也蛮及时，闲麻烦的同学可以先用我的账号登陆看看，ID:Yiruma, Pass:cauccauc 算法分析中除">
+<meta name="keywords">
+<meta property="og:type" content="article">
+<meta property="og:title" content="APK应用市场爬虫的爬取与下载策略">
+<meta property="og:url" content="https://someonesometimes.github.io/2018/01/03/APK应用市场爬虫的爬取与下载策略/index.html">
+<meta property="og:site_name" content="Yiruma">
+<meta property="og:description" content="最近在集中突击项目，队友在用机器学习算法做应用分析的时候需要大量的软件样本。其中恶意软件可以在公开的病毒中下载https://virusshare.com，从论文中可以看到基本上所有的做恶意软件分析的项目都是从这个库中下载的恶意软件样本，这个网站要联系作者提供邀请码才能注册，虽然作者回复的也蛮及时，闲麻烦的同学可以先用我的账号登陆看看，ID:Yiruma, Pass:cauccauc 算法分析中除">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1fn3um8skxyj20ko0930uz.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1fn3wvmhpupj20hs08yjss.jpg">
+<meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1fn3x4o803dj20hj0a474v.jpg">
+<meta property="og:updated_time" content="2018-01-03T17:28:24.549Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="APK应用市场爬虫的爬取与下载策略">
+<meta name="twitter:description" content="最近在集中突击项目，队友在用机器学习算法做应用分析的时候需要大量的软件样本。其中恶意软件可以在公开的病毒中下载https://virusshare.com，从论文中可以看到基本上所有的做恶意软件分析的项目都是从这个库中下载的恶意软件样本，这个网站要联系作者提供邀请码才能注册，虽然作者回复的也蛮及时，闲麻烦的同学可以先用我的账号登陆看看，ID:Yiruma, Pass:cauccauc 算法分析中除">
+<meta name="twitter:image" content="https://ws1.sinaimg.cn/large/93e435bbly1fn3um8skxyj20ko0930uz.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://someonesometimes.github.io/2018/01/03/APK应用市场爬虫的爬取与下载策略/"/>
+
+
+
+
+
+  <title>APK应用市场爬虫的爬取与下载策略 | Yiruma</title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Yiruma</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于我
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-link">
+          <a href="/link" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-link"></i> <br />
+            
+            友链
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  
+  <div class="algolia-popup popup search-popup">
+    <div class="algolia-search">
+      <div class="algolia-search-input-icon">
+        <i class="fa fa-search"></i>
+      </div>
+      <div class="algolia-search-input" id="algolia-search-input"></div>
+    </div>
+
+    <div class="algolia-results">
+      <div id="algolia-stats"></div>
+      <div id="algolia-hits"></div>
+      <div id="algolia-pagination" class="algolia-pagination"></div>
+    </div>
+
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+  </div>
+
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://someonesometimes.github.io/2018/01/03/APK应用市场爬虫的爬取与下载策略/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Yiruma">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Yiruma">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">APK应用市场爬虫的爬取与下载策略</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-03T17:53:18+08:00">
+                2018-01-03
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>最近在集中突击项目，队友在用机器学习算法做应用分析的时候需要大量的软件样本。其中恶意软件可以在公开的病毒中下载<a href="https://virusshare.com" target="_blank" rel="external">https://virusshare.com</a>，从论文中可以看到基本上所有的做恶意软件分析的项目都是从这个库中下载的恶意软件样本，这个网站要联系作者提供邀请码才能注册，虽然作者回复的也蛮及时，闲麻烦的同学可以先用我的账号登陆看看，ID:Yiruma, Pass:cauccauc</p>
+<p>算法分析中除了恶意软件样本，还需要很多正常的，保证安全的软件，然而网上并没有提供这样的下载连接，所以只能自己去应用市场上爬，因此也写了不少小爬虫。因为软件下载网站或多或少都会有防盗链的机制，这里分享出来我的设计思路。</p>
+<a id="more"></a>
+<h2 id="一般的防盗链机制"><a href="#一般的防盗链机制" class="headerlink" title="一般的防盗链机制"></a>一般的防盗链机制</h2><p>我们在网站上下载一个apk应用往往需要这几个步骤：</p>
+<ol>
+<li>打开应用市场主页</li>
+<li>打开某一个应用分类</li>
+<li>应用分类中展示了此分类下的软件列表，我们点进去一个进入某一个apk页面</li>
+<li>apk页面一般不会直接提供下载连接，而是在我们点击下载按钮的时候，使用js来异步发出请求，获取apk的真正下载连接，这些下载连接往往是动态变化，有时间限制的</li>
+<li>浏览器根据下载连接下载apk</li>
+</ol>
+<p>整个过程解决起来大致可以分为三块</p>
+<p>第一步就是从网站上爬取所有的apk链接，这些apk链接一般都是不会变化的，所以设计起来就和普通的爬虫一样</p>
+<p>第二部我们需要设计一个函数，输入apk链接，能够自动将apk的下载链接解析出来</p>
+<p>最后一步就需要我们能够对下载链接实现批量下载</p>
+<p>下面就开始分别介绍这三个步骤。这之前还有一点很重要的是，实际网站都会对过量访问做限制，如果短时间内访问量过大，就会封掉ip导致一段时间内403或者429，所以爬取中<strong>千万不要搞多线程，两次请求间千万要time.sleep()上一段时间</strong>，一旦被封ip，一般都要一个多小时后才能解禁</p>
+<h2 id="第一步：-从应用市场主页中爬取所有应用链接"><a href="#第一步：-从应用市场主页中爬取所有应用链接" class="headerlink" title="第一步： 从应用市场主页中爬取所有应用链接"></a>第一步： 从应用市场主页中爬取所有应用链接</h2><p>为了下载的应用分布比较全面，我的爬取策略是首先从应用市场主页面拿到所有的分类页面链接，之后再从分类页面中下载详细的apk</p>
+<p>这些链接往往都比较明确，如果bs4用的比较熟的话可以直接通过解析html页面然后从DOM上拿链接，不过我的做法比较简单，不过也很有效，直接通过正则表达式就可以获取，比如如下页面</p>
+<p><img src="https://ws1.sinaimg.cn/large/93e435bbly1fn3um8skxyj20ko0930uz.jpg" alt=""></p>
+<p>左边是在网站主页上找到的分类链接，可以看到有Business,Education,Entertainment等诸多种类，他们的链接可以用如下正则提取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://www.xxx.com/category/[a-zA-Z0-9]&#123;1,30&#125;/\d/</div></pre></td></tr></table></figure>
+<p>右边是点进去分类页面后所展示出的apk列表，可以看到这些apk的链接可以用如下正则提取</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">https://www.xxx.com/app/[a-zA-Z0-9\.]&#123;1,100&#125;/</div></pre></td></tr></table></figure>
+<p>大致通过如下代码可以拿到不少apk的链接</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#传入应用市场主页URL，拿到所有分类链接</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getCategoryList</span><span class="params">(url)</span>:</span></div><div class="line">    mainPage = s.get(url).content</div><div class="line">    regGetCategory = re.compile(<span class="string">"/category/.*/\""</span>)</div><div class="line">    categoryList = regGetCategory.findall(mainPage)</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(len(categoryList)):</div><div class="line">        categoryList[i] = <span class="string">"https://www.apkmonk.com"</span> + categoryList[i][:<span class="number">-3</span>] + <span class="string">"&#123;&#125;"</span></div><div class="line"></div><div class="line">    <span class="keyword">return</span> categoryList</div><div class="line"> </div><div class="line"><span class="comment">#传入分类链接，获得所有apk链接</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">getAppList</span><span class="params">(url)</span>:</span></div><div class="line">    subPage = s.get(url).content</div><div class="line">    regSubpage = re.compile(<span class="string">"/app/.*/\""</span>)</div><div class="line">    appList = regSubpage.findall(subPage)</div><div class="line">    appListRetu = []</div><div class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> appList:</div><div class="line">        temp = <span class="string">"https://www.apkmonk.com"</span> + i[:<span class="number">-1</span>]</div><div class="line">        <span class="keyword">if</span> temp <span class="keyword">not</span> <span class="keyword">in</span> appListRetu:</div><div class="line">            appListRetu.append(temp)</div><div class="line"></div><div class="line">    <span class="keyword">return</span> appListRetu</div></pre></td></tr></table></figure>
+<p>简单跑了一下，获取每个分类下的10页，最后拿到了10000个左右的apk链接，将这些链接保存下来，可以一直重复使用</p>
+<h2 id="第二步：-传入一个apk链接，获得其下载链接"><a href="#第二步：-传入一个apk链接，获得其下载链接" class="headerlink" title="第二步： 传入一个apk链接，获得其下载链接"></a>第二步： 传入一个apk链接，获得其下载链接</h2><p>这里就是针对防盗链措施的解决方法，看下比较常见的apk防盗链措施：</p>
+<p>我们首先访问之前拿到的一个apk链接</p>
+<p><a href="https://www.apkmonk.com/app/in.promettheus.fhrai/" target="_blank" rel="external">https://www.apkmonk.com/app/in.promettheus.fhrai/</a></p>
+<p>访问之后，页面上显示DownloadAPK，链接指向</p>
+<p><a href="https://www.apkmonk.com/download-app/in.promettheus.fhrai/5_in.promettheus.fhrai_2018-01-03.apk/" target="_blank" rel="external">https://www.apkmonk.com/download-app/in.promettheus.fhrai/5_in.promettheus.fhrai_2018-01-03.apk/</a></p>
+<p>到这里还不是最终的apk下载链接，因为尝试访问会发现返回的仍是一个html页面，其中的关键信息如下：</p>
+<p><code>$(&#39;#download_sub_text&#39;).html(&#39;You could also download directly by &lt;a onclick=&quot;ga(\&#39;send\&#39;, \&#39;event\&#39;, \&#39;link\&#39;, \&#39;click_here\&#39;, \&#39;in.promettheus.fhrai\&#39;);&quot; href=&quot;&#39;+data.url+&#39;&quot;&gt;clicking here!&lt;/a&gt;&#39;);</code></p>
+<p>这是一段js代码，可以看出来我们的下载链接是通过js动态执行后才生成的，所以我们直接访问这个url是无法拿到下载链接的，这里介绍两种思路</p>
+<h3 id="方法一：类似于XSSbot的js代码执行"><a href="#方法一：类似于XSSbot的js代码执行" class="headerlink" title="方法一：类似于XSSbot的js代码执行"></a>方法一：类似于XSSbot的js代码执行</h3><p>在xss中的bot可以触发我们所发送的js代码，这里关于bot怎么写，可以去翻下土师傅的blog，我采用的是Phantomjs来动态加载js代码</p>
+<p>梳理下我们的思路：</p>
+<ol>
+<li>调用phantomjs动态执行页面，之后将执行js后的页面重新保存</li>
+<li>python解析html文件，拿到真正的下载链接</li>
+</ol>
+<p>我们的js可以这样写：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">var</span> webPage = <span class="built_in">require</span>(<span class="string">'webpage'</span>);</div><div class="line"><span class="keyword">var</span> system = <span class="built_in">require</span>(<span class="string">'system'</span>);</div><div class="line"><span class="keyword">var</span> args = system.args[<span class="number">1</span>];</div><div class="line"><span class="keyword">var</span> page = webPage.create();</div><div class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">'fs'</span>)</div><div class="line"></div><div class="line"><span class="comment">//将参数作为打开的页面</span></div><div class="line">page.open(args,<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">	<span class="comment">//2000毫秒后，执行页面内容保存工作</span></div><div class="line">	setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</div><div class="line">		fs.write(<span class="string">'E:/fei.txt'</span>, page.content, <span class="string">'w'</span>);</div><div class="line">		phantom.exit();</div><div class="line">	&#125;,<span class="number">2000</span>);</div><div class="line">&#125;);</div></pre></td></tr></table></figure>
+<p>整个python代码大致长这样</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">down_url</span><span class="params">(url)</span>:</span></div><div class="line"></div><div class="line">    <span class="comment">#获得apk链接</span></div><div class="line">    os.system(<span class="string">"phantomjs test.js "</span>+url)</div><div class="line">    <span class="comment">#从文件中解析内容</span></div><div class="line">    content = open(<span class="string">"E:/fei.txt"</span>, <span class="string">'r'</span>).read()</div><div class="line">    apk_url = reg.findall(content)</div><div class="line">    <span class="keyword">if</span> len(apk_url) == <span class="number">0</span>:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line">    <span class="keyword">return</span> apk_url</div></pre></td></tr></table></figure>
+<h3 id="方法二：使用python模拟js代码"><a href="#方法二：使用python模拟js代码" class="headerlink" title="方法二：使用python模拟js代码"></a>方法二：使用python模拟js代码</h3><p>这也是比较推荐的方法，有些获取下载链接的js其实并不复杂，通过对其分析，我们甚至可以找到更为简便的api</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">$.get(<span class="string">'/down_file/'</span>,&#123;<span class="string">"pkg"</span>:<span class="string">"in.promettheus.fhrai"</span>,<span class="string">"key"</span>:<span class="string">"5_in.promettheus.fhrai_2018-01-03.apk"</span>&#125;).done(<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span></div><div class="line">&#123;</div><div class="line"><span class="comment">//xxx...</span></div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>可以看到其实就是调用jq的get方法发送了一条get请求，请求是</p>
+<p><a href="https://www.xxx.com/down_file/?pkg=in.promettheus.fhrai&amp;key=5_in.promettheus.fhrai_2018-01-03.apk" target="_blank" rel="external">https://www.xxx.com/down_file/?pkg=in.promettheus.fhrai&amp;key=5_in.promettheus.fhrai_2018-01-03.apk</a></p>
+<p>我们尝试过去访问一下，返回结果如下：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">&#123;<span class="attr">"url"</span>: <span class="string">"http://apk.apkmonk.com/apks-3/in.promettheus.fhrai_2018-01-03.apk?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=IFVYHACUO60QSGWW9L9Z%2F20180103%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20180103T164103Z&amp;X-Amz-Expires=2400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=b187cf0e7b2b680b5dcd858243ba624cb0aa360021af9827628af21ee29162ed"</span>, <span class="attr">"resp"</span>: <span class="string">"success"</span>&#125;</div></pre></td></tr></table></figure>
+<p>json格式数据，里面的url就是我们的apk下载链接，所以直接用python生成url然后访问就可以拿到apk的连接，Bingo！</p>
+<p>这种分析网站的api方法是比较推荐的，毕竟phantomjs的方法执行起来太过麻烦，事实上在这个网站里我不仅发现了不止一个能够获取apk下载连接的api</p>
+<p>OK，最后我们拿到的下载连接大致就是这个样子</p>
+<p><a href="http://apk.apkmonk.com/apks-3/in.promettheus.fhrai_2018-01-03.apk?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=IFVYHACUO60QSGWW9L9Z%2F20180103%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20180103T160517Z&amp;X-Amz-Expires=2400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=3e8625b5087cd37ab6f274c08957c26c50699589772040e00315669e32631422" target="_blank" rel="external">http://apk.apkmonk.com/apks-3/in.promettheus.fhrai_2018-01-03.apk?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Credential=IFVYHACUO60QSGWW9L9Z%2F20180103%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Date=20180103T160517Z&amp;X-Amz-Expires=2400&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Signature=3e8625b5087cd37ab6f274c08957c26c50699589772040e00315669e32631422</a></p>
+<h2 id="第三步：-下载连接分析与下载方式"><a href="#第三步：-下载连接分析与下载方式" class="headerlink" title="第三步： 下载连接分析与下载方式"></a>第三步： 下载连接分析与下载方式</h2><p>首先我们应该简单分析一下这些连接，就拿上面的连接作为例子</p>
+<p>可以看到里面有关于时间的参数X-Amz-Date=20180103T160517Z，猜测是连接生成时间，还有一个名为Expires的参数X-Amz-Expires=2400，猜测是连接有效时间，2400猜测是2400s也就是40分钟，从参数X-Amz-Algorithm=AWS4-HMAC-SHA256中可以看到使用了HMAC算法，对应的签名是X-Amz-Signature=3e8625b5087cd37ab6f274c08957c26c50699589772040e00315669e32631422，没错正好是SHA256的64位，这样整个连接是不可伪造的了，我们不能手动修改时间参数保证链接一直有效，也不能猜测组合生成hash的参数，因为使用了HMAC。另一方面，连接还是有时间的所以拿到连接后还是要尽快下载才行，不能批量拿到所有的下载连接再批量下载了。简单验证一下我们的猜想，我测试了一个昨天的连接，以及一个修改了时间参数的连接，结果都是返回403Forbidden，说明我们的下载连接没有通过验证，不能下载。</p>
+<p>之后便是下载方式的介绍了，这里还是介绍两种</p>
+<h3 id="Wget"><a href="#Wget" class="headerlink" title="Wget"></a>Wget</h3><p>在拿到下载连接后，直接python通过系统调用的方式调用wget工具完成下载，这种的好处是可以在拿到连接后直接下载，同时也很方便控制多线程同时下载，被禁ip的话解封后可以接着上次的接着下载，但问题也很明显，首先wget这个工具总感觉下载速度不快，另外python系统调用os.system(“wget xxx”)对返回结果不好观察，尤其是开多个线程同时下载的时候控制台输出的命令返回结果简直是群魔狂舞，所以推荐真的使用这种方法的话加上-q 或者-nv参数开启静默下载功能，这样就没有输出了。</p>
+<p>另外一个可能用到的参数是-O，用于指定下载文件的位置以及文件名，还有个参数–spider，表示不下载任何东西，只是看下响应头来后的文件大小，不过感觉有时候并没有用。。。</p>
+<h3 id="IDM"><a href="#IDM" class="headerlink" title="IDM"></a>IDM</h3><p>IDM是今天才想到的下载方法，这是一个文件下载工具，下载速度极快，也有很强大的下载自定义功能。我们要做的就是每次获取一小部分下载连接，然后以html格式写到文件里，之后打开此html文件，右键使用IDM下载全部连接，就可以将所有的连接添加到下载队列。</p>
+<p><img src="https://ws1.sinaimg.cn/large/93e435bbly1fn3wvmhpupj20hs08yjss.jpg" alt=""></p>
+<p>那些error请不要在意，如上面所述这些下载连接都已经过时了，没有通过检测</p>
+<h2 id="关于网站防盗链的一些考虑"><a href="#关于网站防盗链的一些考虑" class="headerlink" title="关于网站防盗链的一些考虑"></a>关于网站防盗链的一些考虑</h2><p>其实从上面来看，通过程序批量的获得一些apk还是比较容易实现的，通常的js执行然后获取下载连接的方案很容易解决，事实上整个操作中对我们造成最大的阻碍是云服务器厂商做的访问限制，网站的防护通常并不有效</p>
+<p>也许网站可以设置为用户注册后才能下载apk，并基于用户身份进行apk下载的峰值限制，也许还可以在每个apk下载前都需要人工输入验证码，或者可以将自己的api隐藏的更为隐蔽一点，个人觉得，还是在每次下载前引入不得不人工操作的步骤才是最有效的方法，比如下面这样 2333</p>
+<p><img src="https://ws1.sinaimg.cn/large/93e435bbly1fn3x4o803dj20hj0a474v.jpg" alt=""></p>
+<h2 id="与本文无关，记录些写爬虫时的问题与学到的东西"><a href="#与本文无关，记录些写爬虫时的问题与学到的东西" class="headerlink" title="与本文无关，记录些写爬虫时的问题与学到的东西"></a>与本文无关，记录些写爬虫时的问题与学到的东西</h2><p>http的head方法是不获取文件，只是请求响应头，可以用于获取文件大小，python中的requests包支持head方法</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> requests</div><div class="line"></div><div class="line">s = requests.session()</div><div class="line">s.head(url)</div></pre></td></tr></table></figure>
+<p>相同的在curl中对应的参数是 curl -I  ， wget中是wget –spider</p>
+<p><br></p>
+<p>关于如何做到文件下载记录，考虑了很多种，apkList.txt除了apk连接，做成一个字典，一定要有的是后面0，1表示已经处理和没有处理，如果下载连接可以一直保存的话，可以考虑将下载连接也存到里面，之后将dict对象使用json转成字符串存储到apkList.txt中</p>
+<p><br></p>
+<p>json的简单使用方法再复习一下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> json</div><div class="line"></div><div class="line">dict = json.loads(str)</div><div class="line">str = json.dumps(dict)</div></pre></td></tr></table></figure>
+<p><br></p>
+<p>在python3中，os.popen改成了子线程执行，程序不会阻塞等待命令执行完毕，需要单线程的话可以采用os.system，不过阅读popen的文档应该能找到更好的解决方案</p>
+<p><br></p>
+<p>跑的过程中需要持续写文件的话，可以使用fw.flush()函数，将缓存区中的字符写到文件中，防止中途报错而丢失之前的数据</p>
+<p><br></p>
+<p>当时做多线程拿下载连接的时候，考虑了这样的方式，每个线程处理完需要往dict中置apk的url为1表示下载完成，为了防止中途报错丢失数据，每次结束后都重新将dict写入文件。测试中发现中途报错终止的时候，子线程并不会直接停止，而是停止阻塞强行运行完毕，之后所有程序结束运行，记得之前在java线程池实现的时候线程池的确设计了这种机制，后来爬虫决定不用多线程了，此事也就作罢</p>
+<p><br></p>
+<p>线程池简单使用方法记录，包在python3中可用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> concurrent.futures <span class="keyword">import</span> ThreadPoolExecutor</div><div class="line"><span class="comment">#参数指定线程池的大小</span></div><div class="line">pool = ThreadPoolExecutor(<span class="number">5</span>)</div><div class="line"><span class="comment">#submit往池子里扔函数，第一个是函数名，后面是参数</span></div><div class="line">pool.submit(getApkHTML, <span class="number">50</span>)</div><div class="line">pool.submit(getApkHTML, <span class="number">100</span>)</div><div class="line">pool.submit(getApkHTML, <span class="number">150</span>)</div><div class="line">pool.submit(getApkHTML, <span class="number">200</span>)</div><div class="line">pool.submit(getApkHTML, <span class="number">250</span>)</div></pre></td></tr></table></figure>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/11/20/服务端URL处理问题学习笔记-SSRF-CRLF-其他/" rel="prev" title="服务端URL处理问题学习笔记 SSRF/CRLF/其他">
+                服务端URL处理问题学习笔记 SSRF/CRLF/其他 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8zMTE1OS83NzA4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.gif"
+               alt="Yiruma" />
+          <p class="site-author-name" itemprop="name">Yiruma</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">25</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一般的防盗链机制"><span class="nav-number">1.</span> <span class="nav-text">一般的防盗链机制</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第一步：-从应用市场主页中爬取所有应用链接"><span class="nav-number">2.</span> <span class="nav-text">第一步： 从应用市场主页中爬取所有应用链接</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第二步：-传入一个apk链接，获得其下载链接"><span class="nav-number">3.</span> <span class="nav-text">第二步： 传入一个apk链接，获得其下载链接</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#方法一：类似于XSSbot的js代码执行"><span class="nav-number">3.1.</span> <span class="nav-text">方法一：类似于XSSbot的js代码执行</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#方法二：使用python模拟js代码"><span class="nav-number">3.2.</span> <span class="nav-text">方法二：使用python模拟js代码</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#第三步：-下载连接分析与下载方式"><span class="nav-number">4.</span> <span class="nav-text">第三步： 下载连接分析与下载方式</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Wget"><span class="nav-number">4.1.</span> <span class="nav-text">Wget</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#IDM"><span class="nav-number">4.2.</span> <span class="nav-text">IDM</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#关于网站防盗链的一些考虑"><span class="nav-number">5.</span> <span class="nav-text">关于网站防盗链的一些考虑</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#与本文无关，记录些写爬虫时的问题与学到的东西"><span class="nav-number">6.</span> <span class="nav-text">与本文无关，记录些写爬虫时的问题与学到的东西</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Yiruma</span>
+  <span id="busuanzi_container_site_pv">
+    本站总访问量<span id="busuanzi_value_site_pv"></span>次
+</span>
+<span id="busuanzi_container_site_uv">
+  本站访客数<span id="busuanzi_value_site_uv"></span>人次
+</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (search_path.endsWith("json")) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+  
+  
+  
+  <link rel="stylesheet" href="/lib/algolia-instant-search/instantsearch.min.css">
+
+  
+  
+  <script src="/lib/algolia-instant-search/instantsearch.min.js"></script>
+  
+
+  <script src="/js/src/algolia-search.js?v=5.1.1"></script>
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
