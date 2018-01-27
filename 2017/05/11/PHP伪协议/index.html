@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP伪协议/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议 现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用 关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。">
-<meta property="og:updated_time" content="2017-10-25T09:36:04.489Z">
+<meta property="og:updated_time" content="2018-01-18T07:58:49.116Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP伪协议">
 <meta name="twitter:description" content="伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议 现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用 关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。">
@@ -397,7 +397,8 @@
 <hr>
 <h3 id="php-input"><a href="#php-input" class="headerlink" title="php://input"></a>php://input</h3><p>很常用的数据流构造器，将读取提交的数据作为数据流的输入，也就是post的部分</p>
 <h3 id="data-text-plain-base64-base编码字符串"><a href="#data-text-plain-base64-base编码字符串" class="headerlink" title="data://text/plain;base64,base编码字符串"></a>data://text/plain;base64,base编码字符串</h3><p>很常用的数据流构造器，将读取后面base编码字符串后解码的数据作为数据流的输入</p>
-<h3 id="php-filter-convert-base64-encode-decode-resource-xxx"><a href="#php-filter-convert-base64-encode-decode-resource-xxx" class="headerlink" title="php://filter/convert.base64-[encode/decode]/resource=xxx"></a>php://filter/convert.base64-[encode/decode]/resource=xxx</h3><p>base64本来就有不少小trick，结合文件包含更是会有各种妙用，看下面这些:</p>
+<h3 id="php-filter-convert-base64-encode-decode-resource-xxx"><a href="#php-filter-convert-base64-encode-decode-resource-xxx" class="headerlink" title="php://filter/convert.base64-[encode/decode]/resource=xxx"></a>php://filter/convert.base64-[encode/decode]/resource=xxx</h3><p>php://filter/convert.base64-encode/resource=</p>
+<p>base64本来就有不少小trick，结合文件包含更是会有各种妙用，看下面这些:</p>
 <ul>
 <li><p>在引入resource所指的资源时，通过过滤器进行base64进行编码或解码通常用于获取文件数据时，将文件进行编码后传输</p>
 </li>
@@ -543,15 +544,6 @@
 
           
 
-          
-            
-            
-            <div class="site-state-item site-state-tags">
-              
-                <span class="site-state-item-count">2</span>
-                <span class="site-state-item-name">标签</span>
-              
-            </div>
           
 
         </nav>

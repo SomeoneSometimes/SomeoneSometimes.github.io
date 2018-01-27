@@ -5,11 +5,26 @@
     
   <url>
     <loc>https://someonesometimes.github.io/2017/07/23/mysql%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/</loc>
-    <lastmod>2018-01-06T07:06:32.752Z</lastmod>
+    <lastmod>2018-01-27T10:21:14.061Z</lastmod>
     <data>
         <display>
         <title>mysql注入学习（持续保持更新）</title>
         <pubTime>2017-07-23T05:53:32.000Z</pubTime>
+        
+         
+           
+        </display>
+    </data>
+    </url>
+
+    
+  <url>
+    <loc>https://someonesometimes.github.io/2017/05/11/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/</loc>
+    <lastmod>2018-01-18T07:58:49.116Z</lastmod>
+    <data>
+        <display>
+        <title>PHP伪协议</title>
+        <pubTime>2017-05-11T13:53:23.000Z</pubTime>
         
          
            
@@ -117,21 +132,6 @@
         <display>
         <title>文件上传漏洞</title>
         <pubTime>2017-05-02T12:03:26.000Z</pubTime>
-        
-         
-           
-        </display>
-    </data>
-    </url>
-
-    
-  <url>
-    <loc>https://someonesometimes.github.io/2017/05/11/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/</loc>
-    <lastmod>2017-10-25T09:36:04.489Z</lastmod>
-    <data>
-        <display>
-        <title>PHP伪协议</title>
-        <pubTime>2017-05-11T13:53:23.000Z</pubTime>
         
          
            
