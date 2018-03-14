@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/26/密码学结课后的一些想法以及总结(下)/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。">
-<meta property="og:updated_time" content="2017-05-08T06:31:36.807Z">
+<meta property="og:updated_time" content="2018-02-24T07:51:47.338Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="密码学结课后的一些想法以及总结（下）">
 <meta name="twitter:description" content="断断续续的，为时一年的密码学也终于在今天的结课考试中告一段落，之所以在这里写下这些零碎的想法，是因为总感觉这是一个很关键的转折点。之前一年的学习主要是对密码学所涉及的数学知识以及现行加密体系的掌握，学习了部分数论，加密算法流程等。">
@@ -442,14 +442,17 @@
 <li>HMAC 使用制定流程将x与ke融合一块后再hash的方案</li>
 <li>GMAC 基于使用CTR的加密流程，将加密中的结果，padding，key值都吸收入，最后的结果作为MAC码，同时还得到了加密后的结果</li>
 </ul>
-<h2 id="Digatal-Signature"><a href="#Digatal-Signature" class="headerlink" title="Digatal Signature"></a>Digatal Signature</h2><p><strong>简述</strong><br>数字签名基于公钥体系构建，使用私钥签名hash(x),公钥解密进行验证，除了对信息完整性的验证外，因为使用私钥签名，所以可以做到身份验证，以达到不可否认服务。但正因为使用的公钥体系，签名的速度会很慢，因此才有了只进行信息完整性验证的MAC方案，那里面的key是双方已知的，基于对称加密。对了，DS的安全性也是基于单向函数的安全性的。</p>
+<h2 id="Digatal-Signature"><a href="#Digatal-Signature" class="headerlink" title="Digatal Signature"></a>Digatal Signature</h2><p><strong>简述</strong><br>数字签名基于公钥体系构建，使用私钥签名hash(x),公钥解密进行验证，因为使用私钥进行签名，所以可以证明产品的身份，每一个Android应用都会有使用了开发者私钥签名后的一段数据，来证明此产品是相应开发者所有，被人因为没有此私钥所以是无法伪造里面的数据的。</p>
+<p>但正因为使用的公钥体系，签名的速度会很慢，因此才有了只进行信息完整性验证的MAC方案，那里面的key是双方已知的，基于对称加密。对了，DS的安全性也是基于单向函数的安全性的。</p>
 <p><strong>现行的DS方案</strong></p>
 <ul>
 <li>基于RSA体系 使用私钥加密，公钥解密</li>
-<li>基于Elgamal体系（并没有完全采用这种体系，但是单向函数还是一样的）——原始的方案，改进后的DSA，使用ECC的ECDSA</li>
+<li>基于Elgamal体系（并没有完全采用这种体系，但是单向函数还是一样的）——原始的方案，改进后的DSA，使用ECC的ECDS</li>
 </ul>
 <hr>
 <h1 id="密钥分配方案与CA证书"><a href="#密钥分配方案与CA证书" class="headerlink" title="密钥分配方案与CA证书"></a>密钥分配方案与CA证书</h1><p><strong>简述</strong><br>实际生产环境中，一个组织内部的通信使用密钥的话，是需要考虑专门的方案进行密钥分配的，毕竟使用对称加密的话，总密钥个数可是成O(2^n)的复杂度来增长的<br>如果使用对称加密方式的话，可以通过设置密钥分配中心来减少总密钥的个数，并基于MIT所研究的三头狗Kerburse建立session key的方式来保证安全性<br>如果使用非对称加密方式的话，密钥复杂度问题就可以完美解决，并设置CA认证中心对用户的公钥进行签名来保证安全性</p>
+<p><strong>更新——简述Android应用证书的结构</strong></p>
+<p>首先作为证书，里面是有CA中心签名的开发者的公钥的，通过CA中心的签名来保证此证书的真实性，除了公钥部分，还会有一段使用开发者私钥签名的数据，通过使用开发者公钥的验证，可以确保应用不被伪造，的确就是由掌握着私钥的开发者所发布的</p>
 <h2 id="对称加密的分配方案以及安全性"><a href="#对称加密的分配方案以及安全性" class="headerlink" title="对称加密的分配方案以及安全性"></a>对称加密的分配方案以及安全性</h2><p><strong>分配方案</strong><br>通过设置密钥分配中心，使分配中心只保留与用户之间的长期密钥，在两个用户间需要通信的时候就建立sessionkey会话密钥并使用两个用户的长期密钥来发送过去<br>这样可使得一个组织中只保留n个数的长期密钥，越少也就会越安全，尤其是用户电脑中不会保存所有其他用户的密钥，并且新用户加入时不会影响到老用户</p>
 <p><strong>安全性</strong><br>单纯的传输session key的话，因为没有时效性会受到重放攻击，因为没有通信双方的身份会收到攻击，因为没有验证分配中心的身份会受到攻击。Kerburse方案在通信请求者建立连接的时候使用挑战应答的方式验证了通信对方的身份，分配中心在生成的session key中加入时间戳以及通信双方的ID。这样即可提高了安全性</p>
 <h2 id="非对称加密的安全性"><a href="#非对称加密的安全性" class="headerlink" title="非对称加密的安全性"></a>非对称加密的安全性</h2><p><strong>安全性</strong><br>以前以为证书就是公钥，学习后才知道其实是经过CA中心签名后的用户公钥。因为单纯的公钥在发放中很容易受到伪造，也没有统一的管理策略，因此有了现在的PKI中心来统一管理证书以及CA中心来为这些证书签名以表明这些是通过验证的。具体是为哪些签名就去看书吧。</p>
