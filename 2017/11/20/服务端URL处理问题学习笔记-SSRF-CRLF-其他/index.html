@@ -104,7 +104,7 @@
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flpidcno9lj20kc0bb766.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flpislsoajj20d806adg6.jpg">
 <meta property="og:image" content="https://ws1.sinaimg.cn/large/93e435bbly1flphsi6huij20d90b0q4i.jpg">
-<meta property="og:updated_time" content="2017-12-10T13:42:03.694Z">
+<meta property="og:updated_time" content="2018-03-22T02:27:53.091Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="服务端URL处理问题学习笔记 SSRF/CRLF/其他">
 <meta name="twitter:description" content="LCTF里好多涉及到服务端对url进行处理的问题啊，也暴露出了自己对这一块知识的严重欠缺，ssrf也做过些笔记，但总感觉还不足以专门写东西发出来，通过在LCTF中的一些知识点收集以及自己的一些搜索，感觉在服务端的URL处理这块已经比较全面了，故做下整理，虽然现在认识还很浅，以后慢慢补充吧，保持更新~ 顺便膜一下orange大大，orange师傅在blackhat上的议题再一次刷新了自己对一名真正的">
@@ -446,6 +446,8 @@
 <p>​</p>
 </li>
 </ul>
+<h2 id="ssrf中支持的协议及相关用途"><a href="#ssrf中支持的协议及相关用途" class="headerlink" title="ssrf中支持的协议及相关用途"></a>ssrf中支持的协议及相关用途</h2><p>待补，整理猪猪侠的16年乌云白帽大会+网上的协议介绍</p>
+<h2 id="ssrf出现场景及攻击思路"><a href="#ssrf出现场景及攻击思路" class="headerlink" title="ssrf出现场景及攻击思路"></a>ssrf出现场景及攻击思路</h2><p>待补，整理猪猪侠的16年乌云白帽大会</p>
 
       
     </div>
@@ -614,7 +616,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSRF"><span class="nav-number">1.</span> <span class="nav-text">SSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在URL解析上混淆"><span class="nav-number">1.0.1.</span> <span class="nav-text">在URL解析上混淆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面"><span class="nav-number">1.0.2.</span> <span class="nav-text">没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过其他支持的ip写法来绕过host检测"><span class="nav-number">1.0.3.</span> <span class="nav-text">通过其他支持的ip写法来绕过host检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过302跳转方式来绕过检测"><span class="nav-number">1.0.4.</span> <span class="nav-text">通过302跳转方式来绕过检测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CRLF"><span class="nav-number">2.</span> <span class="nav-text">CRLF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用发送请求库的特殊功能"><span class="nav-number">3.</span> <span class="nav-text">利用发送请求库的特殊功能</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#SSRF"><span class="nav-number">1.</span> <span class="nav-text">SSRF</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#在URL解析上混淆"><span class="nav-number">1.0.1.</span> <span class="nav-text">在URL解析上混淆</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面"><span class="nav-number">1.0.2.</span> <span class="nav-text">没有对域名进行ip转换的话，可以通过一些奇特的域名将ip解析到内网里面</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过其他支持的ip写法来绕过host检测"><span class="nav-number">1.0.3.</span> <span class="nav-text">通过其他支持的ip写法来绕过host检测</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#通过302跳转方式来绕过检测"><span class="nav-number">1.0.4.</span> <span class="nav-text">通过302跳转方式来绕过检测</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#CRLF"><span class="nav-number">2.</span> <span class="nav-text">CRLF</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#利用发送请求库的特殊功能"><span class="nav-number">3.</span> <span class="nav-text">利用发送请求库的特殊功能</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ssrf中支持的协议及相关用途"><span class="nav-number">4.</span> <span class="nav-text">ssrf中支持的协议及相关用途</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#ssrf出现场景及攻击思路"><span class="nav-number">5.</span> <span class="nav-text">ssrf出现场景及攻击思路</span></a></li></ol></div>
             
 
           </div>
