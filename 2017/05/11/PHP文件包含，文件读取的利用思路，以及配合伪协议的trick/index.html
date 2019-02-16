@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/05/11/PHP文件包含，文件读取的利用思路，以及配合伪协议的trick/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能 php写文件的函数 1file_put_contents() 基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了">
-<meta property="og:updated_time" content="2017-10-23T09:21:49.924Z">
+<meta property="og:updated_time" content="2018-04-30T17:00:54.638Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP文件包含，文件读取的利用思路，以及配合伪协议的trick">
 <meta name="twitter:description" content="PHP的文件包含函数有两类，分三种：12file_get_contents() include()/include_once()  require/require_once() 第一种用于获取文件的数据，第二种用于包含并执行代码与读取文件两种功能 php写文件的函数 1file_put_contents() 基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了">
@@ -405,7 +405,13 @@
 点号截断：
 /boot.ini/………[…]…………
 (php版本小于5.2.8(?)可以成功，只适用windows，点号需要长于256)
-</code></pre><p>8、远程文件包含shell，这个在5.6下测试过了，php代码可以正常执行，但是不知为什么马运行不了，莫非是权限问题？？？好像记得ph师傅说过远程文件包含默认是禁用的。<br>9、包含日志文件</p>
+</code></pre><p>8、远程文件包含getshell，这个在5.6下测试过了，php代码可以正常执行，但是不知为什么马运行不了，莫非是权限问题？？？好像记得ph师傅说过远程文件包含默认是禁用的。<br>9、包含日志文件getshell</p>
+<p>/var/log/[apache2/apache/httpd]/access.log</p>
+<p>/var/log/[apache2/apache/httpd]/error.log</p>
+<p>/var/log/nginx/access.log   </p>
+<p>/var/log/nginx/error.log</p>
+<p>10、伪协议中提供数据压缩和解压</p>
+<p>压缩：echo file_get_contents(“php://filter/zlib.deflate/convert.base64-encode/resource=/etc/passwd”);<br>解压：echo file_get_contents(“php://filter/read=convert.base64-decode/zlib.inflate/resource=/tmp/1”);</p>
 
       
     </div>
@@ -597,7 +603,7 @@
         <div class="copyright" >
   
   &copy; 
-  <span itemprop="copyrightYear">2018</span>
+  <span itemprop="copyrightYear">2019</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
   </span>
