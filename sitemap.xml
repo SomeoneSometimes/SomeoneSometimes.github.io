@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://someonesometimes.github.io/about/index.html</loc>
+    
+    <lastmod>2019-02-16T13:31:06.770Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://someonesometimes.github.io/2017/06/15/python%E6%A8%A1%E5%9D%97%E4%BD%BF%E7%94%A8%E8%AE%B0%E5%BD%95/</loc>
     
     <lastmod>2018-05-06T15:49:06.586Z</lastmod>
@@ -40,13 +47,6 @@
     <loc>https://someonesometimes.github.io/2017/07/23/mysql%E6%B3%A8%E5%85%A5%E5%AD%A6%E4%B9%A0%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%E4%B8%AD%EF%BC%89/</loc>
     
     <lastmod>2018-04-28T13:55:44.410Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://someonesometimes.github.io/about/index.html</loc>
-    
-    <lastmod>2018-04-26T13:09:04.085Z</lastmod>
     
   </url>
   
