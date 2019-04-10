@@ -99,7 +99,7 @@
 <meta property="og:url" content="https://someonesometimes.github.io/2017/04/19/PHP弱类型转化的漏洞/index.html">
 <meta property="og:site_name" content="Yiruma">
 <meta property="og:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比较">
-<meta property="og:updated_time" content="2017-07-16T02:41:10.637Z">
+<meta property="og:updated_time" content="2017-07-16T02:41:12.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="PHP中弱类型的转化漏洞">
 <meta name="twitter:description" content="官方文档中的几句话已经说的很清楚了 ==是弱类型漏洞的罪恶根源在==中，数值和字符串比较，则字符串会被转换为数值并且比较按照数值来进行。两个可以完美转化为数值型的字符串（0e123,0x123 但0e4fe，12f3不可），将转化为数值比较  当用 === 或 !== 进行比较时则不进行类型转换，因为此时类型和数值都要比对，基本不会出现弱类型比较的漏洞  对了，这些规则经过测试，在mysql的比较">
@@ -443,10 +443,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/04/14/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
