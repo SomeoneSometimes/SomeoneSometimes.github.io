@@ -6,7 +6,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="https://someonesometimes.github.io/"/>
-  <updated>2017-04-14T03:49:20.000Z</updated>
+  <updated>2018-01-03T17:28:26.000Z</updated>
   <id>https://someonesometimes.github.io/</id>
   
   <author>
@@ -15,24 +15,6 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
-  
-  <entry>
-    <title>Hello World</title>
-    <link href="https://someonesometimes.github.io/2019/04/10/hello-world/"/>
-    <id>https://someonesometimes.github.io/2019/04/10/hello-world/</id>
-    <published>2019-04-10T08:53:56.459Z</published>
-    <updated>2017-04-14T03:49:20.000Z</updated>
-    
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.<br><a id="more"></a></p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>]]></content>
-    
-    <summary type="html">
-    
-      &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.io/docs/&quot;&gt;documentation&lt;/a&gt; for more info. If you get any problems when using Hexo, you can find the answer in &lt;a href=&quot;https://hexo.io/docs/troubleshooting.html&quot;&gt;troubleshooting&lt;/a&gt; or you can ask me on &lt;a href=&quot;https://github.com/hexojs/hexo/issues&quot;&gt;GitHub&lt;/a&gt;.&lt;br&gt;
-    
-    </summary>
-    
-    
-  </entry>
   
   <entry>
     <title>APK应用市场爬虫的爬取与下载策略</title>
@@ -420,6 +402,28 @@
 &lt;p&gt;&lt;strong&gt;php写文件的函数&lt;/strong&gt;&lt;/p&gt;
 &lt;figure class=&quot;highlight php&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;td class=&quot;code&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;file_put_contents()&lt;/div&gt;&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/figure&gt;
 &lt;p&gt;基本的思路就是用来写shell吧，不过会有各种限制，但是结合伪协议就可以简单绕过了&lt;/p&gt;
+    
+    </summary>
+    
+    
+  </entry>
+  
+  <entry>
+    <title>PHP伪协议</title>
+    <link href="https://someonesometimes.github.io/2017/05/11/PHP%E4%BC%AA%E5%8D%8F%E8%AE%AE/"/>
+    <id>https://someonesometimes.github.io/2017/05/11/PHP伪协议/</id>
+    <published>2017-05-11T13:53:23.000Z</published>
+    <updated>2018-04-30T17:05:30.000Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote><p>伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议</p><p>现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用</p><p>关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。</p></blockquote><a id="more"></a><p><strong>伪协议可以分为以下几类：</strong></p><ul><li>生成数据流 （上面两种在wamp 5.6php版本中都被禁用了）<ul><li>php://input</li><li>data://text/plain;base64,base64编码字符串</li></ul></li><li>数据流过滤器（测试可以看到在5.6版本的php中还没有被禁用）<ul><li>php://filter/convert.base64-encode/resource=xxx</li><li>php://filter/convert.base64-decode/resource=xxx</li><li>phar://</li><li>zip://</li></ul></li><li>远程文件访问<ul><li>http://</li><li>ftp://</li></ul></li><li>本地文件访问<ul><li>file:///</li></ul></li></ul><p>现在将逐一介绍这些伪协议以及其常用的应用场景</p><hr><h3 id="php-input"><a href="#php-input" class="headerlink" title="php://input"></a>php://input</h3><p>很常用的数据流构造器，将读取提交的数据作为数据流的输入，也就是post的部分</p><h3 id="data-text-plain-base64-base编码字符串"><a href="#data-text-plain-base64-base编码字符串" class="headerlink" title="data://text/plain;base64,base编码字符串"></a>data://text/plain;base64,base编码字符串</h3><p>很常用的数据流构造器，将读取后面base编码字符串后解码的数据作为数据流的输入</p><h3 id="php-filter-convert-base64-encode-decode-resource-xxx"><a href="#php-filter-convert-base64-encode-decode-resource-xxx" class="headerlink" title="php://filter/convert.base64-[encode/decode]/resource=xxx"></a>php://filter/convert.base64-[encode/decode]/resource=xxx</h3><p>php://filter/convert.base64-encode/resource=</p><p>base64本来就有不少小trick，结合文件包含更是会有各种妙用，看下面这些:</p><ul><li><p>在引入resource所指的资源时，通过过滤器进行base64进行编码或解码通常用于获取文件数据时，将文件进行编码后传输</p></li><li><p>Ph师傅的文章中介绍到了这样一种很巧妙的场景，文件包含参数可控制，可上传内容为固定8种字符，于是首先使用可控制的文件包含结合php://filter读到源码，上传文件因为只能包含8种字符，可以使用base64的小trick经过n次编码将shell转换成只有8种字符的要求，然后文件包含shell中利用多次过滤器嵌套来实现多次base64解码，最终解析到shell</p><p><code>php://filter/convert.base64-decode/resource=php://filter/convert.base64-decode/resource=.....</code></p></li></ul><h3 id="php-filter-read-write-string-rot13-strip-tags-…-resource-xxx"><a href="#php-filter-read-write-string-rot13-strip-tags-…-resource-xxx" class="headerlink" title="php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx"></a>php://filter/[read/write]=string.[rot13/strip_tags/…..]/resource=xxx</h3><p>过滤器里还支持用一些字符串处理函数进行过滤，这样选择的范围就更多了，但目前也就从p牛的博客里看到有这两个函数，其他的没有找到，strip_tags可以用来去掉字符串中的标签</p><p>注意这个过滤器是要分清read与write两个情景的，用错的话就不会产生相应的效果。在file_put_contents()中就要使用write才有过滤效果，在include(),file_get_contents()中就要使用read才有效</p><h3 id="phar-archive-zip-jpg-png…-file-txt"><a href="#phar-archive-zip-jpg-png…-file-txt" class="headerlink" title="phar://archive.[zip/jpg/png…]/file.txt"></a>phar://archive.[zip/jpg/png…]/file.txt</h3><p>经测试，其实可以将任意后缀名的文件(必须要有后缀名)，只要是zip格式压缩的，都可以进行解压，因此上面可以改为phar://archive.abc/file.txt也可以运行</p><p>phar简直就是文件上传+文件包含场景中的神器：</p><p>如果文件上传后可以利用文件包含实现代码执行的话，文件上传中的后缀名过滤基本上一点用都没有了，我们其实可以上传任意后缀名的压缩文件，压缩文件里面包含着我们的任意文件，然后在文件包含的时候使用phar伪协议将我们的文件从压缩包里面提取出来</p><h3 id="zip-archive-zip-file-txt"><a href="#zip-archive-zip-file-txt" class="headerlink" title="zip://archive.zip#file.txt"></a>zip://archive.zip#file.txt</h3><p>用处和phar是一样的，应用场景也一样，但是要注意<strong> ‘#’ </strong>书写的时候要编码为%23才行，因为url的#后面是默认不传输的</p><p>还有测试上，不知为什么，同样是5.6版本，在kali虚拟机上测试通过了，但在windows下就没有通过，也许是配置的问题</p><p>### </p>]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;伪协议，个人感觉就像是对数据流的一种处理方式合集，所有以数据流作为参数的函数都应该考虑是否能够使用伪协议&lt;/p&gt;
+&lt;p&gt;现在基本就能确定，有文件包含的地方，就特别应当考虑伪协议的各种妙用&lt;/p&gt;
+&lt;p&gt;关于伪协议中的过滤器真的是要赞下，如果可以使用过滤器的话，代码检测几乎是没有任何用处的，我们可以使用过滤器进行各种各样的字符串处理，鬼知道有多少种姿势。。。&lt;/p&gt;
+&lt;/blockquote&gt;
     
     </summary>
     
